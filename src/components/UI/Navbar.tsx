@@ -62,17 +62,25 @@ function Navbar() {
                   route.visible ||
                   (route.private === authenticated && route.show)
               )
-              .map((route) => (
-                <Link
-                  key={route.path}
-                  to={route.path}
-                  className={`navbar-item ${
-                    isActivePage(route.path) ? "has-background-white" : ""
-                  }`}
-                >
-                  {route.name}
-                </Link>
-              ))}
+              .map((route) =>
+                !isActivePage(route.path) ? (
+                  <Link
+                    key={route.path}
+                    to={route.path}
+                    className="navbar-item is-size-6"
+                  >
+                    {route.name}
+                  </Link>
+                ) : (
+                  <button
+                    className="navbar-item has-background-white is-size-6"
+                    style={{ opacity: 1, border: "unset" }}
+                    disabled
+                  >
+                    {route.name}
+                  </button>
+                )
+              )}
           </div>
           <div className="navbar-end">
             {user ? (
