@@ -4,9 +4,11 @@ import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import Message from "../../../components/UI/Message"
+import { SignUpData } from "../../../store/types"
 
 const Signup: FC = () => {
   const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
@@ -27,7 +29,11 @@ const Signup: FC = () => {
       dispatch(setError(""))
     }
     setLoading(true)
-    dispatch(signup({ firstName, email, password }, () => setLoading(false)))
+    dispatch(
+      signup({ firstName, email, password, lastName } as SignUpData, () =>
+        setLoading(false)
+      )
+    )
   }
 
   return (
@@ -35,14 +41,21 @@ const Signup: FC = () => {
       <div className="container">
         <h2 className="has-text-centered is-size-2 mb-3">Sign Up</h2>
         <form className="form" onSubmit={submitHandler}>
-          {error && <Message type="danger" msg={error} />}
           <Input
             type="firstName"
             name="firstName"
             value={firstName}
             onChange={(e) => setFirstName(e.currentTarget.value)}
             placeholder="set Name"
-            label="set Name"
+            label="Name"
+          />
+          <Input
+            type="lastName"
+            name="lastName"
+            value={lastName}
+            onChange={(e) => setLastName(e.currentTarget.value)}
+            placeholder="set Surname"
+            label="Surname"
           />
           <Input
             type="email"
@@ -61,7 +74,7 @@ const Signup: FC = () => {
             label="Password"
           />
           <Button
-            text={loading ? "Loading..." : "Sign In"}
+            text={loading ? "Loading..." : "Create Account"}
             className="is-primary is-fullwidth mt-5"
             disabled={loading}
           />

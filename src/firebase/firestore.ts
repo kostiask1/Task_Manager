@@ -1,15 +1,19 @@
-import { collection, addDoc, getDocs } from "firebase/firestore/lite"
+import {
+  collection,
+  addDoc,
+  getDocs,
+  setDoc,
+  doc,
+} from "firebase/firestore/lite"
 import { db } from "./base"
 
 export const uploadDoc = async <T extends {}>(
   collection_name: string,
-  data: T
+  data: T | any
 ) => {
   try {
-    const docRef = await addDoc(collection(db, collection_name), data)
-    console.log(
-      `Document written to "${collection_name}" with ID: "${docRef.id}"`
-    )
+    await setDoc(doc(db, "users", data.id), data)
+    console.log(`Document written to "${collection_name}"`)
   } catch (e) {
     console.error("Error adding document: ", e)
   }

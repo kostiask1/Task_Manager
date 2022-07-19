@@ -11,7 +11,7 @@ import {
 const initialState: AuthState = {
   user: null,
   authenticated: false,
-  loading: false,
+  loading: true,
   error: "",
   success: "",
 }

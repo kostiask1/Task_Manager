@@ -4,10 +4,16 @@ import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import Message from "../../../components/UI/Message"
+import { SignInData } from "../../../store/types"
 
 const SignIn: FC = () => {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const isDevelopment = process.env.NODE_ENV === "development"
+  const [email, setEmail] = useState(
+    isDevelopment ? process.env.REACT_APP_MOCK_EMAIL : ""
+  )
+  const [password, setPassword] = useState(
+    isDevelopment ? process.env.REACT_APP_MOCK_PASSWORD : ""
+  )
   const [loading, setLoading] = useState(false)
   const dispatch = useAppDispatch()
   const { error } = useAppSelector((state: RootState) => state.auth)
@@ -26,7 +32,7 @@ const SignIn: FC = () => {
       dispatch(setError(""))
     }
     setLoading(true)
-    dispatch(signin({ email, password }, () => setLoading(false)))
+    dispatch(signin({ email, password } as SignInData, () => setLoading(false)))
   }
 
   return (
@@ -34,7 +40,6 @@ const SignIn: FC = () => {
       <div className="container">
         <h2 className="has-text-centered is-size-2 mb-3">Sign In</h2>
         <form className="form" onSubmit={submitHandler}>
-          {error && <Message type="danger" msg={error} />}
           <Input
             type="email"
             name="up_email"

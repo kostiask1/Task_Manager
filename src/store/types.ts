@@ -6,7 +6,10 @@ export const SET_SUCCESS = "SET_SUCCESS"
 
 export interface User {
   firstName: string
+  lastName: string
+  profileImg: string
   email: string
+  password: string
   id: string
   admin: boolean
 }
@@ -21,6 +24,7 @@ export interface AuthState {
 
 export interface SignUpData {
   firstName: string
+  lastName: string
   email: string
   password: string
 }

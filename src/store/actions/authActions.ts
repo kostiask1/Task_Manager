@@ -3,14 +3,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth"
-import {
-  doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-} from "firebase/firestore/lite"
+import { collection, query, where, getDocs } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
 import { uploadDoc } from "../../firebase/firestore"
 import {
@@ -35,9 +28,12 @@ export const signup = (data: SignUpData, onError: () => void) => {
           if (res.user) {
             const userData: User = {
               email: data.email,
+              password: data.password,
               firstName: data.firstName,
+              lastName: data.lastName,
               id: res.user.uid,
               admin: false,
+              profileImg: "",
             }
             uploadDoc("users", userData)
             dispatch({
