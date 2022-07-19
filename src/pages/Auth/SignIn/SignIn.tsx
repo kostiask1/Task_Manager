@@ -46,6 +46,7 @@ const SignIn: FC = () => {
             onChange={(e) => setEmail(e.currentTarget.value)}
             placeholder="Email address"
             label="Email address"
+            required
           />
           <Input
             type="password"
@@ -54,6 +55,7 @@ const SignIn: FC = () => {
             onChange={(e) => setPassword(e.currentTarget.value)}
             placeholder="Password"
             label="Password"
+            required
           />
           <Button
             text={loading ? "Loading..." : "Sign In"}

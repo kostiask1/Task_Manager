@@ -12,6 +12,7 @@ const Input: FC<InputProps> = ({
   required,
   onChange,
   label,
+  ...rest
 }) => {
   return (
     <div className="field">
@@ -27,6 +28,7 @@ const Input: FC<InputProps> = ({
           onChange={onChange}
           required={required}
           autoComplete="off"
+          {...rest}
         />
       </div>
     </div>

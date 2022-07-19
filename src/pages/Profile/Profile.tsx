@@ -8,7 +8,7 @@ import { FormEvent, useState } from "react"
 import Button from "../../components/UI/Button"
 import Input from "../../components/UI/Input"
 import Message from "../../components/UI/Message"
-import { uploadDoc } from "../../firebase/firestore"
+import { uploadDoc, uploadImage } from "../../firebase/firestore"
 import { setError } from "../../store/actions/authActions"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { AuthState, SET_USER, User } from "../../store/types"
@@ -21,7 +21,7 @@ const Profile = () => {
   const [lastName, setLastName] = useState(user?.lastName || "")
   const [email, setEmail] = useState(user?.email || "")
   const [profileImg, setProfileImg] = useState(user?.profileImg || "")
-  const [password, setPassword] = useState("")
+  const [password, setPassword] = useState(user?.password || "")
   const [loading, setLoading] = useState(false)
   const { error } = useAppSelector((state: RootState) => state.auth)
   const id = user?.id || ""
@@ -63,34 +63,57 @@ const Profile = () => {
     setLoading(false)
   }
 
+  const uploadProfileImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files && Array.from(files)?.length) {
+      setLoading(true)
+      const data = uploadImage(files, id, setProfileImg).then(() =>
+        setLoading(false)
+      )
+      console.log("data:", data)
+    }
+  }
+
   return (
     <div className="container">
       <div className="columns is-justify-content-center">
         <form className="form column mt-6  is-half" onSubmit={submitHandler}>
           {error && <Message type="danger" msg={error} />}
           <Input
-            type="firstName"
+            type="text"
             name="firstName"
             value={firstName}
             onChange={(e) => setFirstName(e.currentTarget.value)}
             placeholder="set Name"
             label="Name"
+            required
           />
           <Input
-            type="lastName"
+            type="text"
             name="lastName"
             value={lastName}
             onChange={(e) => setLastName(e.currentTarget.value)}
             placeholder="set Surname"
             label="Surname"
+            required
           />
           <Input
-            type="profileImg"
+            type="text"
             name="profileImg"
             value={profileImg}
             onChange={(e) => setProfileImg(e.currentTarget.value)}
             placeholder="set Profile Image"
             label="Profile Image"
+            required
+          />
+          <Input
+            type="file"
+            name="profileImg"
+            onChange={(e) => uploadProfileImg(e)}
+            multiple={false}
+            placeholder="upload Profile Image"
+            label="Profile Image"
+            required
           />
           <Input
             type="email"
@@ -99,15 +122,16 @@ const Profile = () => {
             onChange={(e) => setEmail(e.currentTarget.value)}
             placeholder="Email address"
             label="Email address"
+            required
           />
-          <Input
+          {/* <Input
             type="password"
             name="in_password"
             value={password}
             onChange={(e) => setPassword(e.currentTarget.value)}
             placeholder="Password"
             label="Password"
-          />
+          /> */}
           <Button
             text={loading ? "Loading..." : "Update Profile"}
             className="is-primary is-fullwidth mt-5"

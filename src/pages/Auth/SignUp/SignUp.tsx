@@ -41,20 +41,22 @@ const Signup: FC = () => {
         <h2 className="has-text-centered is-size-2 mb-3">Sign Up</h2>
         <form className="form" onSubmit={submitHandler}>
           <Input
-            type="firstName"
+            type="text"
             name="firstName"
             value={firstName}
             onChange={(e) => setFirstName(e.currentTarget.value)}
             placeholder="set Name"
             label="Name"
+            required
           />
           <Input
-            type="lastName"
+            type="text"
             name="lastName"
             value={lastName}
             onChange={(e) => setLastName(e.currentTarget.value)}
             placeholder="set Surname"
             label="Surname"
+            required
           />
           <Input
             type="email"
@@ -63,6 +65,7 @@ const Signup: FC = () => {
             onChange={(e) => setEmail(e.currentTarget.value)}
             placeholder="Email address"
             label="Email address"
+            required
           />
           <Input
             type="password"
@@ -71,6 +74,7 @@ const Signup: FC = () => {
             onChange={(e) => setPassword(e.currentTarget.value)}
             placeholder="Password"
             label="Password"
+            required
           />
           <Button
             text={loading ? "Loading..." : "Create Account"}
