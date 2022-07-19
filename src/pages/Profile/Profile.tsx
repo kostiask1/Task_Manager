@@ -8,7 +8,7 @@ import { FormEvent, useState } from "react"
 import Button from "../../components/UI/Button"
 import Input from "../../components/UI/Input"
 import Message from "../../components/UI/Message"
-import { uploadDoc, uploadImage } from "../../firebase/firestore"
+import { deleteImage, uploadDoc, uploadImage } from "../../firebase/firestore"
 import { setError } from "../../store/actions/authActions"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { AuthState, SET_USER, User } from "../../store/types"
@@ -21,7 +21,7 @@ const Profile = () => {
   const [lastName, setLastName] = useState(user?.lastName || "")
   const [email, setEmail] = useState(user?.email || "")
   const [profileImg, setProfileImg] = useState(user?.profileImg || "")
-  const [password, setPassword] = useState(user?.password || "")
+  const [password] = useState(user?.password || "")
   const [loading, setLoading] = useState(false)
   const { error } = useAppSelector((state: RootState) => state.auth)
   const id = user?.id || ""
@@ -44,17 +44,20 @@ const Profile = () => {
       password,
     }
     uploadDoc("users", userData)
-    if (auth.currentUser) {
+
+    if (
+      user &&
+      user.profileImg &&
+      user.profileImg !== profileImg &&
+      profileImg.includes("https")
+    ) {
+      deleteImg(user.profileImg)
     }
-    console.log("user:", user)
     if (auth.currentUser && user) {
       const credential = EmailAuthProvider.credential(user.email, user.password)
-      reauthenticateWithCredential(auth.currentUser, credential).then(
-        (resp) => {
-          console.log(resp)
-          updateEmail(auth.currentUser as any, email)
-        }
-      )
+      reauthenticateWithCredential(auth.currentUser, credential).then(() => {
+        updateEmail(auth.currentUser as any, email)
+      })
     }
     dispatch({
       type: SET_USER,
@@ -67,10 +70,18 @@ const Profile = () => {
     const files = e.target.files
     if (files && Array.from(files)?.length) {
       setLoading(true)
-      const data = uploadImage(files, id, setProfileImg).then(() =>
+      uploadImage(files, id + new Date().getTime(), setProfileImg).then(() =>
         setLoading(false)
       )
-      console.log("data:", data)
+    }
+  }
+
+  const deleteImg = (img: string) => {
+    if (profileImg) {
+      deleteImage(img).then(() => {
+        setLoading(false)
+        setProfileImg(profileImg || "")
+      })
     }
   }
 
@@ -82,6 +93,7 @@ const Profile = () => {
           <Input
             type="text"
             name="firstName"
+            minLength={2}
             value={firstName}
             onChange={(e) => setFirstName(e.currentTarget.value)}
             placeholder="set Name"
@@ -91,6 +103,7 @@ const Profile = () => {
           <Input
             type="text"
             name="lastName"
+            minLength={2}
             value={lastName}
             onChange={(e) => setLastName(e.currentTarget.value)}
             placeholder="set Surname"
@@ -100,6 +113,7 @@ const Profile = () => {
           <Input
             type="text"
             name="profileImg"
+            minLength={10}
             value={profileImg}
             onChange={(e) => setProfileImg(e.currentTarget.value)}
             placeholder="set Profile Image"
@@ -108,17 +122,17 @@ const Profile = () => {
           />
           <Input
             type="file"
-            name="profileImg"
+            name="uploadImg"
             onChange={(e) => uploadProfileImg(e)}
             multiple={false}
             placeholder="upload Profile Image"
-            label="Profile Image"
-            required
+            label="Upload Profile Image"
           />
           <Input
             type="email"
             name="in_email"
             value={email}
+            minLength={6}
             onChange={(e) => setEmail(e.currentTarget.value)}
             placeholder="Email address"
             label="Email address"

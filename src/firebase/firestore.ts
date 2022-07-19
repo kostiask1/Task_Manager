@@ -1,8 +1,8 @@
 import { collection, doc, getDocs, setDoc } from "firebase/firestore/lite"
 import {
+  deleteObject,
   getDownloadURL,
   ref,
-  uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage"
 import { db, storage } from "./base"
@@ -35,10 +35,9 @@ export const uploadImage = async (
           (snapshot) => {},
           (error) => {},
           async () => {
-            await getDownloadURL(fileRef.snapshot.ref).then((downloadURL) => {
-              console.log("File available at", downloadURL)
+            await getDownloadURL(fileRef.snapshot.ref).then((downloadURL) =>
               resolve(callback(downloadURL))
-            })
+            )
           }
         )
       })
@@ -48,10 +47,18 @@ export const uploadImage = async (
   return requests
 }
 
-// const deleteImage = async (file) => {
-//   const storageRef = app.storage()
-//   return admin && storageRef.refFromURL(file).delete(file)
-// }
+export const deleteImage = async (file: string) => {
+  const desertRef = ref(storage, file)
+
+  // Delete the file
+  deleteObject(desertRef)
+    .then(() => {
+      console.log("File deleted successfully")
+    })
+    .catch((error) => {
+      // Uh-oh, an error occurred!
+    })
+}
 
 export const getData = async <T extends {}>(collection_name: string) => {
   const querySnapshot = await getDocs(collection(db, collection_name))

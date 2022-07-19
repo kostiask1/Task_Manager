@@ -7,7 +7,6 @@ import { signout } from "../../store/actions/authActions"
 
 function Navbar() {
   const location = useLocation()
-  console.log("location:", location)
   const { authenticated, user } = useAppSelector(
     (state: RootState) => state.auth
   )
