@@ -1,10 +1,4 @@
-import {
-  collection,
-  addDoc,
-  getDocs,
-  setDoc,
-  doc,
-} from "firebase/firestore/lite"
+import { collection, doc, getDocs, setDoc } from "firebase/firestore/lite"
 import { db } from "./base"
 
 export const uploadDoc = async <T extends {}>(

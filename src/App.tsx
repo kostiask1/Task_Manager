@@ -5,8 +5,6 @@ import Navbar from "./components/UI/Navbar"
 import routes from "./routes"
 import { getUserById, setLoading } from "./store/actions/authActions"
 import { RootState, useAppDispatch, useAppSelector } from "./store/store"
-import { useState } from "react"
-import Auth from "./pages/Auth/Auth"
 
 function App() {
   const dispatch = useAppDispatch()

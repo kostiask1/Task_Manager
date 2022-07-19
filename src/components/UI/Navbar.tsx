@@ -13,7 +13,7 @@ function Navbar() {
   )
   const dispatch = useAppDispatch()
 
-  const logout = useCallback(() => dispatch(signout()), [])
+  const logout = () => dispatch(signout())
 
   const isActivePage = useCallback(
     (route: string) => {

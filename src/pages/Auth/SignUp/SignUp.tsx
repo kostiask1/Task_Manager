@@ -1,9 +1,8 @@
 import { FC, FormEvent, useEffect, useState } from "react"
-import { setError, signup } from "../../../store/actions/authActions"
-import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
-import Message from "../../../components/UI/Message"
+import { setError, signup } from "../../../store/actions/authActions"
+import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { SignUpData } from "../../../store/types"
 
 const Signup: FC = () => {
