@@ -36,6 +36,7 @@ export const routesArray = [
     path: "profile",
     element: <Profile />,
     children: [
+      { path: "/profile", element: <Navigate to="/profile/general" /> },
       { path: "/profile/general", element: <General /> },
       { path: "/profile/password", element: <Password /> },
     ],
