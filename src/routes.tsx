@@ -1,9 +1,11 @@
+import { FC } from "react"
+import { Navigate, Route, Routes } from "react-router-dom"
+import About from "./pages/About/About"
 import Auth from "./pages/Auth/Auth"
 import Catalog from "./pages/Catalog/Catalog"
+import General from "./pages/Profile/General/General"
+import Password from "./pages/Profile/Password/Password"
 import Profile from "./pages/Profile/Profile"
-import React from "react"
-import { Outlet, Navigate } from "react-router-dom"
-import About from "./pages/About/About"
 
 export const routesArray = [
   {
@@ -33,6 +35,10 @@ export const routesArray = [
     show: false,
     path: "profile",
     element: <Profile />,
+    children: [
+      { path: "/profile/general", element: <General /> },
+      { path: "/profile/password", element: <Password /> },
+    ],
   },
   {
     name: "About Us",
@@ -44,20 +50,23 @@ export const routesArray = [
   },
 ]
 
-const routes = (isLoggedIn: boolean) => [
-  {
-    path: "",
-    element: <Outlet />,
-    children: routesArray.map((route) => {
-      const clone = { ...route }
-      if (!isLoggedIn) {
-        if (clone.private) {
-          clone.element = <Navigate to="/auth" />
-        }
-      }
-      return clone
-    }),
-  },
-]
+const unWrapRoute = (route: any) => {
+  return (
+    <Route key={route.path} path={route.path} element={route.element}>
+      {route.children?.length &&
+        route.children.map((child: any) => unWrapRoute(child))}
+    </Route>
+  )
+}
 
-export default routes
+const Routing: FC<{ authenticated: boolean }> = ({ authenticated }) => {
+  return (
+    <Routes>
+      {routesArray
+        .filter((route) => !route.private || authenticated)
+        .map((route) => unWrapRoute(route))}
+    </Routes>
+  )
+}
+
+export default Routing

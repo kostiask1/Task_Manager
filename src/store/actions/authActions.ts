@@ -135,5 +135,6 @@ export const setSuccess = (msg: string) => {
       type: SET_SUCCESS,
       payload: msg,
     })
+    setTimeout(() => dispatch({ type: SET_SUCCESS, payload: "" }), 3000)
   }
 }

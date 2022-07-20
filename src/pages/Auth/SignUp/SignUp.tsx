@@ -47,6 +47,7 @@ const Signup: FC = () => {
             onChange={(e) => setFirstName(e.currentTarget.value)}
             placeholder="set Name"
             label="Name"
+            minLength={2}
             required
           />
           <Input
@@ -56,6 +57,7 @@ const Signup: FC = () => {
             onChange={(e) => setLastName(e.currentTarget.value)}
             placeholder="set Surname"
             label="Surname"
+            minLength={2}
             required
           />
           <Input
@@ -65,6 +67,7 @@ const Signup: FC = () => {
             onChange={(e) => setEmail(e.currentTarget.value)}
             placeholder="Email address"
             label="Email address"
+            minLength={6}
             required
           />
           <Input
@@ -74,6 +77,7 @@ const Signup: FC = () => {
             onChange={(e) => setPassword(e.currentTarget.value)}
             placeholder="Password"
             label="Password"
+            minLength={6}
             required
           />
           <Button

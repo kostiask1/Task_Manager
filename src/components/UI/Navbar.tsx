@@ -73,6 +73,7 @@ function Navbar() {
                   </Link>
                 ) : (
                   <button
+                    key={route.path}
                     className="navbar-item has-background-white is-size-6"
                     style={{ opacity: 1, border: "unset" }}
                     disabled
