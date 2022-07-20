@@ -125,6 +125,7 @@ export const setError = (msg: string) => {
       type: SET_ERROR,
       payload: msg,
     })
+    setTimeout(() => dispatch({ type: SET_ERROR, payload: "" }), 4000)
   }
 }
 
@@ -135,6 +136,6 @@ export const setSuccess = (msg: string) => {
       type: SET_SUCCESS,
       payload: msg,
     })
-    setTimeout(() => dispatch({ type: SET_SUCCESS, payload: "" }), 3000)
+    setTimeout(() => dispatch({ type: SET_SUCCESS, payload: "" }), 4000)
   }
 }

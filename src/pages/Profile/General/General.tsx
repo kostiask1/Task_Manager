@@ -2,19 +2,17 @@ import {
   EmailAuthProvider,
   getAuth,
   reauthenticateWithCredential,
-  updateEmail,
+  updateEmail
 } from "firebase/auth"
 import { FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
-import Message from "../../../components/UI/Message"
 import {
-  uploadDoc,
-  uploadImage,
-  deleteImage,
+  deleteImage, uploadDoc,
+  uploadImage
 } from "../../../firebase/firestore"
 import { setError, setSuccess } from "../../../store/actions/authActions"
-import { useAppDispatch, useAppSelector, RootState } from "../../../store/store"
+import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { AuthState, SET_USER, User } from "../../../store/types"
 import "./General.scss"
 
@@ -26,7 +24,7 @@ const General = () => {
   const [email, setEmail] = useState(user?.email || "")
   const [profileImg, setProfileImg] = useState(user?.profileImg || "")
   const [loading, setLoading] = useState(false)
-  const { error, success } = useAppSelector((state: RootState) => state.auth)
+  const { error } = useAppSelector((state: RootState) => state.auth)
   const id = user?.id || ""
   const admin = user?.admin || false
 
@@ -97,8 +95,6 @@ const General = () => {
     <div className="container">
       <div className="columns is-justify-content-center">
         <form className="form column mt-6  is-half" onSubmit={submitHandler}>
-          {error && <Message type="danger" msg={error} />}
-          {success && <Message type="success" msg={success} />}
           <Input
             type="text"
             name="firstName"

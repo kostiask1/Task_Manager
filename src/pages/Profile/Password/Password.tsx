@@ -1,23 +1,22 @@
-import { useState, FormEvent } from "react"
-import Message from "../../../components/UI/Message"
-import { useAppDispatch, useAppSelector, RootState } from "../../../store/store"
-import { AuthState, User, SET_USER } from "../../../store/types"
-import "./Password.scss"
-import Input from "../../../components/UI/Input"
-import Button from "../../../components/UI/Button"
-import { uploadDoc } from "../../../firebase/firestore"
-import { setError, setSuccess } from "../../../store/actions/authActions"
-import { getAuth } from "firebase/auth"
 import {
   EmailAuthProvider,
+  getAuth,
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth"
+import { FormEvent, useState } from "react"
+import Button from "../../../components/UI/Button"
+import Input from "../../../components/UI/Input"
+import { uploadDoc } from "../../../firebase/firestore"
+import { setError, setSuccess } from "../../../store/actions/authActions"
+import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
+import { AuthState, SET_USER, User } from "../../../store/types"
+import "./Password.scss"
 
 const Password = () => {
   const dispatch = useAppDispatch()
   const { user }: AuthState = useAppSelector((state: RootState) => state.auth)
-  const { error, success } = useAppSelector((state: RootState) => state.auth)
+  const { error } = useAppSelector((state: RootState) => state.auth)
 
   const [oldPassword, setOldPassword] = useState("")
   const [password, setPassword] = useState("")
@@ -69,13 +68,11 @@ const Password = () => {
       }
     }
   }
-  console.log("success:", success)
+
   return (
     <div className="container">
       <div className="columns is-justify-content-center">
         <form className="form column mt-6  is-half" onSubmit={submitHandler}>
-          {error && <Message type="danger" msg={error} />}
-          {success && <Message type="success" msg={success} />}
           <Input
             type="password"
             name="oldPassword"

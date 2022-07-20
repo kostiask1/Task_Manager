@@ -4,10 +4,11 @@ import Navbar from "./components/UI/Navbar"
 import Routing from "./routes"
 import { getUserById, setLoading } from "./store/actions/authActions"
 import { RootState, useAppDispatch, useAppSelector } from "./store/store"
+import Message from "./components/UI/Message"
 
 function App() {
   const dispatch = useAppDispatch()
-  const { loading, authenticated } = useAppSelector(
+  const { loading, authenticated, error, success } = useAppSelector(
     (state: RootState) => state.auth
   )
 
@@ -34,6 +35,8 @@ function App() {
   return (
     <React.Fragment>
       <Navbar />
+      {error && <Message type="danger" msg={error} />}
+      {success && <Message type="success" msg={success} />}
       <Routing authenticated={authenticated} />
     </React.Fragment>
   )
