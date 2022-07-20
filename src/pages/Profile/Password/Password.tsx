@@ -70,36 +70,34 @@ const Password = () => {
   }
 
   return (
-    <div className="container">
-      <div className="columns is-justify-content-center">
-        <form className="form column mt-6  is-half" onSubmit={submitHandler}>
-          <Input
-            type="password"
-            name="oldPassword"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.currentTarget.value)}
-            placeholder="Enter Your Previos Password"
-            label="Previos Password"
-            minLength={6}
-            required
-          />
-          <Input
-            type="password"
-            name="in_password"
-            value={password}
-            onChange={(e) => setPassword(e.currentTarget.value)}
-            placeholder="Enter New Password"
-            label="New Password"
-            minLength={6}
-            required
-          />
-          <Button
-            text={loading ? "Loading..." : "Update Password"}
-            className="is-primary is-fullwidth mt-5"
-            disabled={loading}
-          />
-        </form>
-      </div>
+    <div className="columns is-justify-content-center">
+      <form className="form column is-half" onSubmit={submitHandler}>
+        <Input
+          type="password"
+          name="oldPassword"
+          value={oldPassword}
+          onChange={(e) => setOldPassword(e.currentTarget.value)}
+          placeholder="Enter Your Previos Password"
+          label="Previos Password"
+          minLength={6}
+          required
+        />
+        <Input
+          type="password"
+          name="in_password"
+          value={password}
+          onChange={(e) => setPassword(e.currentTarget.value)}
+          placeholder="Enter New Password"
+          label="New Password"
+          minLength={6}
+          required
+        />
+        <Button
+          text={loading ? "Loading..." : "Update Password"}
+          className="is-primary is-fullwidth mt-5"
+          disabled={loading}
+        />
+      </form>
     </div>
   )
 }

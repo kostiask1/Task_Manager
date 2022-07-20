@@ -37,7 +37,9 @@ function App() {
       <Navbar />
       {error && <Message type="danger" msg={error} />}
       {success && <Message type="success" msg={success} />}
-      <Routing authenticated={authenticated} />
+      <div className="container mt-5">
+        <Routing authenticated={authenticated} />
+      </div>
     </React.Fragment>
   )
 }

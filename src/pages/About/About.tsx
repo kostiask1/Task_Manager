@@ -1,7 +1,7 @@
 import "./About.scss"
 
 const About = () => {
-  return <div className="container">About us page</div>
+  return <p>About us page</p>
 }
 
 export default About

@@ -86,31 +86,33 @@ function Navbar() {
           <div className="navbar-end">
             {user ? (
               <div className="navbar-item has-dropdown is-hoverable">
-                <p className="navbar-link">More</p>
+                <div className="navbar-link">
+                  <p className="is-size-6">{user?.firstName || "Profile"}</p>
+                  <figure className="image ml-1 is-48x48">
+                    <img
+                      className="is-rounded"
+                      src={
+                        user?.profileImg ||
+                        "https://bulma.io/images/placeholders/128x128.png"
+                      }
+                      style={{ maxHeight: "48px" }}
+                      alt="Profile img"
+                    />
+                  </figure>
+                </div>
                 <div className="navbar-dropdown is-right">
                   <Link
-                    className="is-flex is-flex-direction-row px-2 is-align-items-center is-justify-content-space-around"
+                    className="is-flex is-flex-direction-row px-2 is-align-items-center"
                     to="profile"
                   >
-                    <p>{user?.firstName || "Profile"}</p>
-                    <figure className="image ml-1 is-48x48">
-                      <img
-                        className="is-rounded"
-                        src={
-                          user?.profileImg ||
-                          "https://bulma.io/images/placeholders/128x128.png"
-                        }
-                        style={{ maxHeight: "48px" }}
-                        alt="Profile img"
-                      />
-                    </figure>
+                    Profile settings
                   </Link>
                   <hr className="navbar-divider" />
                   {authenticated ? (
-                    <div className="is-flex mx-4">
+                    <div className="is-flex mx-2">
                       <Button
                         onClick={logout}
-                        className="is-danger"
+                        className="is-danger is-size-6"
                         text="Log out"
                       />
                     </div>

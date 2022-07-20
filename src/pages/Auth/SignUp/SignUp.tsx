@@ -37,56 +37,54 @@ const Signup: FC = () => {
 
   return (
     <section className="section">
-      <div className="container">
-        <h2 className="has-text-centered is-size-2 mb-3">Sign Up</h2>
-        <form className="form" onSubmit={submitHandler}>
-          <Input
-            type="text"
-            name="firstName"
-            value={firstName}
-            onChange={(e) => setFirstName(e.currentTarget.value)}
-            placeholder="set Name"
-            label="Name"
-            minLength={2}
-            required
-          />
-          <Input
-            type="text"
-            name="lastName"
-            value={lastName}
-            onChange={(e) => setLastName(e.currentTarget.value)}
-            placeholder="set Surname"
-            label="Surname"
-            minLength={2}
-            required
-          />
-          <Input
-            type="email"
-            name="in_email"
-            value={email}
-            onChange={(e) => setEmail(e.currentTarget.value)}
-            placeholder="Email address"
-            label="Email address"
-            minLength={6}
-            required
-          />
-          <Input
-            type="password"
-            name="in_password"
-            value={password}
-            onChange={(e) => setPassword(e.currentTarget.value)}
-            placeholder="Password"
-            label="Password"
-            minLength={6}
-            required
-          />
-          <Button
-            text={loading ? "Loading..." : "Create Account"}
-            className="is-primary is-fullwidth mt-5"
-            disabled={loading}
-          />
-        </form>
-      </div>
+      <h2 className="has-text-centered is-size-2 mb-3">Sign Up</h2>
+      <form className="form" onSubmit={submitHandler}>
+        <Input
+          type="text"
+          name="firstName"
+          value={firstName}
+          onChange={(e) => setFirstName(e.currentTarget.value)}
+          placeholder="set Name"
+          label="Name"
+          minLength={2}
+          required
+        />
+        <Input
+          type="text"
+          name="lastName"
+          value={lastName}
+          onChange={(e) => setLastName(e.currentTarget.value)}
+          placeholder="set Surname"
+          label="Surname"
+          minLength={2}
+          required
+        />
+        <Input
+          type="email"
+          name="in_email"
+          value={email}
+          onChange={(e) => setEmail(e.currentTarget.value)}
+          placeholder="Email address"
+          label="Email address"
+          minLength={6}
+          required
+        />
+        <Input
+          type="password"
+          name="in_password"
+          value={password}
+          onChange={(e) => setPassword(e.currentTarget.value)}
+          placeholder="Password"
+          label="Password"
+          minLength={6}
+          required
+        />
+        <Button
+          text={loading ? "Loading..." : "Create Account"}
+          className="is-primary is-fullwidth mt-5"
+          disabled={loading}
+        />
+      </form>
     </section>
   )
 }

@@ -36,34 +36,32 @@ const SignIn: FC = () => {
 
   return (
     <section className="section">
-      <div className="container">
-        <h2 className="has-text-centered is-size-2 mb-3">Sign In</h2>
-        <form className="form" onSubmit={submitHandler}>
-          <Input
-            type="email"
-            name="up_email"
-            value={email}
-            onChange={(e) => setEmail(e.currentTarget.value)}
-            placeholder="Email address"
-            label="Email address"
-            required
-          />
-          <Input
-            type="password"
-            name="up_password"
-            value={password}
-            onChange={(e) => setPassword(e.currentTarget.value)}
-            placeholder="Password"
-            label="Password"
-            required
-          />
-          <Button
-            text={loading ? "Loading..." : "Sign In"}
-            className="is-primary is-fullwidth mt-5"
-            disabled={loading}
-          />
-        </form>
-      </div>
+      <h2 className="has-text-centered is-size-2 mb-3">Sign In</h2>
+      <form className="form" onSubmit={submitHandler}>
+        <Input
+          type="email"
+          name="up_email"
+          value={email}
+          onChange={(e) => setEmail(e.currentTarget.value)}
+          placeholder="Email address"
+          label="Email address"
+          required
+        />
+        <Input
+          type="password"
+          name="up_password"
+          value={password}
+          onChange={(e) => setPassword(e.currentTarget.value)}
+          placeholder="Password"
+          label="Password"
+          required
+        />
+        <Button
+          text={loading ? "Loading..." : "Sign In"}
+          className="is-primary is-fullwidth mt-5"
+          disabled={loading}
+        />
+      </form>
     </section>
   )
 }
