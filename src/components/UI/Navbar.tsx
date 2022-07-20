@@ -23,6 +23,7 @@ function Navbar() {
     },
     [location.pathname]
   )
+
   return (
     <nav
       className="navbar has-background-primary"

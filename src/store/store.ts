@@ -1,10 +1,15 @@
-import { configureStore } from "@reduxjs/toolkit"
-import authReducer from "./reducers/authReducer"
-import thunk from "redux-thunk"
+import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
+import thunk from "redux-thunk"
+import authReducer from "./reducers/authReducer"
+// import counterSlice from "../slices/messages.slice"
+
+const reducer = combineReducers({
+  auth: authReducer,
+})
 
 const store = configureStore({
-  reducer: { auth: authReducer },
+  reducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
   devTools: true,
 })
