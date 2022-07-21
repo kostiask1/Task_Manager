@@ -1,21 +1,60 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import {
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth"
-import { collection, query, where, getDocs } from "firebase/firestore/lite"
-import { db } from "../../firebase/base"
-import { uploadDoc } from "../../firebase/firestore"
-import {
-  SET_ERROR,
-  SET_LOADING,
-  SET_SUCCESS,
-  SET_USER,
-  SignInData,
-  SignUpData,
-  SIGN_OUT,
-  User,
-} from "../types"
+import { collection, getDocs, query, where } from "firebase/firestore/lite"
+import { db } from "../firebase/base"
+import { uploadDoc } from "../firebase/firestore"
+import { AuthState, SignInData, SignUpData, User } from "./types"
+
+const initialState: AuthState = {
+  user: {
+    firstName: "",
+    lastName: "",
+    profileImg: "",
+    email: "",
+    password: "",
+    id: "",
+    admin: false,
+  },
+  authenticated: false,
+  loading: true,
+  error: "",
+  success: "",
+}
+
+const slice = createSlice({
+  name: "users",
+  initialState,
+  reducers: {
+    setUser: (state: AuthState, action: PayloadAction<User>) => {
+      state.user = action.payload
+      state.authenticated = true
+    },
+    loading: (state: AuthState, action: PayloadAction<boolean>) => {
+      state.loading = action.payload
+    },
+    signOut: (state: AuthState) => {
+      state.user = initialState.user
+      state.authenticated = false
+      state.loading = false
+    },
+    error: (state: AuthState, action: PayloadAction<string>) => {
+      state.error = action.payload
+    },
+    success: (state: AuthState, action: PayloadAction<string>) => {
+      state.success = action.payload
+    },
+  },
+})
+
+export default slice.reducer
+
+// Actions
+
+export const { setUser, loading, signOut, error, success } = slice.actions
 
 const auth = getAuth()
 
@@ -36,27 +75,18 @@ export const signup = (data: SignUpData, onError: () => void) => {
               profileImg: "",
             }
             uploadDoc("users", userData)
-            dispatch({
-              type: SET_USER,
-              payload: userData,
-            })
+            dispatch(setUser(userData))
           }
         })
         .catch((err) => {
           console.log(err)
           onError()
-          dispatch({
-            type: SET_ERROR,
-            payload: err.message,
-          })
+          dispatch(error(err.message))
         })
     } catch (err: any) {
       console.log(err)
       onError()
-      dispatch({
-        type: SET_ERROR,
-        payload: err.message,
-      })
+      dispatch(error(err.message))
     }
   }
 }
@@ -67,13 +97,10 @@ export const getUserById = (id: string) => {
     try {
       const q = query(collection(db, "users"), where("id", "==", id))
       const querySnapshot = await getDocs(q)
-      const user = querySnapshot.docs[0].data() as User
+      const userData = querySnapshot.docs[0].data() as User
 
-      if (user) {
-        dispatch({
-          type: SET_USER,
-          payload: user,
-        })
+      if (userData) {
+        dispatch(setUser(userData))
       } else {
         console.log("No such user!")
       }
@@ -86,10 +113,7 @@ export const getUserById = (id: string) => {
 // Set loading
 export const setLoading = (value: boolean) => {
   return (dispatch: any) => {
-    dispatch({
-      type: SET_LOADING,
-      payload: value,
-    })
+    dispatch(loading(value))
   }
 }
 
@@ -101,7 +125,7 @@ export const signin = (data: SignInData, onError: () => void) => {
     } catch (err: any) {
       console.log(err)
       onError()
-      dispatch(setError(err.message))
+      dispatch(error(err.message))
     }
   }
 }
@@ -110,14 +134,12 @@ export const signin = (data: SignInData, onError: () => void) => {
 export const signout = () => {
   return async (dispatch: any) => {
     try {
-      dispatch(setLoading(true))
+      dispatch(loading(true))
       await auth.signOut()
-      dispatch({
-        type: SIGN_OUT,
-      })
+      dispatch(signOut())
     } catch (err) {
       console.log(err)
-      dispatch(setLoading(false))
+      dispatch(loading(false))
     }
   }
 }
@@ -128,16 +150,11 @@ let timer: boolean = false
 export const setError = (msg: string) => {
   return (dispatch: any) => {
     if (timer) {
-      dispatch({ type: SET_ERROR, payload: "" })
+      dispatch(error(""))
       timer = false
     }
     timer = true
-    setTimeout(() =>
-      dispatch({
-        type: SET_ERROR,
-        payload: msg,
-      })
-    )
+    setTimeout(() => dispatch(error(msg)))
   }
 }
 
@@ -145,15 +162,10 @@ export const setError = (msg: string) => {
 export const setSuccess = (msg: string) => {
   return (dispatch: any) => {
     if (timer) {
-      dispatch({ type: SET_SUCCESS, payload: "" })
+      dispatch(success(""))
       timer = false
     }
     timer = true
-    setTimeout(() =>
-      dispatch({
-        type: SET_SUCCESS,
-        payload: msg,
-      })
-    )
+    setTimeout(() => dispatch(success(msg)))
   }
 }

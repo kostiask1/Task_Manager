@@ -3,7 +3,7 @@ import Button from "./Button"
 import { routesArray } from "../../routes"
 import { RootState, useAppSelector, useAppDispatch } from "../../store/store"
 import { useCallback } from "react"
-import { signout } from "../../store/actions/authActions"
+import { signout } from "../../store/authSlice"
 
 function Navbar() {
   const location = useLocation()
@@ -87,7 +87,7 @@ function Navbar() {
               )}
           </div>
           <div className="navbar-end">
-            {user ? (
+            {authenticated && user ? (
               <div className="navbar-item has-dropdown is-hoverable">
                 <div className="navbar-link">
                   <p className="is-size-6">{user?.firstName || "Profile"}</p>

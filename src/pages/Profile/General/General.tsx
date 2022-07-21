@@ -12,9 +12,9 @@ import {
   uploadDoc,
   uploadImage,
 } from "../../../firebase/firestore"
-import { setError, setSuccess } from "../../../store/actions/authActions"
+import { setError, setSuccess, setUser } from "../../../store/authSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
-import { SET_USER, User } from "../../../store/types"
+import { User } from "../../../store/types"
 import "./General.scss"
 
 const General = () => {
@@ -62,10 +62,7 @@ const General = () => {
         })
       }
       uploadDoc("users", userData)
-      dispatch({
-        type: SET_USER,
-        payload: userData,
-      })
+      dispatch(setUser(userData))
       dispatch(setSuccess("Profile updated successfully"))
       setLoading(false)
     }

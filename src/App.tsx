@@ -3,7 +3,7 @@ import React, { useEffect } from "react"
 import Messages from "./components/Messages/Messages"
 import Navbar from "./components/UI/Navbar"
 import Routing from "./routes"
-import { getUserById, setLoading } from "./store/actions/authActions"
+import { getUserById, setLoading } from "./store/authSlice"
 import { RootState, useAppDispatch, useAppSelector } from "./store/store"
 
 function App() {
@@ -18,8 +18,10 @@ function App() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         await dispatch(getUserById(user.uid))
+        dispatch(setLoading(false))
+      } else {
+        dispatch(setLoading(false))
       }
-      dispatch(setLoading(false))
     })
 
     return () => {
@@ -28,6 +30,8 @@ function App() {
   }, [dispatch])
 
   console.log("rendered App.tsx")
+
+  console.log("authenticated:", authenticated)
 
   if (loading) return <div>Loading...</div>
   // (process.env.NODE_ENV === "production" || "development")

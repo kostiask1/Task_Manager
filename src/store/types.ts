@@ -1,8 +1,8 @@
-export const SET_USER = "SET_USER"
-export const SIGN_OUT = "SIGN_OUT"
-export const SET_LOADING = "SET_LOADING"
-export const SET_ERROR = "SET_ERROR"
-export const SET_SUCCESS = "SET_SUCCESS"
+const SET_USER = "SET_USER"
+const SIGN_OUT = "SIGN_OUT"
+const SET_LOADING = "SET_LOADING"
+const SET_ERROR = "SET_ERROR"
+const SET_SUCCESS = "SET_SUCCESS"
 
 export interface User {
   firstName: string
@@ -15,7 +15,7 @@ export interface User {
 }
 
 export interface AuthState {
-  user: User | null
+  user: User
   authenticated: boolean
   loading: boolean
   error: string

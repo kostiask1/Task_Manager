@@ -1,7 +1,7 @@
 import { FC, FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
-import { signin } from "../../../store/actions/authActions"
+import { signin } from "../../../store/authSlice"
 import { useAppDispatch } from "../../../store/store"
 import { SignInData } from "../../../store/types"
 

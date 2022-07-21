@@ -8,16 +8,14 @@ import { FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import { uploadDoc } from "../../../firebase/firestore"
-import { setError, setSuccess } from "../../../store/actions/authActions"
+import { error, success, setUser } from "../../../store/authSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
-import { SET_USER, User } from "../../../store/types"
+import { User } from "../../../store/types"
 import "./Password.scss"
 
 const Password = () => {
   const dispatch = useAppDispatch()
-  const user: User | null = useAppSelector(
-    (state: RootState) => state.auth.user
-  )
+  const user: User = useAppSelector((state: RootState) => state.auth.user)
   const [oldPassword, setOldPassword] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
@@ -29,15 +27,15 @@ const Password = () => {
 
     if (user) {
       if (oldPassword !== user.password) {
-        return dispatch(setError("Your Old Password is incorrect."))
+        return dispatch(error("Your Old Password is incorrect."))
       }
 
       if (password.includes(" ")) {
-        return dispatch(setError("Remove all spaces and try again."))
+        return dispatch(error("Remove all spaces and try again."))
       }
 
       if (user.password === password) {
-        return dispatch(setError("Passwords are equal."))
+        return dispatch(error("Passwords are equal."))
       }
 
       if (auth.currentUser && oldPassword === user.password) {
@@ -53,11 +51,8 @@ const Password = () => {
         reauthenticateWithCredential(auth.currentUser, credential).then(() => {
           uploadDoc("users", userData)
           updatePassword(auth.currentUser as any, password)
-          dispatch({
-            type: SET_USER,
-            payload: userData,
-          })
-          dispatch(setSuccess("Password updated successfully"))
+          dispatch(setUser(userData))
+          dispatch(success("Password updated successfully"))
           setPassword("")
           setOldPassword("")
           setLoading(false)
