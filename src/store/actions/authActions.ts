@@ -45,6 +45,10 @@ export const signup = (data: SignUpData, onError: () => void) => {
         .catch((err) => {
           console.log(err)
           onError()
+          dispatch({
+            type: SET_ERROR,
+            payload: err.message,
+          })
         })
     } catch (err: any) {
       console.log(err)
@@ -118,16 +122,17 @@ export const signout = () => {
   }
 }
 
-let timer: ReturnType<typeof setTimeout> | null = null
+let timer: boolean = false
 
 // Set error
 export const setError = (msg: string) => {
   return (dispatch: any) => {
     if (timer) {
       dispatch({ type: SET_ERROR, payload: "" })
-      clearTimeout(timer)
+      timer = false
     }
-    timer = setTimeout(() =>
+    timer = true
+    setTimeout(() =>
       dispatch({
         type: SET_ERROR,
         payload: msg,
@@ -141,15 +146,14 @@ export const setSuccess = (msg: string) => {
   return (dispatch: any) => {
     if (timer) {
       dispatch({ type: SET_SUCCESS, payload: "" })
-      clearTimeout(timer)
+      timer = false
     }
-    timer = setTimeout(
-      () =>
-        dispatch({
-          type: SET_SUCCESS,
-          payload: msg,
-        }),
-      4000
+    timer = true
+    setTimeout(() =>
+      dispatch({
+        type: SET_SUCCESS,
+        payload: msg,
+      })
     )
   }
 }

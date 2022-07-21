@@ -4,7 +4,7 @@ import {
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth"
-import { FormEvent, useState } from "react"
+import { FormEvent, useState, useEffect } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import { uploadDoc } from "../../../firebase/firestore"
@@ -18,7 +18,6 @@ const Password = () => {
   const user: User | null = useAppSelector(
     (state: RootState) => state.auth.user
   )
-  const error = useAppSelector((state: RootState) => state.auth.error)
   const [oldPassword, setOldPassword] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)

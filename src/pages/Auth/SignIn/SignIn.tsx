@@ -1,8 +1,8 @@
-import { FC, FormEvent, useEffect, useState } from "react"
+import { FC, FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
-import { setError, signin } from "../../../store/actions/authActions"
-import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
+import { signin } from "../../../store/actions/authActions"
+import { useAppDispatch } from "../../../store/store"
 import { SignInData } from "../../../store/types"
 
 const SignIn: FC = () => {
@@ -15,21 +15,9 @@ const SignIn: FC = () => {
   )
   const [loading, setLoading] = useState(false)
   const dispatch = useAppDispatch()
-  const error = useAppSelector((state: RootState) => state.auth.error)
-
-  useEffect(() => {
-    return () => {
-      if (error) {
-        dispatch(setError(""))
-      }
-    }
-  }, [error, dispatch])
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault()
-    if (error) {
-      dispatch(setError(""))
-    }
     setLoading(true)
     dispatch(signin({ email, password } as SignInData, () => setLoading(false)))
   }

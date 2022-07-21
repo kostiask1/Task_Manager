@@ -1,8 +1,8 @@
-import { FC, FormEvent, useEffect, useState } from "react"
+import { FC, FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
-import { setError, signup } from "../../../store/actions/authActions"
-import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
+import { signup } from "../../../store/actions/authActions"
+import { useAppDispatch } from "../../../store/store"
 import { SignUpData } from "../../../store/types"
 
 const Signup: FC = () => {
@@ -12,21 +12,9 @@ const Signup: FC = () => {
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const dispatch = useAppDispatch()
-  const error = useAppSelector((state: RootState) => state.auth.error)
-
-  useEffect(() => {
-    return () => {
-      if (error) {
-        dispatch(setError(""))
-      }
-    }
-  }, [error, dispatch])
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault()
-    if (error) {
-      dispatch(setError(""))
-    }
     setLoading(true)
     dispatch(
       signup({ firstName, email, password, lastName } as SignUpData, () =>

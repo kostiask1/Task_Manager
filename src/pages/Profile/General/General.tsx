@@ -27,16 +27,12 @@ const General = () => {
   const [email, setEmail] = useState(user?.email || "")
   const [profileImg, setProfileImg] = useState(user?.profileImg || "")
   const [loading, setLoading] = useState(false)
-  const error = useAppSelector((state: RootState) => state.auth.error)
   const id = user?.id || ""
   const admin = user?.admin || false
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault()
     const auth = getAuth()
-    if (error) {
-      dispatch(setError(""))
-    }
 
     if (!profileImg.includes("https")) {
       return dispatch(setError("Profile image is not a link"))
