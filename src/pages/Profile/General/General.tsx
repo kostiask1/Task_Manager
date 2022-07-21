@@ -12,7 +12,8 @@ import {
   uploadDoc,
   uploadImage,
 } from "../../../firebase/firestore"
-import { setError, setSuccess, setUser } from "../../../store/authSlice"
+import { setError, setSuccess } from "../../../store/appSlice"
+import { setUser } from "../../../store/authSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { User } from "../../../store/types"
 import "./General.scss"

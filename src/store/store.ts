@@ -2,9 +2,11 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 import thunk from "redux-thunk"
 import authReducer from "./authSlice"
+import appReducer from "./appSlice"
 
 const reducer = combineReducers({
   auth: authReducer,
+  app: appReducer,
 })
 
 const store = configureStore({

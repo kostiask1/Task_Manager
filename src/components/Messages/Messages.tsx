@@ -3,7 +3,12 @@ import Message from "../UI/Message"
 import "./Messages.scss"
 
 const Messages = () => {
-  const { error, success } = useAppSelector((state: RootState) => state.auth)
+  const { error, success } = useAppSelector((state: RootState) => ({
+    error: state.app.error,
+    success: state.app.success,
+  }))
+
+  console.log("messages")
   return (
     <>
       {error && <Message type="danger" msg={error} />}

@@ -1,30 +1,21 @@
 import { Link, useLocation } from "react-router-dom"
-import Button from "./Button"
 import { routesArray } from "../../routes"
-import { RootState, useAppSelector, useAppDispatch } from "../../store/store"
-import { useCallback } from "react"
 import { signout } from "../../store/authSlice"
+import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
+import Button from "./Button"
 
 function Navbar() {
   const location = useLocation()
-  const authenticated = useAppSelector(
-    (state: RootState) => state.auth.authenticated
-  )
-  const user = useAppSelector((state: RootState) => state.auth.user)
+  const { authenticated, user } = useAppSelector((state: RootState) => ({
+    authenticated: state.auth.authenticated,
+    user: state.auth.user,
+  }))
 
   const dispatch = useAppDispatch()
 
   const logout = () => dispatch(signout())
 
-  const isActivePage = useCallback(
-    (route: string) => {
-      if (location.pathname.includes(route)) {
-        return true
-      }
-      return false
-    },
-    [location.pathname]
-  )
+  const isActivePage = (route: string) => location.pathname.includes(route)
 
   return (
     <nav

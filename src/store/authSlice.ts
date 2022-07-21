@@ -7,6 +7,7 @@ import {
 import { collection, getDocs, query, where } from "firebase/firestore/lite"
 import { db } from "../firebase/base"
 import { uploadDoc } from "../firebase/firestore"
+import { error, loading } from "./appSlice"
 import { AuthState, SignInData, SignUpData, User } from "./types"
 
 const initialState: AuthState = {
@@ -20,9 +21,6 @@ const initialState: AuthState = {
     admin: false,
   },
   authenticated: false,
-  loading: true,
-  error: "",
-  success: "",
 }
 
 const slice = createSlice({
@@ -33,19 +31,9 @@ const slice = createSlice({
       state.user = action.payload
       state.authenticated = true
     },
-    loading: (state: AuthState, action: PayloadAction<boolean>) => {
-      state.loading = action.payload
-    },
     signOut: (state: AuthState) => {
       state.user = initialState.user
       state.authenticated = false
-      state.loading = false
-    },
-    error: (state: AuthState, action: PayloadAction<string>) => {
-      state.error = action.payload
-    },
-    success: (state: AuthState, action: PayloadAction<string>) => {
-      state.success = action.payload
     },
   },
 })
@@ -54,7 +42,7 @@ export default slice.reducer
 
 // Actions
 
-export const { setUser, loading, signOut, error, success } = slice.actions
+export const { setUser, signOut } = slice.actions
 
 const auth = getAuth()
 
@@ -110,22 +98,17 @@ export const getUserById = (id: string) => {
   }
 }
 
-// Set loading
-export const setLoading = (value: boolean) => {
-  return (dispatch: any) => {
-    dispatch(loading(value))
-  }
-}
-
 // Log in
 export const signin = (data: SignInData, onError: () => void) => {
   return async (dispatch: any) => {
     try {
+      dispatch(loading(true))
       await signInWithEmailAndPassword(auth, data.email, data.password)
     } catch (err: any) {
       console.log(err)
       onError()
       dispatch(error(err.message))
+      dispatch(loading(false))
     }
   }
 }
@@ -141,31 +124,5 @@ export const signout = () => {
       console.log(err)
       dispatch(loading(false))
     }
-  }
-}
-
-let timer: boolean = false
-
-// Set error
-export const setError = (msg: string) => {
-  return (dispatch: any) => {
-    if (timer) {
-      dispatch(error(""))
-      timer = false
-    }
-    timer = true
-    setTimeout(() => dispatch(error(msg)))
-  }
-}
-
-// Set success
-export const setSuccess = (msg: string) => {
-  return (dispatch: any) => {
-    if (timer) {
-      dispatch(success(""))
-      timer = false
-    }
-    timer = true
-    setTimeout(() => dispatch(success(msg)))
   }
 }

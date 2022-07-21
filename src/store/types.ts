@@ -17,6 +17,8 @@ export interface User {
 export interface AuthState {
   user: User
   authenticated: boolean
+}
+export interface AppState {
   loading: boolean
   error: string
   success: string
