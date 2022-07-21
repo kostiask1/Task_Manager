@@ -7,7 +7,7 @@ const initialState: AppState = {
   success: "",
 }
 
-const slice = createSlice({
+const app = createSlice({
   name: "app",
   initialState,
   reducers: {
@@ -23,11 +23,11 @@ const slice = createSlice({
   },
 })
 
-export default slice.reducer
+export default app.reducer
 
 // Actions
 
-export const { loading, error, success } = slice.actions
+export const { loading, error, success } = app.actions
 
 // Set loading
 export const setLoading = (value: boolean) => {

@@ -23,7 +23,7 @@ const initialState: AuthState = {
   authenticated: false,
 }
 
-const slice = createSlice({
+const auth = createSlice({
   name: "auth",
   initialState,
   reducers: {
@@ -38,19 +38,19 @@ const slice = createSlice({
   },
 })
 
-export default slice.reducer
+export default auth.reducer
 
 // Actions
 
-export const { setUser, signOut } = slice.actions
+export const { setUser, signOut } = auth.actions
 
-const auth = getAuth()
+const _auth = getAuth()
 
 // Create user
 export const signup = (data: SignUpData, onError: () => void) => {
   return async (dispatch: any) => {
     try {
-      createUserWithEmailAndPassword(auth, data.email, data.password)
+      createUserWithEmailAndPassword(_auth, data.email, data.password)
         .then((res) => {
           if (res.user) {
             const userData: User = {
@@ -102,7 +102,7 @@ export const getUserById = (id: string) => {
 export const signin = (data: SignInData, onError: () => void) => {
   return async (dispatch: any) => {
     try {
-      await signInWithEmailAndPassword(auth, data.email, data.password)
+      await signInWithEmailAndPassword(_auth, data.email, data.password)
     } catch (err: any) {
       setError(err)
       onError()
@@ -115,7 +115,7 @@ export const signin = (data: SignInData, onError: () => void) => {
 export const signout = () => {
   return async (dispatch: any) => {
     try {
-      await auth.signOut()
+      await _auth.signOut()
       dispatch(signOut())
     } catch (err) {
       setError("Error dispatching signout")
