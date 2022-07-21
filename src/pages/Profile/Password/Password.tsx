@@ -4,7 +4,7 @@ import {
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth"
-import { FormEvent, useState, useEffect } from "react"
+import { FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import { uploadDoc } from "../../../firebase/firestore"
