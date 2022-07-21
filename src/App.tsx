@@ -1,6 +1,7 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth"
-import React, { useEffect } from "react"
+import { useEffect } from "react"
 import Messages from "./components/Messages/Messages"
+import Loader from "./components/UI/Loader"
 import Navbar from "./components/UI/Navbar"
 import Routing from "./routes"
 import { getUserById } from "./store/authSlice"
@@ -9,7 +10,6 @@ import { setLoading } from "./store/appSlice"
 
 function App() {
   const dispatch = useAppDispatch()
-  const loading = useAppSelector((state: RootState) => state.app.loading)
   const authenticated = useAppSelector(
     (state: RootState) => state.auth.authenticated
   )
@@ -34,16 +34,16 @@ function App() {
 
   console.log("authenticated:", authenticated)
 
-  if (loading) return <div>Loading...</div>
   // (process.env.NODE_ENV === "production" || "development")
   return (
-    <React.Fragment>
+    <>
       <Navbar />
       <Messages />
       <div className="container mt-5">
         <Routing authenticated={authenticated} />
       </div>
-    </React.Fragment>
+      <Loader />
+    </>
   )
 }
 export default App

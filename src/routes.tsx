@@ -1,11 +1,13 @@
-import { FC } from "react"
+import { FC, Suspense } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
-import About from "./pages/About/About"
-import Auth from "./pages/Auth/Auth"
-import Catalog from "./pages/Catalog/Catalog"
-import General from "./pages/Profile/General/General"
-import Password from "./pages/Profile/Password/Password"
-import Profile from "./pages/Profile/Profile"
+import React from "react"
+import Loader from "./components/UI/Loader/Loader"
+const About = React.lazy(() => import("./pages/About/About"))
+const Auth = React.lazy(() => import("./pages/Auth/Auth"))
+const Catalog = React.lazy(() => import("./pages/Catalog/Catalog"))
+const General = React.lazy(() => import("./pages/Profile/General/General"))
+const Password = React.lazy(() => import("./pages/Profile/Password/Password"))
+const Profile = React.lazy(() => import("./pages/Profile/Profile"))
 
 export const routesArray = [
   {
@@ -62,11 +64,13 @@ const unWrapRoute = (route: any) => {
 
 const Routing: FC<{ authenticated: boolean }> = ({ authenticated }) => {
   return (
-    <Routes>
-      {routesArray
-        .filter((route) => !route.private || authenticated)
-        .map((route) => unWrapRoute(route))}
-    </Routes>
+    <Suspense fallback={<Loader loading={true} />}>
+      <Routes>
+        {routesArray
+          .filter((route) => !route.private || authenticated)
+          .map((route) => unWrapRoute(route))}
+      </Routes>
+    </Suspense>
   )
 }
 

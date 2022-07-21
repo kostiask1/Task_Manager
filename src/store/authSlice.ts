@@ -7,7 +7,7 @@ import {
 import { collection, getDocs, query, where } from "firebase/firestore/lite"
 import { db } from "../firebase/base"
 import { uploadDoc } from "../firebase/firestore"
-import { error, loading } from "./appSlice"
+import { error, setError } from "./appSlice"
 import { AuthState, SignInData, SignUpData, User } from "./types"
 
 const initialState: AuthState = {
@@ -24,7 +24,7 @@ const initialState: AuthState = {
 }
 
 const slice = createSlice({
-  name: "users",
+  name: "auth",
   initialState,
   reducers: {
     setUser: (state: AuthState, action: PayloadAction<User>) => {
@@ -67,12 +67,12 @@ export const signup = (data: SignUpData, onError: () => void) => {
           }
         })
         .catch((err) => {
-          console.log(err)
+          setError(err)
           onError()
           dispatch(error(err.message))
         })
     } catch (err: any) {
-      console.log(err)
+      setError(err)
       onError()
       dispatch(error(err.message))
     }
@@ -93,7 +93,7 @@ export const getUserById = (id: string) => {
         console.log("No such user!")
       }
     } catch (err) {
-      console.log(err)
+      setError("Error dispatching setUser")
     }
   }
 }
@@ -102,13 +102,11 @@ export const getUserById = (id: string) => {
 export const signin = (data: SignInData, onError: () => void) => {
   return async (dispatch: any) => {
     try {
-      dispatch(loading(true))
       await signInWithEmailAndPassword(auth, data.email, data.password)
     } catch (err: any) {
-      console.log(err)
+      setError(err)
       onError()
       dispatch(error(err.message))
-      dispatch(loading(false))
     }
   }
 }
@@ -117,12 +115,10 @@ export const signin = (data: SignInData, onError: () => void) => {
 export const signout = () => {
   return async (dispatch: any) => {
     try {
-      dispatch(loading(true))
       await auth.signOut()
       dispatch(signOut())
     } catch (err) {
-      console.log(err)
-      dispatch(loading(false))
+      setError("Error dispatching signout")
     }
   }
 }

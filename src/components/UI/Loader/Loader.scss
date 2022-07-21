@@ -1,0 +1,53 @@
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  font-size: 30px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  vertical-align: top;
+  background-color: rgba(255, 255, 255, 0.345);
+  transition: 0.3s color, 0.3s border, 0.3s transform, 0.3s opacity;
+}
+
+.loader {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border: unset;
+  box-shadow: 0 1em 0 -0.2em hsl(171, 100%, 41%);
+  position: relative;
+  animation: loader 0.8s ease-in-out alternate infinite;
+  animation-delay: 0.32s;
+  top: -1em;
+  &:after,
+  &:before {
+    content: "";
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    box-shadow: hsl(171, 100%, 41%);
+    animation: inherit;
+  }
+  &:before {
+    left: -1em;
+    animation-delay: 0.48s;
+  }
+  &:after {
+    right: -1em;
+    animation-delay: 0.16s;
+  }
+}
+
+@keyframes loader {
+  0% {
+    box-shadow: 0 2em 0 -0.2em hsl(171, 100%, 41%);
+  }
+  100% {
+    box-shadow: 0 1em 0 -0.2em hsl(171, 100%, 41%);
+  }
+}
