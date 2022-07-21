@@ -8,8 +8,9 @@ import { RootState, useAppDispatch, useAppSelector } from "./store/store"
 
 function App() {
   const dispatch = useAppDispatch()
-  const { loading, authenticated } = useAppSelector(
-    (state: RootState) => state.auth
+  const loading = useAppSelector((state: RootState) => state.auth.loading)
+  const authenticated = useAppSelector(
+    (state: RootState) => state.auth.authenticated
   )
 
   useEffect(() => {
@@ -25,6 +26,8 @@ function App() {
       unsubscribe()
     }
   }, [dispatch])
+
+  console.log("rendered App.tsx")
 
   if (loading) return <div>Loading...</div>
   // (process.env.NODE_ENV === "production" || "development")

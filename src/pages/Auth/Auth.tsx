@@ -5,7 +5,9 @@ import SignIn from "./SignIn"
 import SignUp from "./SignUp"
 
 const Auth = () => {
-  const { authenticated } = useAppSelector((state: RootState) => state.auth)
+  const authenticated = useAppSelector(
+    (state: RootState) => state.auth.authenticated
+  )
 
   if (authenticated) return <Navigate to="/catalog" />
 

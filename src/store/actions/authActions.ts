@@ -118,24 +118,38 @@ export const signout = () => {
   }
 }
 
+let timer: ReturnType<typeof setTimeout> | null = null
+
 // Set error
 export const setError = (msg: string) => {
   return (dispatch: any) => {
-    dispatch({
-      type: SET_ERROR,
-      payload: msg,
-    })
-    setTimeout(() => dispatch({ type: SET_ERROR, payload: "" }), 4000)
+    if (timer) {
+      dispatch({ type: SET_ERROR, payload: "" })
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() =>
+      dispatch({
+        type: SET_ERROR,
+        payload: msg,
+      })
+    )
   }
 }
 
 // Set success
 export const setSuccess = (msg: string) => {
   return (dispatch: any) => {
-    dispatch({
-      type: SET_SUCCESS,
-      payload: msg,
-    })
-    setTimeout(() => dispatch({ type: SET_SUCCESS, payload: "" }), 4000)
+    if (timer) {
+      dispatch({ type: SET_SUCCESS, payload: "" })
+      clearTimeout(timer)
+    }
+    timer = setTimeout(
+      () =>
+        dispatch({
+          type: SET_SUCCESS,
+          payload: msg,
+        }),
+      4000
+    )
   }
 }

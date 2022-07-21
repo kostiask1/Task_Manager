@@ -10,23 +10,21 @@ import Input from "../../../components/UI/Input"
 import { uploadDoc } from "../../../firebase/firestore"
 import { setError, setSuccess } from "../../../store/actions/authActions"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
-import { AuthState, SET_USER, User } from "../../../store/types"
+import { SET_USER, User } from "../../../store/types"
 import "./Password.scss"
 
 const Password = () => {
   const dispatch = useAppDispatch()
-  const { user }: AuthState = useAppSelector((state: RootState) => state.auth)
-  const { error } = useAppSelector((state: RootState) => state.auth)
-
+  const user: User | null = useAppSelector(
+    (state: RootState) => state.auth.user
+  )
+  const error = useAppSelector((state: RootState) => state.auth.error)
   const [oldPassword, setOldPassword] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault()
-    if (error) {
-      dispatch(setError(""))
-    }
 
     const auth = getAuth()
 

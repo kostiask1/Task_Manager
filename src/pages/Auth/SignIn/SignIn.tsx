@@ -15,7 +15,7 @@ const SignIn: FC = () => {
   )
   const [loading, setLoading] = useState(false)
   const dispatch = useAppDispatch()
-  const { error } = useAppSelector((state: RootState) => state.auth)
+  const error = useAppSelector((state: RootState) => state.auth.error)
 
   useEffect(() => {
     return () => {

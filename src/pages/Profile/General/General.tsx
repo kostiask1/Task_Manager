@@ -14,18 +14,20 @@ import {
 } from "../../../firebase/firestore"
 import { setError, setSuccess } from "../../../store/actions/authActions"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
-import { AuthState, SET_USER, User } from "../../../store/types"
+import { SET_USER, User } from "../../../store/types"
 import "./General.scss"
 
 const General = () => {
   const dispatch = useAppDispatch()
-  const { user }: AuthState = useAppSelector((state: RootState) => state.auth)
+  const user: User | null = useAppSelector(
+    (state: RootState) => state.auth.user
+  )
   const [firstName, setFirstName] = useState(user?.firstName || "")
   const [lastName, setLastName] = useState(user?.lastName || "")
   const [email, setEmail] = useState(user?.email || "")
   const [profileImg, setProfileImg] = useState(user?.profileImg || "")
   const [loading, setLoading] = useState(false)
-  const { error } = useAppSelector((state: RootState) => state.auth)
+  const error = useAppSelector((state: RootState) => state.auth.error)
   const id = user?.id || ""
   const admin = user?.admin || false
 

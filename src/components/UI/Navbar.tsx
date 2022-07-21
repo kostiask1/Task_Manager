@@ -7,9 +7,11 @@ import { signout } from "../../store/actions/authActions"
 
 function Navbar() {
   const location = useLocation()
-  const { authenticated, user } = useAppSelector(
-    (state: RootState) => state.auth
+  const authenticated = useAppSelector(
+    (state: RootState) => state.auth.authenticated
   )
+  const user = useAppSelector((state: RootState) => state.auth.user)
+
   const dispatch = useAppDispatch()
 
   const logout = () => dispatch(signout())
