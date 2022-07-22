@@ -73,9 +73,12 @@ const General = () => {
     const files = e.target.files
     if (files && Array.from(files)?.length) {
       setLoading(true)
-      uploadImage(files, id + new Date().getTime(), setProfileImg).then(() =>
-        setLoading(false)
-      )
+      uploadImage(
+        files,
+        id + new Date().getTime(),
+        "users",
+        setProfileImg
+      ).then(() => setLoading(false))
     }
   }
 

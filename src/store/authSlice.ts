@@ -7,7 +7,7 @@ import {
 import { collection, getDocs, query, where } from "firebase/firestore/lite"
 import { db } from "../firebase/base"
 import { uploadDoc } from "../firebase/firestore"
-import { error, setError } from "./appSlice"
+import { setError, setSuccess, setLoading } from "./appSlice"
 import { AuthState, SignInData, SignUpData, User } from "./types"
 
 const initialState: AuthState = {
@@ -27,7 +27,7 @@ const auth = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state: AuthState, action: PayloadAction<User>) => {
+    setUserData: (state: AuthState, action: PayloadAction<User>) => {
       state.user = action.payload
       state.authenticated = true
     },
@@ -42,10 +42,17 @@ export default auth.reducer
 
 // Actions
 
-export const { setUser, signOut } = auth.actions
+export const { setUserData, signOut } = auth.actions
 
 const _auth = getAuth()
 
+export const setUser = (data: User) => {
+  console.log("setUser")
+  return (dispatch: any) => {
+    console.log("in dispatch")
+    dispatch(setUserData(data))
+  }
+}
 // Create user
 export const signup = (data: SignUpData, onError: () => void) => {
   return async (dispatch: any) => {
@@ -67,14 +74,14 @@ export const signup = (data: SignUpData, onError: () => void) => {
           }
         })
         .catch((err) => {
-          setError(err)
+          dispatch(setError(err))
           onError()
-          dispatch(error(err.message))
+          dispatch(setError(err.message))
         })
     } catch (err: any) {
-      setError(err)
+      dispatch(setError(err))
       onError()
-      dispatch(error(err.message))
+      dispatch(setError(err.message))
     }
   }
 }
@@ -90,10 +97,12 @@ export const getUserById = (id: string) => {
       if (userData) {
         dispatch(setUser(userData))
       } else {
-        console.log("No such user!")
+        dispatch(setError("No such user"))
       }
     } catch (err) {
-      setError("Error dispatching setUser")
+      dispatch(setError("Error dispatching setUser"))
+    } finally {
+      dispatch(setLoading(false))
     }
   }
 }
@@ -102,11 +111,18 @@ export const getUserById = (id: string) => {
 export const signin = (data: SignInData, onError: () => void) => {
   return async (dispatch: any) => {
     try {
-      await signInWithEmailAndPassword(_auth, data.email, data.password)
+      console.log(1)
+      await signInWithEmailAndPassword(_auth, data.email, data.password).then(
+        (resp) => {
+          console.log("resp:", resp)
+          if (resp.user) {
+          }
+        }
+      )
+      dispatch(setSuccess("Successfully signed in"))
     } catch (err: any) {
-      setError(err)
       onError()
-      dispatch(error(err.message))
+      dispatch(setError(err.message))
     }
   }
 }
@@ -118,7 +134,7 @@ export const signout = () => {
       await _auth.signOut()
       dispatch(signOut())
     } catch (err) {
-      setError("Error dispatching signout")
+      dispatch(setError("Error dispatching signout"))
     }
   }
 }

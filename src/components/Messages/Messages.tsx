@@ -8,7 +8,6 @@ const Messages = () => {
     success: state.app.success,
   }))
 
-  console.log("messages")
   return (
     <>
       {error && <Message type="danger" msg={error} />}

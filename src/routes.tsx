@@ -2,6 +2,7 @@ import { FC, Suspense } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 import React from "react"
 import Loader from "./components/UI/Loader/Loader"
+import { useAppSelector, RootState } from "./store/store"
 const About = React.lazy(() => import("./pages/About/About"))
 const Auth = React.lazy(() => import("./pages/Auth/Auth"))
 const Catalog = React.lazy(() => import("./pages/Catalog/Catalog"))
@@ -62,16 +63,21 @@ const unWrapRoute = (route: any) => {
   )
 }
 
-const Routing: FC<{ authenticated: boolean }> = ({ authenticated }) => {
-  return (
+const Routing: FC = () => {
+  const { authenticated, loading } = useAppSelector((state: RootState) => ({
+    authenticated: state.auth.authenticated,
+    loading: state.app.loading,
+  }))
+  return !loading ? (
     <Suspense fallback={<Loader loading={true} />}>
       <Routes>
-        {routesArray
-          .filter((route) => !route.private || authenticated)
-          .map((route) => unWrapRoute(route))}
+        <Route path="*" element={<Navigate to="/catalog" />} />
+        {routesArray.map(
+          (route) => (!route.private || authenticated) && unWrapRoute(route)
+        )}
       </Routes>
     </Suspense>
-  )
+  ) : null
 }
 
 export default Routing

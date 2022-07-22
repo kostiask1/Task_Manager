@@ -12,8 +12,7 @@ export const uploadDoc = async <T extends {}>(
   data: T | any
 ) => {
   try {
-    await setDoc(doc(db, "users", data.id), data)
-    console.log(`Document written to "${collection_name}"`)
+    await setDoc(doc(db, collection_name, data.id), data)
   } catch (e) {
     console.error("Error adding document: ", e)
   }
@@ -22,10 +21,11 @@ export const uploadDoc = async <T extends {}>(
 export const uploadImage = async (
   filesRaw: FileList,
   name: string,
+  folder: string,
   callback: Function
 ) => {
   let files = Array.from(filesRaw)
-  const storageRef = ref(storage, "users/" + name)
+  const storageRef = ref(storage, `${folder}/` + name)
   let requests = Promise.all(
     files.map(async (file) => {
       const fileRef = uploadBytesResumable(storageRef, file)

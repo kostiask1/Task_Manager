@@ -24,8 +24,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "serve": "serve -s build",
-    "build-serve": "react-scripts build && serve -s build",
+    "serve": "serve -l 5000 -s build",
+    "build-serve": "react-scripts build && serve -l 5000 -s build",
     "release": "react-scripts build && firebase deploy"
   },
   "eslintConfig": {

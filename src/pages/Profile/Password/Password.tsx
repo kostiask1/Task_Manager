@@ -8,9 +8,9 @@ import { FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import { uploadDoc } from "../../../firebase/firestore"
-import { error, success } from "../../../store/appSlice"
+import { setError, setSuccess } from "../../../store/appSlice"
 import { setUser } from "../../../store/authSlice"
-import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
+import { RootState, useAppSelector, useAppDispatch } from "../../../store/store"
 import { User } from "../../../store/types"
 import "./Password.scss"
 
@@ -28,15 +28,15 @@ const Password = () => {
 
     if (user) {
       if (oldPassword !== user.password) {
-        return dispatch(error("Your Old Password is incorrect."))
+        return dispatch(setError("Your Old Password is incorrect."))
       }
 
       if (password.includes(" ")) {
-        return dispatch(error("Remove all spaces and try again."))
+        return dispatch(setError("Remove all spaces and try again."))
       }
 
       if (user.password === password) {
-        return dispatch(error("Passwords are equal."))
+        return dispatch(setError("Passwords are equal."))
       }
 
       if (auth.currentUser && oldPassword === user.password) {
@@ -53,7 +53,7 @@ const Password = () => {
           uploadDoc("users", userData)
           updatePassword(auth.currentUser as any, password)
           dispatch(setUser(userData))
-          dispatch(success("Password updated successfully"))
+          dispatch(setSuccess("Password updated successfully"))
           setPassword("")
           setOldPassword("")
           setLoading(false)
