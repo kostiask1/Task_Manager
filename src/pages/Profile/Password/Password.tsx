@@ -73,6 +73,7 @@ const Password = () => {
           placeholder="Enter Your Previous Password"
           label="Previous Password"
           minLength={6}
+          maxLength={30}
           required
         />
         <Input
@@ -83,6 +84,7 @@ const Password = () => {
           placeholder="Enter New Password"
           label="New Password"
           minLength={6}
+          maxLength={30}
           required
         />
         <Button

@@ -105,6 +105,7 @@ const General = () => {
           type="text"
           name="firstName"
           minLength={2}
+          maxLength={20}
           value={firstName}
           onChange={(e) => setFirstName(e.currentTarget.value)}
           placeholder="set Name"
@@ -115,6 +116,7 @@ const General = () => {
           type="text"
           name="lastName"
           minLength={2}
+          maxLength={30}
           value={lastName}
           onChange={(e) => setLastName(e.currentTarget.value)}
           placeholder="set Surname"
@@ -144,6 +146,7 @@ const General = () => {
           name="in_email"
           value={email}
           minLength={6}
+          maxLength={40}
           onChange={(e) => setEmail(e.currentTarget.value)}
           placeholder="Email address"
           label="Email address"

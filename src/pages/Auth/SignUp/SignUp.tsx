@@ -35,6 +35,7 @@ const Signup: FC = () => {
           placeholder="set Name"
           label="Name"
           minLength={2}
+          maxLength={20}
           required
         />
         <Input
@@ -45,6 +46,7 @@ const Signup: FC = () => {
           placeholder="set Surname"
           label="Surname"
           minLength={2}
+          maxLength={30}
           required
         />
         <Input
@@ -55,6 +57,7 @@ const Signup: FC = () => {
           placeholder="Email address"
           label="Email address"
           minLength={6}
+          maxLength={40}
           required
         />
         <Input
@@ -65,6 +68,7 @@ const Signup: FC = () => {
           placeholder="Password"
           label="Password"
           minLength={6}
+          maxLength={30}
           required
         />
         <Button
