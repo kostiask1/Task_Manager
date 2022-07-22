@@ -90,6 +90,11 @@ function Navbar() {
                         "https://bulma.io/images/placeholders/128x128.png"
                       }
                       style={{ maxHeight: "48px" }}
+                      onError={({ currentTarget }) => {
+                        currentTarget.onerror = null
+                        currentTarget.src =
+                          "https://bulma.io/images/placeholders/128x128.png"
+                      }}
                       alt="Profile img"
                     />
                   </figure>

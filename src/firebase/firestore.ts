@@ -56,6 +56,7 @@ export const deleteImage = async (file: string) => {
       console.log("File deleted successfully")
     })
     .catch((error) => {
+      console.log("error:", error)
       // Uh-oh, an error occurred!
     })
 }
