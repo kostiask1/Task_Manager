@@ -5,7 +5,7 @@ import {
   updateEmail,
   updateProfile,
 } from "firebase/auth"
-import { FormEvent, useState } from "react"
+import { FormEvent, useState, useEffect, useRef } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import {
@@ -29,21 +29,43 @@ const General = () => {
   const [lastName, setLastName] = useState(user?.lastName || "")
   const [email, setEmail] = useState(user?.email || "")
   const [profileImg, setProfileImg] = useState(user?.profileImg || "")
+  const [files, setFiles] = useState<FileList>()
   const [loading, setLoading] = useState(false)
   const id = user?.id || ""
   const admin = user?.admin || false
+  const imageRef = useRef<HTMLImageElement>(null)
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault()
-    const auth = getAuth()
 
-    if (!profileImg.includes("https")) {
+    if (!files && !profileImg.includes("https")) {
       return dispatch(setError("Profile image is not a link"))
     }
 
-    if (user && user.profileImg && user.profileImg !== profileImg) {
+    if (
+      user &&
+      ((user.profileImg && user.profileImg !== profileImg) || files)
+    ) {
+      setLoading(true)
+      if (files) {
+        uploadImage(files, id + new Date().getTime(), "users").then(
+          (imageUrl: any) => {
+            dispatch(setSuccess("Image updated successfully"))
+            setProfileImg(imageUrl)
+            update(imageUrl)
+          }
+        )
+      } else {
+        update()
+      }
       deleteImg(user.profileImg)
+    } else {
+      update()
     }
+  }
+
+  const update = (image?: string) => {
+    const auth = getAuth()
     if (auth.currentUser && user) {
       setLoading(true)
       const userData: User = {
@@ -52,7 +74,7 @@ const General = () => {
         lastName,
         id,
         admin,
-        profileImg,
+        profileImg: image || profileImg,
         password: user.password,
         emailVerified: auth.currentUser.emailVerified,
       }
@@ -60,6 +82,10 @@ const General = () => {
         displayName: firstName,
         photoURL: profileImg,
       })
+      uploadDoc("users", userData)
+      dispatch(setUser(userData))
+      dispatch(setSuccess("Profile updated successfully"))
+      setLoading(false)
       if (user.email !== email) {
         const credential = EmailAuthProvider.credential(
           user.email,
@@ -69,23 +95,21 @@ const General = () => {
           updateEmail(auth.currentUser as any, email)
         })
       }
-      uploadDoc("users", userData)
-      dispatch(setUser(userData))
-      dispatch(setSuccess("Profile updated successfully"))
+    } else {
       setLoading(false)
     }
   }
 
-  const uploadProfileImg = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
+  useEffect(() => {
     if (files && Array.from(files)?.length) {
-      setLoading(true)
-      uploadImage(
-        files,
-        id + new Date().getTime(),
-        "users",
-        setProfileImg
-      ).then(() => setLoading(false))
+      const url = URL.createObjectURL(files[0])
+      if (imageRef.current) imageRef.current.src = url
+    }
+  }, [files])
+
+  const uploadProfileImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFiles(e.target.files)
     }
   }
 
@@ -93,13 +117,31 @@ const General = () => {
     if (profileImg) {
       deleteImage(img).then(() => {
         setLoading(false)
-        setProfileImg(profileImg || "")
+        if (imageRef.current) imageRef.current.src = profileImg
       })
     }
   }
 
   return (
     <div className="columns is-justify-content-center">
+      <div className="column is-one-fifth">
+        <figure className="image ml-1 is-128x128">
+          <img
+            ref={imageRef}
+            className="is-rounded"
+            src={
+              profileImg || "https://bulma.io/images/placeholders/128x128.png"
+            }
+            style={{ maxHeight: "128px" }}
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null
+              currentTarget.src =
+                "https://bulma.io/images/placeholders/128x128.png"
+            }}
+            alt="Profile img"
+          />
+        </figure>
+      </div>
       <form className="form column is-half" onSubmit={submitHandler}>
         <Input
           type="text"
@@ -131,7 +173,7 @@ const General = () => {
           onChange={(e) => setProfileImg(e.currentTarget.value)}
           placeholder="set Profile Image"
           label="Profile Image"
-          required
+          required={!files}
         />
         <Input
           type="file"
