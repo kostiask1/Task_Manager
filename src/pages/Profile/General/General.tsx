@@ -2,6 +2,7 @@ import {
   EmailAuthProvider,
   getAuth,
   reauthenticateWithCredential,
+  sendEmailVerification,
   updateEmail,
   updateProfile,
 } from "firebase/auth"
@@ -61,7 +62,7 @@ const General = () => {
     }
   }
 
-  const updateUserProfile = (image?: string) => {
+  const updateUserProfile = async (image?: string) => {
     const auth = getAuth()
     if (auth.currentUser) {
       const userData: User = {
@@ -72,13 +73,14 @@ const General = () => {
         admin,
         profileImg: image || profileImg,
         password: user.password,
-        emailVerified: auth.currentUser.emailVerified,
+        emailVerified:
+          user.email !== email ? false : auth.currentUser.emailVerified,
       }
       updateProfile(auth.currentUser, {
         displayName: firstName,
         photoURL: profileImg,
       })
-      uploadDoc("users", userData)
+      await uploadDoc("users", userData)
       dispatch(setUser(userData))
       dispatch(setSuccess("Profile updated successfully"))
       setLoading(false)
@@ -88,7 +90,11 @@ const General = () => {
           user.password
         )
         reauthenticateWithCredential(auth.currentUser, credential).then(() => {
-          updateEmail(auth.currentUser as any, email)
+          updateEmail(auth.currentUser as any, email).then(() => {
+            sendEmailVerification(auth.currentUser as any).then(() =>
+              dispatch(setError("Check your email to verify your account!"))
+            )
+          })
         })
       }
     } else {
