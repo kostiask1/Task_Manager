@@ -70,8 +70,8 @@ const Password = () => {
           name="oldPassword"
           value={oldPassword}
           onChange={(e) => setOldPassword(e.currentTarget.value)}
-          placeholder="Enter Your Previos Password"
-          label="Previos Password"
+          placeholder="Enter Your Previous Password"
+          label="Previous Password"
           minLength={6}
           required
         />

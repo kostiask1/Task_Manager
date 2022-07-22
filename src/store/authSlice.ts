@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth"
 import { collection, getDocs, query, where } from "firebase/firestore/lite"
@@ -47,9 +48,7 @@ export const { setUserData, signOut } = auth.actions
 const _auth = getAuth()
 
 export const setUser = (data: User) => {
-  console.log("setUser")
   return (dispatch: any) => {
-    console.log("in dispatch")
     dispatch(setUserData(data))
   }
 }
@@ -70,18 +69,59 @@ export const signup = (data: SignUpData, onError: () => void) => {
               profileImg: "",
             }
             uploadDoc("users", userData)
+            sendEmailVerification(_auth.currentUser as any).then(() => {
+              setTimeout(
+                () =>
+                  dispatch(
+                    setSuccess("Check your email to verify your account!")
+                  ),
+                2000
+              )
+            })
             dispatch(setUser(userData))
+            dispatch(setSuccess("You have successfully signed up!"))
           }
         })
         .catch((err) => {
-          dispatch(setError(err))
+          console.log("err:", err)
           onError()
           dispatch(setError(err.message))
         })
     } catch (err: any) {
-      dispatch(setError(err))
+      console.log("err:", err)
       onError()
       dispatch(setError(err.message))
+    }
+  }
+}
+
+// Log in
+export const signin = (data: SignInData, onError: () => void) => {
+  return async (dispatch: any) => {
+    try {
+      await signInWithEmailAndPassword(_auth, data.email, data.password).then(
+        ({ user }) =>
+          dispatch(
+            setSuccess(
+              `Welcome back${user.displayName ? ` ${user.displayName}!` : ""}`
+            )
+          )
+      )
+    } catch (err: any) {
+      onError()
+      dispatch(setError(err.message))
+    }
+  }
+}
+
+// Log out
+export const signout = () => {
+  return async (dispatch: any) => {
+    try {
+      await _auth.signOut()
+      dispatch(signOut())
+    } catch (err) {
+      dispatch(setError("Error dispatching signout"))
     }
   }
 }
@@ -103,38 +143,6 @@ export const getUserById = (id: string) => {
       dispatch(setError("Error dispatching setUser"))
     } finally {
       dispatch(setLoading(false))
-    }
-  }
-}
-
-// Log in
-export const signin = (data: SignInData, onError: () => void) => {
-  return async (dispatch: any) => {
-    try {
-      console.log(1)
-      await signInWithEmailAndPassword(_auth, data.email, data.password).then(
-        (resp) => {
-          console.log("resp:", resp)
-          if (resp.user) {
-          }
-        }
-      )
-      dispatch(setSuccess("Successfully signed in"))
-    } catch (err: any) {
-      onError()
-      dispatch(setError(err.message))
-    }
-  }
-}
-
-// Log out
-export const signout = () => {
-  return async (dispatch: any) => {
-    try {
-      await _auth.signOut()
-      dispatch(signOut())
-    } catch (err) {
-      dispatch(setError("Error dispatching signout"))
     }
   }
 }

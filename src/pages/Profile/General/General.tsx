@@ -3,6 +3,7 @@ import {
   getAuth,
   reauthenticateWithCredential,
   updateEmail,
+  updateProfile,
 } from "firebase/auth"
 import { FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
@@ -53,6 +54,10 @@ const General = () => {
         profileImg,
         password: user.password,
       }
+      updateProfile(auth.currentUser, {
+        displayName: firstName,
+        photoURL: profileImg,
+      })
       if (user.email !== email) {
         const credential = EmailAuthProvider.credential(
           user.email,
