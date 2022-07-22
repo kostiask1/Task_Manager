@@ -5,8 +5,9 @@ import {
   updateEmail,
   updateProfile,
 } from "firebase/auth"
-import { FormEvent, useState, useEffect, useRef } from "react"
+import { FormEvent, useEffect, useRef, useState } from "react"
 import Button from "../../../components/UI/Button"
+import Checkbox from "../../../components/UI/Checkbox/Checkbox"
 import Input from "../../../components/UI/Input"
 import {
   deleteImage,
@@ -18,7 +19,6 @@ import { setUser } from "../../../store/authSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { User } from "../../../store/types"
 import "./General.scss"
-import Checkbox from "../../../components/UI/Checkbox/Checkbox"
 
 const General = () => {
   const dispatch = useAppDispatch()
@@ -41,33 +41,29 @@ const General = () => {
     if (!files && !profileImg.includes("https")) {
       return dispatch(setError("Profile image is not a link"))
     }
-
-    if (
-      user &&
-      ((user.profileImg && user.profileImg !== profileImg) || files)
-    ) {
+    if (user) {
       setLoading(true)
       if (files) {
+        deleteImage(user.profileImg)
         uploadImage(files, id + new Date().getTime(), "users").then(
           (imageUrl: any) => {
             dispatch(setSuccess("Image updated successfully"))
             setProfileImg(imageUrl)
-            update(imageUrl)
+            updateUserProfile(imageUrl)
           }
         )
+      } else if (user?.profileImg !== profileImg) {
+        deleteImage(user.profileImg)
+        updateUserProfile()
       } else {
-        update()
+        updateUserProfile()
       }
-      deleteImg(user.profileImg)
-    } else {
-      update()
     }
   }
 
-  const update = (image?: string) => {
+  const updateUserProfile = (image?: string) => {
     const auth = getAuth()
-    if (auth.currentUser && user) {
-      setLoading(true)
+    if (auth.currentUser) {
       const userData: User = {
         email,
         firstName,
@@ -103,24 +99,15 @@ const General = () => {
   useEffect(() => {
     if (files && Array.from(files)?.length) {
       const url = URL.createObjectURL(files[0])
-      if (imageRef.current) imageRef.current.src = url
+      setProfileImg("")
+      setTimeout(() => {
+        if (imageRef.current) imageRef.current.src = url
+      })
     }
   }, [files])
 
-  const uploadProfileImg = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFiles(e.target.files)
-    }
-  }
-
-  const deleteImg = (img: string) => {
-    if (profileImg) {
-      deleteImage(img).then(() => {
-        setLoading(false)
-        if (imageRef.current) imageRef.current.src = profileImg
-      })
-    }
-  }
+  const uploadProfileImg = (e: React.ChangeEvent<HTMLInputElement>) =>
+    e.target.files && setFiles(e.target.files)
 
   return (
     <div className="columns is-justify-content-center">
