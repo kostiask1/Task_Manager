@@ -1,4 +1,4 @@
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -8,9 +8,8 @@ import {
 import { collection, getDocs, query, where } from "firebase/firestore/lite"
 import { db } from "../firebase/base"
 import { uploadDoc } from "../firebase/firestore"
-import { setError, setSuccess, setLoading } from "./appSlice"
+import { setError, setLoading, setSuccess } from "./appSlice"
 import { AuthState, SignInData, SignUpData, User } from "./types"
-import { RootState } from "./store"
 
 const initialState: AuthState = {
   user: {
