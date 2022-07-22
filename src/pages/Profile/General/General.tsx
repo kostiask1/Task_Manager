@@ -53,6 +53,7 @@ const General = () => {
         admin,
         profileImg,
         password: user.password,
+        emailVerified: auth.currentUser.emailVerified,
       }
       updateProfile(auth.currentUser, {
         displayName: firstName,

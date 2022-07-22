@@ -20,6 +20,7 @@ const initialState: AuthState = {
     password: "",
     id: "",
     admin: false,
+    emailVerified: false,
   },
   authenticated: false,
 }
@@ -67,6 +68,7 @@ export const signup = (data: SignUpData, onError: () => void) => {
               id: res.user.uid,
               admin: false,
               profileImg: "",
+              emailVerified: false,
             }
             uploadDoc("users", userData)
             sendEmailVerification(_auth.currentUser as any).then(() => {
@@ -75,11 +77,10 @@ export const signup = (data: SignUpData, onError: () => void) => {
                   dispatch(
                     setSuccess("Check your email to verify your account!")
                   ),
-                2000
+                3000
               )
             })
             dispatch(setUser(userData))
-            dispatch(setSuccess("You have successfully signed up!"))
           }
         })
         .catch((err) => {
@@ -135,6 +136,8 @@ export const getUserById = (id: string) => {
       const userData = querySnapshot.docs[0].data() as User
 
       if (userData) {
+        userData.emailVerified =
+          _auth.currentUser?.emailVerified ?? userData.emailVerified
         dispatch(setUser(userData))
       } else {
         dispatch(setError("No such user"))

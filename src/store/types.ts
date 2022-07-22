@@ -12,6 +12,7 @@ export interface User {
   password: string
   id: string
   admin: boolean
+  emailVerified: boolean
 }
 
 export interface AuthState {
