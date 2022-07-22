@@ -18,6 +18,7 @@ import { setUser } from "../../../store/authSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { User } from "../../../store/types"
 import "./General.scss"
+import Checkbox from "../../../components/UI/Checkbox/Checkbox"
 
 const General = () => {
   const dispatch = useAppDispatch()
@@ -147,6 +148,11 @@ const General = () => {
           placeholder="Email address"
           label="Email address"
           required
+        />
+        <Checkbox
+          text="Email verificated"
+          disabled={true}
+          checked={user.emailVerified}
         />
         <Button
           text={loading ? "Loading..." : "Update Profile"}

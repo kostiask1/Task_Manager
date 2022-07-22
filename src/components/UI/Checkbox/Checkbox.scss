@@ -1,0 +1,16 @@
+/* your css code */
+label.disabled {
+  color: #7a7a7a;
+  cursor: not-allowed;
+  pointer-events: none;
+  &:hover {
+    color: #7a7a7a;
+  }
+}
+label.checkbox {
+  display: flex;
+  align-items: center;
+  input {
+    margin-right: 5px;
+  }
+}

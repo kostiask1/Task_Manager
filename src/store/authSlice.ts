@@ -84,7 +84,6 @@ export const signup = (data: SignUpData, onError: () => void) => {
           }
         })
         .catch((err) => {
-          console.log("err:", err)
           onError()
           dispatch(setError(err.message))
         })
