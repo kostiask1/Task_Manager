@@ -26,9 +26,8 @@ function App() {
     }
   }, [dispatch])
 
-  console.log("rendered App.tsx")
+  if (import.meta.env.DEV) console.log("rendered App.tsx")
 
-  // (process.env.NODE_ENV === "production" || "development")
   return (
     <>
       <Navbar />
