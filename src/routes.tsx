@@ -6,9 +6,9 @@ import { useAppSelector, RootState } from "./store/store"
 const About = React.lazy(() => import("./pages/About"))
 const Auth = React.lazy(() => import("./pages/Auth"))
 const Catalog = React.lazy(() => import("./pages/Catalog"))
-const General = React.lazy(() => import("./pages/Profile"))
-const Password = React.lazy(() => import("./pages/Profile/Password"))
-const Profile = React.lazy(() => import("./pages/Profile/Profile"))
+const General = React.lazy(() => import("./pages/User"))
+const Password = React.lazy(() => import("./pages/User/Password"))
+const Profile = React.lazy(() => import("./pages/User/Profile"))
 
 export const routesArray = [
   {
