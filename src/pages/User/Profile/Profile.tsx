@@ -6,7 +6,7 @@ import {
   updateEmail,
   updateProfile,
 } from "firebase/auth"
-import { FormEvent, useEffect, useRef, useState } from "react"
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Checkbox from "../../../components/UI/Checkbox/Checkbox"
 import Input from "../../../components/UI/Input"
@@ -21,6 +21,8 @@ import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { User } from "../../../store/types"
 import "./Profile.scss"
 import { equal } from "../../../helpers"
+import { useCallbackPrompt } from "../../../hooks/useCallbackPrompt"
+import Modal from "../../../components/Modal/Modal"
 
 const Profile = () => {
   const dispatch = useAppDispatch()
@@ -30,6 +32,11 @@ const Profile = () => {
   const [loading, setLoading] = useState(false)
   const imageRef = useRef<HTMLImageElement>(null)
   const imageNameRef = useRef<HTMLSpanElement>(null)
+
+  const isEqual = useMemo(() => equal(user, userData), [user, userData])
+
+  const [showPrompt, confirmNavigation, cancelNavigation]: any =
+    useCallbackPrompt(!isEqual || loading)
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault()
@@ -99,7 +106,6 @@ const Profile = () => {
     if (files && Array.from(files)?.length) {
       const url = URL.createObjectURL(files[0])
       setProfileImg()
-      console.log(files[0].name)
       if (imageNameRef.current) {
         imageNameRef.current.innerText = files[0].name
         imageNameRef.current.style.display = "block"
@@ -235,9 +241,32 @@ const Profile = () => {
         <Button
           text={loading ? "Loading..." : "Update Profile"}
           className="is-primary is-fullwidth mt-5"
-          disabled={equal(user, userData) || loading}
+          disabled={isEqual || loading}
         />
       </form>
+      <Modal id="modal" show={showPrompt}>
+        <div className="box is-flex is-align-items-center is-flex-direction-column">
+          <h2 className="is-size-4">
+            If you leave your settings will not be saved!
+          </h2>
+          <div className="columns mt-5">
+            <div className="column">
+              <Button
+                className="is-primary"
+                onClick={() => cancelNavigation()}
+                text="Stay"
+              />
+            </div>
+            <div className="column">
+              <Button
+                className="is-danger"
+                onClick={() => confirmNavigation()}
+                text="Leave"
+              />
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -8,7 +8,7 @@ interface LoaderProps {
 const Loader: FC<LoaderProps> = ({ loading: forceLoading }) => {
   const loading = useAppSelector((state: RootState) => state.app.loading)
   return forceLoading || loading ? (
-    <div className="box">
+    <div className="loader-wrap">
       <div className="loader"></div>
     </div>
   ) : null
