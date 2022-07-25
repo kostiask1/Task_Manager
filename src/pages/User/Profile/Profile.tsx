@@ -29,6 +29,7 @@ const Profile = () => {
   const [files, setFiles] = useState<FileList>()
   const [loading, setLoading] = useState(false)
   const imageRef = useRef<HTMLImageElement>(null)
+  const imageNameRef = useRef<HTMLSpanElement>(null)
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault()
@@ -98,9 +99,18 @@ const Profile = () => {
     if (files && Array.from(files)?.length) {
       const url = URL.createObjectURL(files[0])
       setProfileImg()
+      console.log(files[0].name)
+      if (imageNameRef.current) {
+        imageNameRef.current.innerText = files[0].name
+        imageNameRef.current.style.display = "block"
+      }
       setTimeout(() => {
         if (imageRef.current) imageRef.current.src = url
       })
+    } else {
+      if (imageNameRef.current) {
+        imageNameRef.current.style.display = "none"
+      }
     }
   }, [files])
 
@@ -177,18 +187,35 @@ const Profile = () => {
           minLength={10}
           value={userData.profileImg}
           onChange={(e) => setProfileImg(e)}
-          placeholder="set Profile Image"
+          placeholder="Paste url or download image with button below"
           label="Profile Image"
           required={!files}
         />
-        <Input
-          type="file"
-          name="uploadImg"
-          onChange={(e) => uploadProfileImg(e)}
-          multiple={false}
-          placeholder="upload Profile Image"
-          label="Upload Profile Image"
-        />
+        <div className="field">
+          <div className="file">
+            <label className="file-label">
+              <input
+                className="file-input"
+                type="file"
+                name="resume"
+                onChange={(e) => uploadProfileImg(e)}
+                accept="image/*"
+                multiple={false}
+              />
+              <span className="file-cta">
+                <span className="file-icon">
+                  <i className="fas fa-upload"></i>
+                </span>
+                <span className="file-label">Choose a file…</span>
+              </span>
+              <span
+                className="file-name"
+                style={{ display: "none" }}
+                ref={imageNameRef}
+              ></span>
+            </label>
+          </div>
+        </div>
         <Input
           type="email"
           name="in_email"
