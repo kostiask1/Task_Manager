@@ -192,7 +192,7 @@ const Profile = () => {
           required={!files}
         />
         <div className="field">
-          <div className="file">
+          <div className="file is-small">
             <label className="file-label">
               <input
                 className="file-input"
