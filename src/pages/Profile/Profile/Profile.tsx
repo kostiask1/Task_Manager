@@ -19,10 +19,10 @@ import { setError, setSuccess } from "../../../store/appSlice"
 import { setUser } from "../../../store/authSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { User } from "../../../store/types"
-import "./General.scss"
+import "./Profile.scss"
 import { equal } from "../../../helpers"
 
-const General = () => {
+const Profile = () => {
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const [userData, setUserData] = useState<User>(user)
@@ -215,4 +215,4 @@ const General = () => {
   )
 }
 
-export default General
+export default Profile

@@ -3,11 +3,11 @@ import { Navigate, Route, Routes } from "react-router-dom"
 import React from "react"
 import Loader from "./components/UI/Loader/Loader"
 import { useAppSelector, RootState } from "./store/store"
-const About = React.lazy(() => import("./pages/About/About"))
-const Auth = React.lazy(() => import("./pages/Auth/Auth"))
-const Catalog = React.lazy(() => import("./pages/Catalog/Catalog"))
-const General = React.lazy(() => import("./pages/Profile/General/General"))
-const Password = React.lazy(() => import("./pages/Profile/Password/Password"))
+const About = React.lazy(() => import("./pages/About"))
+const Auth = React.lazy(() => import("./pages/Auth"))
+const Catalog = React.lazy(() => import("./pages/Catalog"))
+const General = React.lazy(() => import("./pages/Profile"))
+const Password = React.lazy(() => import("./pages/Profile/Password"))
 const Profile = React.lazy(() => import("./pages/Profile/Profile"))
 
 export const routesArray = [
@@ -37,10 +37,9 @@ export const routesArray = [
     private: true,
     show: false,
     path: "profile",
-    element: <Profile />,
+    element: <General />,
     children: [
-      { path: "/profile", element: <Navigate to="/profile/general" /> },
-      { path: "/profile/general", element: <General /> },
+      { path: "/profile", element: <Profile /> },
       { path: "/profile/password", element: <Password /> },
     ],
   },

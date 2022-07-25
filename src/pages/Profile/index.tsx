@@ -1,7 +1,7 @@
 import { FC, useCallback } from "react"
 import { Link, Outlet, useLocation } from "react-router-dom"
 
-const Profile: FC = () => {
+const General: FC = () => {
   const location = useLocation()
 
   const isActivePage = useCallback(
@@ -22,8 +22,8 @@ const Profile: FC = () => {
           <ul className="menu-list">
             <li>
               <Link
-                to="general"
-                className={isActivePage("general") ? "is-active" : ""}
+                to="/profile"
+                className={!isActivePage("password") ? "is-active" : ""}
               >
                 User Info
               </Link>
@@ -46,4 +46,4 @@ const Profile: FC = () => {
   )
 }
 
-export default Profile
+export default General
