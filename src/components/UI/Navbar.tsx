@@ -111,7 +111,7 @@ function Navbar() {
                     <div className="is-flex mx-2">
                       <Button
                         onClick={logout}
-                        className="is-danger is-size-6"
+                        className="is-danger is-small"
                         text="Log out"
                       />
                     </div>
