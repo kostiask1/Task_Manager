@@ -120,12 +120,6 @@ const Profile = () => {
     }
   }, [files])
 
-  const setFirstName = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setUserData((state): User => ({ ...state, firstName: e.target.value }))
-
-  const setLastName = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setUserData((state): User => ({ ...state, lastName: e.target.value }))
-
   const setProfileImg = (
     e?: React.ChangeEvent<HTMLInputElement> | null,
     value?: string
@@ -137,11 +131,11 @@ const Profile = () => {
       })
     )
 
-  const setEmail = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setUserData((state): User => ({ ...state, email: e.target.value }))
-
-  const uploadProfileImg = (e: React.ChangeEvent<HTMLInputElement>) =>
-    e.target.files && setFiles(e.target.files)
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.name
+    const value = event.target.value
+    setUserData((state) => ({ ...state, [name]: value }))
+  }
 
   return (
     <div className="columns is-justify-content-center">
@@ -171,7 +165,7 @@ const Profile = () => {
           minLength={2}
           maxLength={20}
           value={userData.firstName}
-          onChange={(e) => setFirstName(e)}
+          onChange={handleChange}
           placeholder="set Name"
           label="Name"
           required
@@ -182,7 +176,7 @@ const Profile = () => {
           minLength={2}
           maxLength={30}
           value={userData.lastName}
-          onChange={(e) => setLastName(e)}
+          onChange={handleChange}
           placeholder="set Surname"
           label="Surname"
           required
@@ -192,19 +186,21 @@ const Profile = () => {
           name="profileImg"
           minLength={10}
           value={userData.profileImg}
-          onChange={(e) => setProfileImg(e)}
+          onChange={handleChange}
           placeholder="Paste url or download image with button below"
           label="Profile Image"
           required={!files}
         />
         <div className="field">
-          <div className="file is-small">
+          <div className="file">
             <label className="file-label">
               <input
                 className="file-input"
                 type="file"
                 name="resume"
-                onChange={(e) => uploadProfileImg(e)}
+                onChange={(e) =>
+                  e.target.files ? setFiles(e.target.files) : null
+                }
                 accept="image/*"
                 multiple={false}
               />
@@ -228,7 +224,7 @@ const Profile = () => {
           value={userData.email}
           minLength={6}
           maxLength={40}
-          onChange={(e) => setEmail(e)}
+          onChange={handleChange}
           placeholder="Email address"
           label="Email address"
           required

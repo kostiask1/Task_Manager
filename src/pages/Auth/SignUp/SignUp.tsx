@@ -3,26 +3,31 @@ import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import { signup } from "../../../store/authSlice"
 import { useAppDispatch } from "../../../store/store"
-import { SignUpData } from "../../../store/types"
+import { SignUpData, User } from "../../../store/types"
+
+const signUpData = {
+  firstName: "",
+  email: "",
+  password: "",
+  lastName: "",
+}
 
 const Signup: FC = () => {
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [userData, setUserData] = useState<SignUpData>(signUpData)
   const [loading, setLoading] = useState(false)
   const dispatch = useAppDispatch()
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    dispatch(
-      signup({ firstName, email, password, lastName } as SignUpData, () =>
-        setLoading(false)
-      )
-    )
+    dispatch(signup(userData as SignUpData, () => setLoading(false)))
   }
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.name
+    const value = event.target.value
+    setUserData((state) => ({ ...state, [name]: value }))
+  }
   return (
     <section className="section">
       <h2 className="has-text-centered is-size-2 mb-3">Sign Up</h2>
@@ -30,8 +35,8 @@ const Signup: FC = () => {
         <Input
           type="text"
           name="firstName"
-          value={firstName}
-          onChange={(e) => setFirstName(e.currentTarget.value)}
+          value={userData.firstName}
+          onChange={handleChange}
           placeholder="set Name"
           label="Name"
           minLength={2}
@@ -41,8 +46,8 @@ const Signup: FC = () => {
         <Input
           type="text"
           name="lastName"
-          value={lastName}
-          onChange={(e) => setLastName(e.currentTarget.value)}
+          value={userData.lastName}
+          onChange={handleChange}
           placeholder="set Surname"
           label="Surname"
           minLength={2}
@@ -51,9 +56,9 @@ const Signup: FC = () => {
         />
         <Input
           type="email"
-          name="in_email"
-          value={email}
-          onChange={(e) => setEmail(e.currentTarget.value)}
+          name="email"
+          value={userData.email}
+          onChange={handleChange}
           placeholder="Email address"
           label="Email address"
           minLength={6}
@@ -62,9 +67,9 @@ const Signup: FC = () => {
         />
         <Input
           type="password"
-          name="in_password"
-          value={password}
-          onChange={(e) => setPassword(e.currentTarget.value)}
+          name="password"
+          value={userData.password}
+          onChange={handleChange}
           placeholder="Password"
           label="Password"
           minLength={6}

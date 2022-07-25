@@ -28,7 +28,7 @@ const SignIn: FC = () => {
       <form className="form" onSubmit={submitHandler}>
         <Input
           type="email"
-          name="up_email"
+          name="in_email"
           value={email}
           onChange={(e) => setEmail(e.currentTarget.value)}
           placeholder="Email address"
@@ -37,7 +37,7 @@ const SignIn: FC = () => {
         />
         <Input
           type="password"
-          name="up_password"
+          name="in_password"
           value={password}
           onChange={(e) => setPassword(e.currentTarget.value)}
           placeholder="Password"

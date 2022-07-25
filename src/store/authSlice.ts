@@ -61,10 +61,7 @@ export const signup = (data: SignUpData, onError: () => void) => {
         .then((res) => {
           if (res.user) {
             const userData: User = {
-              email: data.email,
-              password: data.password,
-              firstName: data.firstName,
-              lastName: data.lastName,
+              ...data,
               id: res.user.uid,
               admin: false,
               profileImg: "",
