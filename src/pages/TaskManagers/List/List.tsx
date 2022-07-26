@@ -2,25 +2,18 @@ import "./List.scss"
 import Button from "../../../components/UI/Button"
 import { useAppDispatch, useAppSelector, RootState } from "../../../store/store"
 import { User, Task } from "../../../store/types"
-import { setTask, getTasks } from "../../../store/taskSlice"
+import { setTask, getTasks, setTaskToEdit } from "../../../store/taskSlice"
 import { useEffect } from "react"
+import TaskForm from "./TaskForm/TaskForm"
 
 const List = () => {
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const tasks: Task[] = useAppSelector((state: RootState) => state.tasks.array)
-
-  const addTaskToUser = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    const task: Task = {
-      id: new Date().getTime(),
-      uid: user.id,
-      completed: false,
-      description: "Task description",
-      title: "New task",
-    }
-    dispatch(setTask(task))
-  }
+  const editingTask: Task | null = useAppSelector(
+    (state: RootState) => state.tasks.editingTask
+  )
+  console.log("editingTask:", editingTask)
 
   useEffect(() => {
     dispatch(getTasks(user.id))
@@ -28,7 +21,8 @@ const List = () => {
 
   return (
     <>
-      <Button onClick={addTaskToUser} text="Add Task" />
+      <TaskForm />
+      <hr />
       {tasks.map((task) => (
         <div className="card" key={task.id}>
           <header className="card-header">
@@ -41,21 +35,17 @@ const List = () => {
           </header>
           <div className="card-content">
             <div className="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-              nec iaculis mauris.
-              <a href="#">@bulmaio</a>. <a href="#">#css</a>{" "}
-              <a href="#">#responsive</a>
+              {task.description}
               <br />
-              <time dateTime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+              <time dateTime={task.deadline}>{task.deadline}</time>
             </div>
           </div>
           <footer className="card-footer">
-            <a href="#" className="card-footer-item">
-              Save
-            </a>
-            <a href="#" className="card-footer-item">
-              Edit
-            </a>
+            <Button
+              onClick={() => dispatch(setTaskToEdit(task))}
+              className="card-footer-item"
+              text="Edit"
+            />
             <a href="#" className="card-footer-item">
               Delete
             </a>

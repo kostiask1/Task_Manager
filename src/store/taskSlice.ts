@@ -7,11 +7,14 @@ import { useAppSelector, RootState } from "./store"
 
 interface TasksState {
   array: Task[]
+  editingTask: Task | null
 }
 
 const initialState: TasksState = {
   array: [],
+  editingTask: null,
 }
+
 const task = createSlice({
   name: "task",
   initialState,
@@ -20,6 +23,9 @@ const task = createSlice({
       console.log("action.payload:", action.payload)
       state.array = action.payload
     },
+    editingTask: (state: TasksState, action: PayloadAction<Task | null>) => {
+      state.editingTask = action.payload
+    },
   },
 })
 
@@ -27,7 +33,7 @@ export default task.reducer
 
 // Actions
 
-export const { tasks } = task.actions
+export const { tasks, editingTask } = task.actions
 
 export const setTasks = (tasksArray: Task[]) => {
   return (dispatch: any) => {
@@ -54,7 +60,7 @@ export const setTask = (task: Task) => {
     const tasks = getState().tasks.array
     const tempArray: Task[] = [...tasks]
 
-    const indexOfTask = tasks.indexOf((t: Task) => t.id === task.id)
+    const indexOfTask = tasks.findIndex((t: Task) => t.id === task.id)
     const existTask = indexOfTask !== -1
 
     if (!existTask) {
@@ -62,11 +68,31 @@ export const setTask = (task: Task) => {
     } else {
       tempArray[indexOfTask] = task
     }
-
+    tempArray.sort((a: Task, b: Task) => {
+      if (
+        (a.deadline || a.updatedAt || a.createdAt) <
+        (b.deadline || b.updatedAt || b.createdAt)
+      ) {
+        return -1
+      }
+      if (
+        (a.deadline || a.updatedAt || a.createdAt) >
+        (b.deadline || b.updatedAt || b.createdAt)
+      ) {
+        return 1
+      }
+      return 0
+    })
     await setDoc(doc(db, "tasks", task.uid), {
       tasks: tempArray as Task[],
     })
 
     dispatch(setTasks(tempArray))
+  }
+}
+
+export const setTaskToEdit = (task: Task) => {
+  return (dispatch: any) => {
+    dispatch(editingTask(task))
   }
 }

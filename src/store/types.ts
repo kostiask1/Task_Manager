@@ -31,8 +31,11 @@ export interface Task {
   id: number
   uid: string
   title: string
-  parentTask?: string
-  childTask?: string
+  parentTask?: string | null
+  childTask?: string | null
+  deadline?: string
+  createdAt: Date | 0
+  updatedAt?: Date | 0
 }
 
 export interface SignUpData {

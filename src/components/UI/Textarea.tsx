@@ -1,10 +1,10 @@
 import React, { FC, InputHTMLAttributes } from "react"
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface TextareaProps extends InputHTMLAttributes<HTMLTextAreaElement> {
   label?: string
 }
 
-const Input: FC<InputProps> = ({
+const Textarea: FC<TextareaProps> = ({
   type = "text",
   placeholder,
   value,
@@ -18,21 +18,20 @@ const Input: FC<InputProps> = ({
     <div className="field">
       <div className="control">
         {!!label && <label htmlFor={name}>{label}</label>}
-        <input
-          className="input"
-          type={type}
+        <textarea
+          className="textarea has-fixed-size"
           placeholder={placeholder}
-          value={value}
           name={name}
           id={name}
           onChange={onChange}
           required={required}
           autoComplete="off"
+          value={value}
           {...rest}
-        />
+        ></textarea>
       </div>
     </div>
   )
 }
 
-export default Input
+export default Textarea
