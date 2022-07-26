@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom"
 import React from "react"
 import Loader from "./components/UI/Loader/Loader"
 import { useAppSelector, RootState } from "./store/store"
+import List from "./pages/TaskManagers/List/List"
 const About = React.lazy(() => import("./pages/About"))
 const Auth = React.lazy(() => import("./pages/Auth"))
 const Catalog = React.lazy(() => import("./pages/Catalog"))
@@ -25,6 +26,14 @@ export const routesArray = [
     visible: true,
     path: "catalog",
     element: <Catalog />,
+  },
+  {
+    name: "Tasks",
+    private: false,
+    show: true,
+    visible: true,
+    path: "tasks",
+    element: <List />,
   },
   {
     name: "Catalog",

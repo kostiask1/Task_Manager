@@ -25,6 +25,16 @@ export interface AppState {
   success: string
 }
 
+export interface Task {
+  completed: boolean
+  description: string
+  id: number
+  uid: string
+  title: string
+  parentTask?: string
+  childTask?: string
+}
+
 export interface SignUpData {
   firstName: string
   lastName: string
