@@ -1,26 +1,26 @@
-import React, { FC } from 'react';
+import { FC } from "react"
 
 interface MessageProps {
-  msg: string;
-  type: 'danger' | 'success';
+  msg: string
+  type: "danger" | "success"
 }
 
 const Message: FC<MessageProps> = ({ msg, type }) => {
-  let typeClass = '';
+  let typeClass = ""
 
-  if(type === 'danger') {
-    typeClass = 'is-danger';
+  if (type === "danger") {
+    typeClass = "is-danger"
   }
 
-  if(type === 'success') {
-    typeClass = 'is-success';
+  if (type === "success") {
+    typeClass = "is-success"
   }
 
-  return(
+  return (
     <article className={`message ${typeClass}`}>
       <div className="message-body">{msg}</div>
     </article>
-  );
+  )
 }
 
-export default Message;
+export default Message

@@ -2,8 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../firebase/base"
 import { Task } from "./types"
-import { getAuth } from "firebase/auth"
-import { useAppSelector, RootState } from "./store"
 
 interface TasksState {
   array: Task[]
@@ -20,7 +18,6 @@ const task = createSlice({
   initialState,
   reducers: {
     tasks: (state: TasksState, action: PayloadAction<Task[]>) => {
-      console.log("action.payload:", action.payload)
       state.array = action.payload
     },
     editingTask: (state: TasksState, action: PayloadAction<Task | null>) => {

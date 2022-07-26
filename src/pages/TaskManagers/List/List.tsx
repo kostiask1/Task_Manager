@@ -1,23 +1,15 @@
-import "./List.scss"
-import Button from "../../../components/UI/Button"
-import { useAppDispatch, useAppSelector, RootState } from "../../../store/store"
-import { User, Task } from "../../../store/types"
-import {
-  setTask,
-  getTasks,
-  setTaskToEdit,
-  deleteTask,
-} from "../../../store/taskSlice"
 import { useEffect } from "react"
+import Button from "../../../components/UI/Button"
+import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
+import { deleteTask, getTasks, setTaskToEdit } from "../../../store/taskSlice"
+import { Task, User } from "../../../store/types"
+import "./List.scss"
 import TaskForm from "./TaskForm/TaskForm"
 
 const List = () => {
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const tasks: Task[] = useAppSelector((state: RootState) => state.tasks.array)
-  const editingTask: Task | null = useAppSelector(
-    (state: RootState) => state.tasks.editingTask
-  )
 
   useEffect(() => {
     dispatch(getTasks(user.id))
