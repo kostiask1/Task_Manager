@@ -32,9 +32,8 @@ const Profile = () => {
   const [loading, setLoading] = useState(false)
   const imageRef = useRef<HTMLImageElement>(null)
   const imageNameRef = useRef<HTMLSpanElement>(null)
-
   const isEqual = useMemo(() => equal(user, userData), [user, userData])
-  
+
   const [showPrompt, confirmNavigation, cancelNavigation]: any =
     useCallbackPrompt(!isEqual || loading)
 
