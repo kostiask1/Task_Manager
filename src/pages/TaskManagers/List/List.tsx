@@ -5,6 +5,7 @@ import { deleteTask, getTasks, setTaskToEdit } from "../../../store/taskSlice"
 import { Task, User } from "../../../store/types"
 import "./List.scss"
 import TaskForm from "./TaskForm/TaskForm"
+import { setSuccess } from "../../../store/appSlice"
 
 const List = () => {
   const dispatch = useAppDispatch()
@@ -15,6 +16,15 @@ const List = () => {
     dispatch(getTasks(user.id))
   }, [])
 
+  const deleteT = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    task: Task
+  ) => {
+    e.preventDefault()
+    await dispatch(deleteTask(task))
+    dispatch(setSuccess("Task deleted successfully"))
+  }
+
   return (
     <>
       <div className="section is-medium pt-2">
@@ -22,7 +32,7 @@ const List = () => {
         <hr />
         <div className="columns">
           {tasks.map((task) => (
-            <div className="column" key={task.id}>
+            <div className="column is-half" key={task.id}>
               <div className="card mb-5">
                 <header className="card-header">
                   <p className="card-header-title">{task.title}</p>
@@ -52,7 +62,7 @@ const List = () => {
                     <Button
                       className="mx-2 card-footer-item is-danger"
                       text="Delete"
-                      onClick={() => dispatch(deleteTask(task))}
+                      onClick={(e) => deleteT(e, task)}
                     />
                   </div>
                 </footer>

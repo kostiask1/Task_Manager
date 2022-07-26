@@ -12,6 +12,7 @@ import {
 import { setTask, setTaskToEdit, deleteTask } from "../../../../store/taskSlice"
 import { Task, User } from "../../../../store/types"
 import "./TaskForm.scss"
+import { setSuccess } from "../../../../store/appSlice"
 
 const TaskForm = () => {
   const dispatch = useAppDispatch()
@@ -45,7 +46,7 @@ const TaskForm = () => {
     }
   }, [task])
 
-  const addTaskToUser = (e: React.FormEvent) => {
+  const addTaskToUser = async (e: React.FormEvent) => {
     e.preventDefault()
     const saveTask: Task = { ...state }
 
@@ -56,7 +57,10 @@ const TaskForm = () => {
     }
     saveTask.updatedAt = new Date().getTime()
 
-    dispatch(setTask(saveTask))
+    await dispatch(setTask(saveTask))
+    isEdit
+      ? dispatch(setSuccess("Task updated successfully"))
+      : dispatch(setSuccess("Task created successfully"))
     clear()
   }
 
@@ -70,12 +74,19 @@ const TaskForm = () => {
 
   const clear = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
+    setState(initialState)
     dispatch(setTaskToEdit(initialState))
   }
 
   const reset = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
     setState(initialState)
+  }
+
+  const deleteT = async (e?: React.MouseEvent<HTMLButtonElement>) => {
+    e?.preventDefault()
+    await dispatch(deleteTask(state))
+    dispatch(setSuccess("Task deleted successfully"))
   }
 
   const formatChars: Array<RegExp | string> = useMemo(
@@ -144,7 +155,7 @@ const TaskForm = () => {
               <Button
                 className="mx-2 card-footer-item is-danger"
                 text="Delete"
-                onClick={() => dispatch(deleteTask(state))}
+                onClick={deleteT}
               />
             )}
             {isEdit ? (

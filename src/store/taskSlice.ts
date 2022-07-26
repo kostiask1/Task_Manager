@@ -93,7 +93,6 @@ export const deleteTask = (task: Task) => {
     const tasks = getState().tasks.array
     let tempArray: Task[] = [...tasks]
     tempArray = tempArray.filter((t: Task) => t.id !== task.id)
-
     await setDoc(doc(db, "tasks", task.uid), {
       tasks: tempArray as Task[],
     })
