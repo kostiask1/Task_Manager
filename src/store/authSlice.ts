@@ -5,7 +5,7 @@ import {
   sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth"
-import { collection, getDocs, query, where } from "firebase/firestore/lite"
+import { doc, getDoc } from "firebase/firestore/lite"
 import { db } from "../firebase/base"
 import { uploadDoc } from "../firebase/firestore"
 import { setError, setLoading, setSuccess } from "./appSlice"
@@ -127,9 +127,9 @@ export const signout = () => {
 export const getUserById = (id: string) => {
   return async (dispatch: any) => {
     try {
-      const q = query(collection(db, "users"), where("id", "==", id))
-      const querySnapshot = await getDocs(q)
-      const userData = querySnapshot.docs[0].data() as User
+      const docRef = doc(db, "users", id)
+      const docSnap = await getDoc(docRef)
+      const userData = docSnap.data() as User
 
       if (userData) {
         userData.emailVerified =
