@@ -1,9 +1,8 @@
-import { FC, Suspense } from "react"
+import React, { FC, Suspense } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
-import React from "react"
 import Loader from "./components/UI/Loader/Loader"
-import { useAppSelector, RootState } from "./store/store"
-import List from "./pages/TaskManagers/List/List"
+import Board from "./pages/TaskManagers/Board/Board"
+import { RootState, useAppSelector } from "./store/store"
 const About = React.lazy(() => import("./pages/About"))
 const Auth = React.lazy(() => import("./pages/Auth"))
 const Catalog = React.lazy(() => import("./pages/Catalog"))
@@ -32,7 +31,7 @@ export const routesArray = [
     private: true,
     show: true,
     path: "tasks",
-    element: <List />,
+    element: <Board />,
   },
   {
     name: "Catalog",
