@@ -87,18 +87,21 @@ const TaskForm = () => {
     [state.deadline]
   )
 
-  const formatChars: Array<RegExp | string> = [
-    /[0-3]/,
-    dayStartsWithThree ? /[01]/ : /[0-9]/,
-    "-",
-    /[01]/,
-    monthStartsWithOne ? /[0-2]/ : /[0-9]/,
-    "-",
-    /2/,
-    /[0-9]/,
-    /[0-9]/,
-    /[0-9]/,
-  ]
+  const formatChars: Array<RegExp | string> = useMemo(
+    () => [
+      /[0-3]/,
+      dayStartsWithThree ? /[01]/ : /[0-9]/,
+      "-",
+      /[01]/,
+      monthStartsWithOne ? /[0-2]/ : /[0-9]/,
+      "-",
+      /2/,
+      /[0-9]/,
+      /[0-9]/,
+      /[0-9]/,
+    ],
+    [state.deadline]
+  )
   return (
     <>
       <form className="card" key={state.id} onSubmit={addTaskToUser}>
