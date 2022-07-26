@@ -3,12 +3,12 @@ import InputMask from "react-input-mask"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import Textarea from "../../../components/UI/Textarea"
-import { equal, dateFormat } from "../../../helpers"
+import { dateFormat, equal } from "../../../helpers"
+import { setSuccess } from "../../../store/appSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
-import { setTask, setTaskToEdit, deleteTask } from "../../../store/taskSlice"
+import { deleteTask, setTask, setTaskToEdit } from "../../../store/taskSlice"
 import { Task, User } from "../../../store/types"
 import "./TaskForm.scss"
-import { setSuccess } from "../../../store/appSlice"
 
 const TaskForm = () => {
   const dispatch = useAppDispatch()

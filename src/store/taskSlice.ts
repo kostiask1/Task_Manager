@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../firebase/base"
 import { Task } from "./types"
+import { convertToDate } from "../helpers"
 
 interface TasksState {
   array: Task[]
@@ -55,7 +56,7 @@ export const getTasks = (uid: string) => {
 export const setTask = (task: Task) => {
   return async (dispatch: any, getState: any) => {
     const tasks = getState().tasks.array
-    const tempArray: Task[] = [...tasks]
+    let tempArray: Task[] = [...tasks]
 
     const indexOfTask = tasks.findIndex((t: Task) => t.id === task.id)
     const existTask = indexOfTask !== -1
@@ -65,21 +66,33 @@ export const setTask = (task: Task) => {
     } else {
       tempArray[indexOfTask] = task
     }
-    tempArray.sort((a: Task, b: Task) => {
-      if (
-        (a.deadline || a.updatedAt || a.createdAt) <
-        (b.deadline || b.updatedAt || b.createdAt)
-      ) {
+    const arrayWithDeadlines: Task[] = tempArray.filter((t: Task) => t.deadline)
+
+    arrayWithDeadlines.sort((a: Task, b: Task) => {
+      const deadlineA = (a.deadline && convertToDate(a.deadline).getTime()) || 0
+      const deadlineB = (b.deadline && convertToDate(b.deadline).getTime()) || 0
+      if (deadlineA < deadlineB) {
         return -1
       }
-      if (
-        (a.deadline || a.updatedAt || a.createdAt) >
-        (b.deadline || b.updatedAt || b.createdAt)
-      ) {
+      if (deadlineA > deadlineB) {
         return 1
       }
       return 0
     })
+    tempArray = tempArray.filter((t: Task) => !t.deadline)
+    tempArray.sort((a: Task, b: Task) => {
+      if ((a.updatedAt || a.createdAt) < (b.updatedAt || b.createdAt)) {
+        return -1
+      }
+      if ((a.updatedAt || a.createdAt) > (b.updatedAt || b.createdAt)) {
+        return 1
+      }
+
+      return 0
+    })
+
+    tempArray = [...arrayWithDeadlines, ...tempArray]
+
     await setDoc(doc(db, "tasks", task.uid), {
       tasks: tempArray as Task[],
     })
