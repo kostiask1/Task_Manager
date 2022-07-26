@@ -34,8 +34,8 @@ export interface Task {
   parentTask?: string | null
   childTask?: string | null
   deadline?: string
-  createdAt: Date | 0
-  updatedAt?: Date | 0
+  createdAt: number
+  updatedAt?: number
 }
 
 export interface SignUpData {

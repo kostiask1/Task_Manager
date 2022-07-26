@@ -29,9 +29,8 @@ export const routesArray = [
   },
   {
     name: "Tasks",
-    private: false,
+    private: true,
     show: true,
-    visible: true,
     path: "tasks",
     element: <List />,
   },

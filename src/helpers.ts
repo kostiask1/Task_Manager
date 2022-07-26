@@ -7,3 +7,20 @@ export function equal(x: any, y: any): boolean {
         ok(x).every((key) => equal(x[key], y[key]))
     : x === y
 }
+export const dateFormat = (date: string): Array<string | RegExp> => {
+  const dayStartsWithThree = date?.charAt(0) === "3" || false
+  const monthStartsWithOne = date?.charAt(0) === "1" || false
+
+  return [
+    /[0-3]/,
+    dayStartsWithThree ? /[01]/ : /[0-9]/,
+    "-",
+    /[01]/,
+    monthStartsWithOne ? /[0-2]/ : /[0-9]/,
+    "-",
+    /2/,
+    /[0-9]/,
+    /[0-9]/,
+    /[0-9]/,
+  ]
+}

@@ -3,13 +3,13 @@ import InputMask from "react-input-mask"
 import Button from "../../../../components/UI/Button"
 import Input from "../../../../components/UI/Input"
 import Textarea from "../../../../components/UI/Textarea"
-import { equal } from "../../../../helpers"
+import { equal, dateFormat } from "../../../../helpers"
 import {
   RootState,
   useAppDispatch,
   useAppSelector,
 } from "../../../../store/store"
-import { setTask, setTaskToEdit } from "../../../../store/taskSlice"
+import { setTask, setTaskToEdit, deleteTask } from "../../../../store/taskSlice"
 import { Task, User } from "../../../../store/types"
 import "./TaskForm.scss"
 
@@ -40,22 +40,22 @@ const TaskForm = () => {
   const stateName = isEdit ? "Edit" : "Create"
 
   useEffect(() => {
-    task && setState(task)
+    if (task) {
+      setState(task)
+    }
   }, [task])
 
   const addTaskToUser = (e: React.FormEvent) => {
     e.preventDefault()
-
     const saveTask: Task = { ...state }
 
     if (!isEdit) {
       saveTask.id = new Date().getTime()
       saveTask.completed = false
-      saveTask.createdAt = new Date()
+      saveTask.createdAt = new Date().getTime()
     }
-    saveTask.updatedAt = new Date()
-    console.log("saveTask:", saveTask)
-    return
+    saveTask.updatedAt = new Date().getTime()
+
     dispatch(setTask(saveTask))
     clear()
   }
@@ -78,28 +78,8 @@ const TaskForm = () => {
     setState(initialState)
   }
 
-  const dayStartsWithThree = useMemo(
-    () => state.deadline?.charAt(0) === "3" || false,
-    [state.deadline]
-  )
-  const monthStartsWithOne = useMemo(
-    () => state.deadline?.charAt(0) === "1" || false,
-    [state.deadline]
-  )
-
   const formatChars: Array<RegExp | string> = useMemo(
-    () => [
-      /[0-3]/,
-      dayStartsWithThree ? /[01]/ : /[0-9]/,
-      "-",
-      /[01]/,
-      monthStartsWithOne ? /[0-2]/ : /[0-9]/,
-      "-",
-      /2/,
-      /[0-9]/,
-      /[0-9]/,
-      /[0-9]/,
-    ],
+    () => dateFormat(state.deadline as string),
     [state.deadline]
   )
   return (
@@ -107,13 +87,14 @@ const TaskForm = () => {
       <form className="card" key={state.id} onSubmit={addTaskToUser}>
         <header className="card-header">
           <div className="card-header-title">
-            {stateName} Task -{" "}
+            {stateName} Task -
             <Input
               type="text"
               name="title"
               className="ml-2 input"
               value={state.title}
               onChange={handleChange}
+              placeholder="Task Title"
               required
             />
           </div>
@@ -128,6 +109,7 @@ const TaskForm = () => {
             <Textarea
               value={state.description}
               onChange={handleChange}
+              placeholder="Task Descpription"
               name="description"
               required
             />
@@ -143,36 +125,43 @@ const TaskForm = () => {
             />
           </div>
         </div>
-        <footer className="card-footer">
-          {isEdit ? (
-            <Button
-              className="mx-2 card-footer-item is-success"
-              text="Update"
-            />
-          ) : (
-            <Button
-              className="mx-2 card-footer-item is-success"
-              text="Save"
-              disabled={equal(state, initialState)}
-            />
-          )}
-          {isEdit && (
-            <Button className="mx-2 card-footer-item is-danger" text="Delete" />
-          )}
-          {isEdit ? (
-            <Button
-              onClick={clear}
-              className="mx-2 card-footer-item is-warning"
-              text="Clear"
-            />
-          ) : (
-            <Button
-              onClick={reset}
-              className="mx-2 card-footer-item is-warning"
-              text="Reset"
-              disabled={equal(state, initialState)}
-            />
-          )}
+        <footer className="card-footer p-3">
+          <div className="buttons">
+            {isEdit ? (
+              <Button
+                className="mx-2 card-footer-item is-success"
+                text="Update"
+                disabled={equal(state, task)}
+              />
+            ) : (
+              <Button
+                className="mx-2 card-footer-item is-success"
+                text="Save"
+                disabled={equal(state, initialState)}
+              />
+            )}
+            {isEdit && (
+              <Button
+                className="mx-2 card-footer-item is-danger"
+                text="Delete"
+                onClick={() => dispatch(deleteTask(state))}
+              />
+            )}
+            {isEdit ? (
+              <Button
+                onClick={clear}
+                className="mx-2 card-footer-item is-warning"
+                text="Clear"
+              />
+            ) : (
+              <Button
+                onClick={reset}
+                className="mx-2 card-footer-item is-warning"
+                text="Reset"
+                disabled={equal(state, initialState)}
+              />
+            )}
+          </div>
         </footer>
       </form>
     </>

@@ -91,6 +91,20 @@ export const setTask = (task: Task) => {
   }
 }
 
+export const deleteTask = (task: Task) => {
+  return async (dispatch: any, getState: any) => {
+    const tasks = getState().tasks.array
+    let tempArray: Task[] = [...tasks]
+    tempArray = tempArray.filter((t: Task) => t.id !== task.id)
+
+    await setDoc(doc(db, "tasks", task.uid), {
+      tasks: tempArray as Task[],
+    })
+
+    dispatch(setTasks(tempArray))
+  }
+}
+
 export const setTaskToEdit = (task: Task) => {
   return (dispatch: any) => {
     dispatch(editingTask(task))
