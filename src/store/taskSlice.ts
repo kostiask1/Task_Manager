@@ -82,10 +82,10 @@ export const setTask = (task: Task) => {
     tempArray = tempArray.filter((t: Task) => !t.deadline)
     tempArray.sort((a: Task, b: Task) => {
       if ((a.updatedAt || a.createdAt) < (b.updatedAt || b.createdAt)) {
-        return -1
+        return 1
       }
       if ((a.updatedAt || a.createdAt) > (b.updatedAt || b.createdAt)) {
-        return 1
+        return -1
       }
 
       return 0
