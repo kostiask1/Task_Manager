@@ -56,17 +56,25 @@ export const getTasks = (uid: string) => {
 export const setTask = (task: Task) => {
   return async (dispatch: any, getState: any) => {
     const tasks = getState().tasks.array
-    let tempArray: Task[] = [...tasks]
+    const arrayWithoutDeadlines: Task[] = []
+    const arrayWithDeadlines: Task[] = []
 
     const indexOfTask = tasks.findIndex((t: Task) => t.id === task.id)
     const existTask = indexOfTask !== -1
 
     if (!existTask) {
-      tempArray.push(task)
+      arrayWithoutDeadlines.push(task)
     } else {
-      tempArray[indexOfTask] = task
+      arrayWithoutDeadlines[indexOfTask] = task
     }
-    const arrayWithDeadlines: Task[] = tempArray.filter((t: Task) => t.deadline)
+
+    for (const item of tasks) {
+      if (item.deadline) {
+        arrayWithDeadlines.push(item)
+      } else {
+        arrayWithoutDeadlines.push(item)
+      }
+    }
 
     arrayWithDeadlines.sort((a: Task, b: Task) => {
       const deadlineA = (a.deadline && convertToDate(a.deadline).getTime()) || 0
@@ -79,8 +87,7 @@ export const setTask = (task: Task) => {
       }
       return 0
     })
-    tempArray = tempArray.filter((t: Task) => !t.deadline)
-    tempArray.sort((a: Task, b: Task) => {
+    arrayWithoutDeadlines.sort((a: Task, b: Task) => {
       if ((a.updatedAt || a.createdAt) < (b.updatedAt || b.createdAt)) {
         return 1
       }
@@ -91,13 +98,13 @@ export const setTask = (task: Task) => {
       return 0
     })
 
-    tempArray = [...arrayWithDeadlines, ...tempArray]
+    const newArray = [...arrayWithDeadlines, ...arrayWithoutDeadlines]
 
     await setDoc(doc(db, "tasks", task.uid), {
-      tasks: tempArray as Task[],
+      tasks: newArray as Task[],
     })
 
-    dispatch(setTasks(tempArray))
+    dispatch(setTasks(newArray))
   }
 }
 
