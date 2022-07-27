@@ -56,6 +56,7 @@ export const getTasks = (uid: string) => {
 export const setTask = (task: Task) => {
   return async (dispatch: any, getState: any) => {
     const tasks = getState().tasks.array
+    const tasksCopy = [...tasks]
     const arrayWithoutDeadlines: Task[] = []
     const arrayWithDeadlines: Task[] = []
 
@@ -63,12 +64,13 @@ export const setTask = (task: Task) => {
     const existTask = indexOfTask !== -1
 
     if (!existTask) {
-      arrayWithoutDeadlines.push(task)
+      tasksCopy.push(task)
     } else {
-      arrayWithoutDeadlines[indexOfTask] = task
+      tasksCopy[indexOfTask] = task
     }
 
-    for (const item of tasks) {
+    for (let i = 0; i < tasksCopy.length; i++) {
+      const item = tasksCopy[i]
       if (item.deadline) {
         arrayWithDeadlines.push(item)
       } else {
@@ -94,7 +96,6 @@ export const setTask = (task: Task) => {
       if ((a.updatedAt || a.createdAt) > (b.updatedAt || b.createdAt)) {
         return -1
       }
-
       return 0
     })
 
