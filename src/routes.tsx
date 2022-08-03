@@ -3,10 +3,10 @@ import { Navigate, Route, Routes } from "react-router-dom"
 import Loader from "./components/UI/Loader/Loader"
 import Board from "./pages/TaskManagers/Board/Board"
 import { RootState, useAppSelector } from "./store/store"
-import Calendar from "./pages/Calendar/Calendar"
+const Calendar = React.lazy(() => import("./pages/Calendar/Calendar"))
 const About = React.lazy(() => import("./pages/About"))
 const Auth = React.lazy(() => import("./pages/Auth"))
-const Catalog = React.lazy(() => import("./pages/Catalog"))
+// const Catalog = React.lazy(() => import("./pages/Catalog"))
 const General = React.lazy(() => import("./pages/User"))
 const Password = React.lazy(() => import("./pages/User/Password"))
 const Profile = React.lazy(() => import("./pages/User/Profile"))
@@ -19,14 +19,14 @@ export const routesArray = [
     path: "auth",
     element: <Auth />,
   },
-  {
-    name: "Catalog",
-    private: false,
-    show: true,
-    visible: true,
-    path: "catalog",
-    element: <Catalog />,
-  },
+  // {
+  //   name: "Catalog",
+  //   private: false,
+  //   show: true,
+  //   visible: true,
+  //   path: "catalog",
+  //   element: <Catalog />,
+  // },
   {
     name: "Calendar",
     private: true,
@@ -41,12 +41,12 @@ export const routesArray = [
     path: "tasks",
     element: <Board />,
   },
-  {
-    name: "Catalog",
-    private: false,
-    path: "/",
-    element: <Navigate to="catalog" />,
-  },
+  // {
+  //   name: "Catalog",
+  //   private: false,
+  //   path: "/",
+  //   element: <Navigate to="catalog" />,
+  // },
   {
     name: "Profile",
     private: true,
@@ -59,7 +59,7 @@ export const routesArray = [
     ],
   },
   {
-    name: "About Us",
+    name: "About",
     private: false,
     show: true,
     visible: true,
@@ -85,7 +85,7 @@ const Routing: FC = () => {
   return !loading ? (
     <Suspense fallback={<Loader loading={true} />}>
       <Routes>
-        <Route path="*" element={<Navigate to="/catalog" />} />
+        <Route path="*" element={<Navigate to="/about" />} />
         {routesArray.map(
           (route) => (!route.private || authenticated) && unWrapRoute(route)
         )}
