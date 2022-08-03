@@ -6,7 +6,12 @@ import Textarea from "../../../components/UI/Textarea"
 import { dateFormat, equal } from "../../../helpers"
 import { setSuccess } from "../../../store/appSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
-import { deleteTask, setTask, setTaskToEdit } from "../../../store/taskSlice"
+import {
+  deleteTask,
+  setTask,
+  setTaskToEdit,
+  taskInitialState,
+} from "../../../store/taskSlice"
 import { Task, User } from "../../../store/types"
 import "./TaskForm.scss"
 
@@ -14,24 +19,10 @@ const TaskForm = () => {
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
 
-  const initialState: Task = useMemo(
-    () => ({
-      id: 0,
-      uid: user.id,
-      completed: false,
-      description: "",
-      title: "",
-      deadline: "",
-      createdAt: 0,
-      updatedAt: 0,
-    }),
-    []
-  )
-
   const task: Task | null = useAppSelector(
     (state: RootState) => state.tasks.editingTask
   )
-  const [state, setState] = useState<Task>(task || initialState)
+  const [state, setState] = useState<Task>(task || taskInitialState)
 
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
@@ -52,7 +43,7 @@ const TaskForm = () => {
       saveTask.createdAt = new Date().getTime()
     }
     saveTask.updatedAt = new Date().getTime()
-
+    saveTask.uid = user.id
     await dispatch(setTask(saveTask))
     isEdit
       ? dispatch(setSuccess("Task updated successfully"))
@@ -70,13 +61,13 @@ const TaskForm = () => {
 
   const clear = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
-    setState(initialState)
-    dispatch(setTaskToEdit(initialState))
+    setState(taskInitialState)
+    dispatch(setTaskToEdit(null))
   }
 
   const reset = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
-    setState(initialState)
+    setState(taskInitialState)
   }
 
   const deleteT = async (e?: React.MouseEvent<HTMLButtonElement>) => {
@@ -144,7 +135,7 @@ const TaskForm = () => {
               <Button
                 className="mx-2 card-footer-item is-success"
                 text="Save"
-                disabled={equal(state, initialState)}
+                disabled={equal(state, taskInitialState)}
               />
             )}
             {isEdit && (
@@ -165,7 +156,7 @@ const TaskForm = () => {
                 onClick={reset}
                 className="mx-2 card-footer-item is-warning"
                 text="Reset"
-                disabled={equal(state, initialState)}
+                disabled={equal(state, taskInitialState)}
               />
             )}
           </div>

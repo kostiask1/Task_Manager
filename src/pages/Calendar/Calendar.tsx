@@ -16,7 +16,12 @@ import Loader from "../../components/UI/Loader/Loader"
 import { convertToDate, convertDateToString } from "../../helpers"
 import { setSuccess, setError } from "../../store/appSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
-import { getTasks, setTask, setTaskToEdit } from "../../store/taskSlice"
+import {
+  getTasks,
+  setTask,
+  setTaskToEdit,
+  taskInitialState,
+} from "../../store/taskSlice"
 import { Task, User } from "../../store/types"
 import "./Calendar.scss"
 import TaskForm from "../TaskManagers/TaskForm/TaskForm"
@@ -32,6 +37,10 @@ const Calendar = () => {
   useEffect(() => {
     getData()
   }, [])
+
+  useEffect(() => {
+    setSlot(null)
+  }, [tasks])
 
   const getData = useCallback(() => {
     setLoading(true)
@@ -114,17 +123,11 @@ const Calendar = () => {
     },
     [event]
   )
-  
+
   const onSelectSlot = (slotInfo: any) => {
     dispatch(
       setTaskToEdit({
-        id: 0,
-        uid: user.id,
-        completed: false,
-        description: "",
-        title: "",
-        createdAt: 0,
-        updatedAt: 0,
+        ...taskInitialState,
         deadline: convertDateToString(slotInfo.end),
       })
     )
@@ -138,18 +141,10 @@ const Calendar = () => {
     setEvent(null)
     setSlot(true)
   }
-const clear = () => {
-  dispatch(setTaskToEdit({
-    id: 0,
-    uid: user.id,
-    completed: false,
-    description: "",
-    title: "",
-    createdAt: 0,
-    updatedAt: 0,
-    deadline: "",
-  }))
-  setSlot(null)}
+  const clear = () => {
+    dispatch(setTaskToEdit(null))
+    setSlot(null)
+  }
   return (
     <>
       <Loader loading={loading} />
@@ -181,7 +176,7 @@ const clear = () => {
                   onClick={() => complete(!event.completed)}
                   text={`Completed: ${event.completed ? "Yes" : "No"}`}
                 />
-                </div>
+              </div>
               <div className="column">
                 <Button
                   className={"is-primary"}
@@ -194,7 +189,7 @@ const clear = () => {
         )}
       </Modal>
       <Modal id="slot" show={slot} hide={clear}>
-        {slot && <TaskForm />}
+        <TaskForm />
       </Modal>
     </>
   )

@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../firebase/base"
-import { Task } from "./types"
 import { convertToDate } from "../helpers"
+import { Task } from "./types"
 
 interface TasksState {
   array: Task[]
@@ -12,6 +12,17 @@ interface TasksState {
 const initialState: TasksState = {
   array: [],
   editingTask: null,
+}
+
+export const taskInitialState: Task = {
+  id: 0,
+  uid: "",
+  completed: false,
+  description: "",
+  title: "",
+  deadline: "",
+  createdAt: 0,
+  updatedAt: 0,
 }
 
 const task = createSlice({
@@ -122,8 +133,8 @@ export const deleteTask = (task: Task) => {
   }
 }
 
-export const setTaskToEdit = (task: Task) => {
+export const setTaskToEdit = (task: Task | null) => {
   return (dispatch: any) => {
-    dispatch(editingTask(task))
+    dispatch(editingTask(task || taskInitialState))
   }
 }
