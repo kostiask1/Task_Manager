@@ -1,3 +1,4 @@
+import { useRef } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { routesArray } from "../../routes"
 import { signout } from "../../store/authSlice"
@@ -10,12 +11,19 @@ function Navbar() {
     authenticated: state.auth.authenticated,
     user: state.auth.user,
   }))
+  const burgerRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   const dispatch = useAppDispatch()
 
   const logout = () => dispatch(signout())
 
   const isActivePage = (route: string) => location.pathname.includes(route)
+
+  const handleBurgerClick = () => {
+    burgerRef.current?.classList.toggle("is-active")
+    menuRef.current?.classList.toggle("is-active")
+  }
 
   return (
     <nav
@@ -39,6 +47,8 @@ function Navbar() {
             aria-label="menu"
             aria-expanded="false"
             data-target="navbarBasicExample"
+            ref={burgerRef}
+            onClick={handleBurgerClick}
           >
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -47,6 +57,7 @@ function Navbar() {
         </div>
         <div
           id="navbarBasicExample"
+          ref={menuRef}
           className="navbar-menu is-align-items-center"
         >
           <div className="navbar-start">
