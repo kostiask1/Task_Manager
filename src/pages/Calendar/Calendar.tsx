@@ -86,6 +86,8 @@ const Calendar = () => {
     )
     const style = {
       color: "white",
+      margin: "2px 5px",
+      width: "calc(100% - 10px)",
       backgroundColor: "",
     }
     if (!event.deadline) {
