@@ -6,12 +6,12 @@ import { useAppDispatch } from "../../../store/store"
 import { SignInData } from "../../../store/types"
 
 const SignIn: FC = () => {
-  const isDevelopment = import.meta.env.DEV
+  const isDevelopment = import.meta.env.MODE === "development"
   const [email, setEmail] = useState(
-    isDevelopment ? import.meta.env.VITE_MOCK_EMAIL : "kostiasha99@gmail.com"
+    isDevelopment ? import.meta.env.VITE_MOCK_EMAIL : ""
   )
   const [password, setPassword] = useState(
-    isDevelopment ? import.meta.env.VITE_MOCK_PASSWORD : "123321"
+    isDevelopment ? import.meta.env.VITE_MOCK_PASSWORD : ""
   )
   const [loading, setLoading] = useState(false)
   const dispatch = useAppDispatch()

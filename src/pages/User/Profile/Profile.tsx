@@ -46,7 +46,7 @@ const Profile = () => {
     if (user) {
       setLoading(true)
       if (files) {
-        deleteImage(user.profileImg)
+        user.profileImg && deleteImage(user.profileImg)
         uploadImage(files, user.id + new Date().getTime(), "users").then(
           (imageUrl: any) => {
             dispatch(setSuccess("Image updated successfully"))
@@ -55,7 +55,7 @@ const Profile = () => {
           }
         )
       } else if (user?.profileImg !== userData.profileImg) {
-        deleteImage(user.profileImg)
+        user.profileImg && deleteImage(user.profileImg)
         updateUserProfile()
       } else {
         updateUserProfile()
@@ -219,7 +219,7 @@ const Profile = () => {
         </div>
         <Input
           type="email"
-          name="in_email"
+          name="email"
           value={userData.email}
           minLength={6}
           maxLength={40}
