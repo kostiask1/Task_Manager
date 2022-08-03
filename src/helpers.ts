@@ -33,3 +33,13 @@ export const convertToDate = (date: string): Date => {
   const dateObject = new Date(dateString)
   return dateObject
 }
+
+export const convertDateToString = (date: Date): string => {
+  let month = (date.getUTCMonth() + 1).toString() //months from 1-12
+  month.length < 2 && (month = "0" + month)
+  let day = date.getUTCDate().toString()
+  day.length < 2 && (day = "0" + day)
+  const year = date.getUTCFullYear()
+  const dateString = `${day}-${month}-${year}`
+  return dateString
+}
