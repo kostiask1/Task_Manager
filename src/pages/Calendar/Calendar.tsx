@@ -125,7 +125,7 @@ const Calendar = () => {
     [event]
   )
 
-  const onSelectSlot = (slotInfo: any) => {
+  const onSelectSlot = useCallback((slotInfo: any) => {
     dispatch(
       setTaskToEdit({
         ...taskInitialState,
@@ -133,24 +133,27 @@ const Calendar = () => {
       })
     )
     setSlot(true)
-  }
-  const setUpdateEvent = (event: any) => {
+  }, [])
+
+  const setUpdateEvent = useCallback((event: any) => {
     const eventCopy = { ...event }
     delete eventCopy.start
     delete eventCopy.end
     dispatch(setTaskToEdit(eventCopy))
     setEvent(null)
     setSlot(true)
-  }
-  const handleCloseTaskModal = () => {
+  }, [])
+
+  const handleCloseTaskModal = useCallback(() => {
     dispatch(setTaskToEdit(null))
     setSlot(null)
-  }
-  const handleDeleteTask = async (task: Task) => {
+  }, [])
+
+  const handleDeleteTask = useCallback(async (task: Task) => {
     await dispatch(deleteTask(task))
     dispatch(setSuccess("Task deleted"))
     setEvent(null)
-  }
+  }, [])
   return (
     <>
       <Loader loading={loading} />
