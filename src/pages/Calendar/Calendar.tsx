@@ -79,14 +79,8 @@ const Calendar = () => {
     if (!event.deadline) {
       style.backgroundColor = "#27557b"
     }
-    if (daysLeft <= 14) {
-      style.backgroundColor = "#ffbb00"
-    }
-    if (daysLeft <= 7) {
-      style.backgroundColor = "#ee6600"
-    }
-    if (daysLeft <= 3) {
-      style.backgroundColor = "#ad0000"
+    if (daysLeft > 0) {
+      style.backgroundColor = `hsl(${0 + Math.min(16, daysLeft) * 3}, 90% ,50%)`
     }
     if (daysLeft < 0) {
       style.backgroundColor = "#222222"
