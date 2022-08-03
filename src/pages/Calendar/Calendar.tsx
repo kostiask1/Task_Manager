@@ -25,6 +25,7 @@ import {
 import { Task, User } from "../../store/types"
 import "./Calendar.scss"
 import TaskForm from "../TaskManagers/TaskForm/TaskForm"
+import { deleteTask } from "../../store/taskSlice"
 
 const Calendar = () => {
   const dispatch = useAppDispatch()
@@ -90,7 +91,7 @@ const Calendar = () => {
     if (!event.deadline) {
       style.backgroundColor = "#27557b"
     }
-    if (daysLeft > 0) {
+    if (daysLeft >= 0 && event.deadline) {
       style.backgroundColor = `hsl(${0 + Math.min(16, daysLeft) * 3}, 90% ,50%)`
     }
     if (daysLeft < 0) {
@@ -141,9 +142,14 @@ const Calendar = () => {
     setEvent(null)
     setSlot(true)
   }
-  const clear = () => {
+  const handleCloseTaskModal = () => {
     dispatch(setTaskToEdit(null))
     setSlot(null)
+  }
+  const handleDeleteTask = async (task: Task) => {
+    await dispatch(deleteTask(task))
+    dispatch(setSuccess("Task deleted"))
+    setEvent(null)
   }
   return (
     <>
@@ -184,11 +190,18 @@ const Calendar = () => {
                   text="Edit"
                 />
               </div>
+              <div className="column">
+                <Button
+                  className="mx-2 card-footer-item is-danger"
+                  text="Delete"
+                  onClick={() => handleDeleteTask(event)}
+                />
+              </div>
             </div>
           </div>
         )}
       </Modal>
-      <Modal id="slot" show={slot} hide={clear}>
+      <Modal id="slot" show={slot} hide={handleCloseTaskModal}>
         <TaskForm />
       </Modal>
     </>
