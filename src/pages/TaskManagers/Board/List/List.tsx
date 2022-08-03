@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Button from "../../../../components/UI/Button"
 import { setSuccess } from "../../../../store/appSlice"
 import {
@@ -13,14 +13,16 @@ import {
 } from "../../../../store/taskSlice"
 import { Task, User } from "../../../../store/types"
 import "./List.scss"
+import Loader from "../../../../components/UI/Loader/Loader"
 
 const List = () => {
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const tasks: Task[] = useAppSelector((state: RootState) => state.tasks.array)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    dispatch(getTasks(user.id))
+    dispatch(getTasks(user.id)).then(() => setLoading(false))
   }, [])
 
   const deleteT = async (
@@ -69,6 +71,7 @@ const List = () => {
           </div>
         </div>
       ))}
+      <Loader loading={loading} />
     </div>
   )
 }
