@@ -13,12 +13,13 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import Modal from "../../components/Modal/Modal"
 import Button from "../../components/UI/Button"
 import Loader from "../../components/UI/Loader/Loader"
-import { convertToDate } from "../../helpers"
-import { setSuccess } from "../../store/appSlice"
+import { convertToDate, convertDateToString } from "../../helpers"
+import { setSuccess, setError } from "../../store/appSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
-import { getTasks, setTask } from "../../store/taskSlice"
+import { getTasks, setTask, setTaskToEdit } from "../../store/taskSlice"
 import { Task, User } from "../../store/types"
 import "./Calendar.scss"
+import TaskForm from "../TaskManagers/TaskForm/TaskForm"
 
 const Calendar = () => {
   const dispatch = useAppDispatch()
@@ -26,6 +27,7 @@ const Calendar = () => {
   const tasks: Task[] = useAppSelector((state: RootState) => state.tasks.array)
   const [loading, setLoading] = useState(true)
   const [event, setEvent] = useState<any>(null)
+  const [slot, setSlot] = useState<any>(null)
 
   useEffect(() => {
     getData()
@@ -86,7 +88,7 @@ const Calendar = () => {
       style.backgroundColor = "#222222"
     }
     if (event.completed) {
-      style.backgroundColor = "#009900"
+      style.backgroundColor = "#00d1b2"
     }
     return { style }
   }, [])
@@ -102,17 +104,52 @@ const Calendar = () => {
 
         await dispatch(setTask(saveTask))
         if (completed) {
-          dispatch(setSuccess("Task completed successfully"))
+          dispatch(setSuccess("Task completed"))
         } else {
-          dispatch(setSuccess("Task returned successfully"))
+          dispatch(setError("Task returned"))
         }
         getData()
-        setEvent(null)
+        setEvent(saveTask)
       }
     },
     [event]
   )
-
+  
+  const onSelectSlot = (slotInfo: any) => {
+    dispatch(
+      setTaskToEdit({
+        id: 0,
+        uid: user.id,
+        completed: false,
+        description: "",
+        title: "",
+        createdAt: 0,
+        updatedAt: 0,
+        deadline: convertDateToString(slotInfo.end),
+      })
+    )
+    setSlot(true)
+  }
+  const setUpdateEvent = (event: any) => {
+    const eventCopy = { ...event }
+    delete eventCopy.start
+    delete eventCopy.end
+    dispatch(setTaskToEdit(eventCopy))
+    setEvent(null)
+    setSlot(true)
+  }
+const clear = () => {
+  dispatch(setTaskToEdit({
+    id: 0,
+    uid: user.id,
+    completed: false,
+    description: "",
+    title: "",
+    createdAt: 0,
+    updatedAt: 0,
+    deadline: "",
+  }))
+  setSlot(null)}
   return (
     <>
       <Loader loading={loading} />
@@ -121,6 +158,8 @@ const Calendar = () => {
         events={events}
         eventPropGetter={eventPropGetter}
         onSelectEvent={onSelectEvent}
+        selectable={true}
+        onSelectSlot={onSelectSlot}
         defaultView="month"
         style={{ height: "100vh" }}
       />
@@ -138,21 +177,24 @@ const Calendar = () => {
             <div className="columns mt-5">
               <div className="column">
                 <Button
-                  className="is-primary"
-                  onClick={() => complete(true)}
-                  text="Yes"
+                  className={event.completed ? "is-primary" : "is-danger"}
+                  onClick={() => complete(!event.completed)}
+                  text={`Completed: ${event.completed ? "Yes" : "No"}`}
                 />
-              </div>
+                </div>
               <div className="column">
                 <Button
-                  className="is-danger"
-                  onClick={() => complete(false)}
-                  text="No"
+                  className={"is-primary"}
+                  onClick={() => setUpdateEvent(event)}
+                  text="Edit"
                 />
               </div>
             </div>
           </div>
         )}
+      </Modal>
+      <Modal id="slot" show={slot} hide={clear}>
+        {slot && <TaskForm />}
       </Modal>
     </>
   )
