@@ -28,7 +28,7 @@ const Profile = () => {
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const [userData, setUserData] = useState<User>(user)
-  const [files, setFiles] = useState<FileList>()
+  const [files, setFiles] = useState<FileList | null>(null)
   const [loading, setLoading] = useState(false)
   const imageRef = useRef<HTMLImageElement>(null)
   const imageNameRef = useRef<HTMLSpanElement>(null)
@@ -51,6 +51,7 @@ const Profile = () => {
           (imageUrl: any) => {
             dispatch(setSuccess("Image updated successfully"))
             setProfileImg(null, imageUrl)
+            setFiles(null)
             updateUserProfile(imageUrl)
           }
         )
@@ -236,7 +237,7 @@ const Profile = () => {
         <Button
           text={loading ? "Loading..." : "Update Profile"}
           className="is-primary is-fullwidth mt-5"
-          disabled={isEqual || loading}
+          disabled={(isEqual && !files) || loading}
         />
       </form>
       <Modal id="modal" show={showPrompt} hide={() => {}}>
