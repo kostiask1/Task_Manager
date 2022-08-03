@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom"
 import Loader from "./components/UI/Loader/Loader"
 import Board from "./pages/TaskManagers/Board/Board"
 import { RootState, useAppSelector } from "./store/store"
+import Calendar from "./pages/Calendar/Calendar"
 const About = React.lazy(() => import("./pages/About"))
 const Auth = React.lazy(() => import("./pages/Auth"))
 const Catalog = React.lazy(() => import("./pages/Catalog"))
@@ -25,6 +26,13 @@ export const routesArray = [
     visible: true,
     path: "catalog",
     element: <Catalog />,
+  },
+  {
+    name: "Calendar",
+    private: true,
+    show: true,
+    path: "calendar",
+    element: <Calendar />,
   },
   {
     name: "Tasks",
