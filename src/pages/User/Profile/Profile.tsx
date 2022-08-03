@@ -239,7 +239,7 @@ const Profile = () => {
           disabled={isEqual || loading}
         />
       </form>
-      <Modal id="modal" show={showPrompt}>
+      <Modal id="modal" show={showPrompt} hide={() => {}}>
         <div className="box is-flex is-align-items-center is-flex-direction-column">
           <h2 className="is-size-4">
             If you leave your settings will not be saved!
