@@ -9,7 +9,7 @@ export function equal(x: any, y: any): boolean {
 }
 export const dateFormat = (date: string): Array<string | RegExp> => {
   const dayStartsWithThree = date?.charAt(0) === "3" || false
-  const monthStartsWithOne = date?.charAt(0) === "1" || false
+  const monthStartsWithOne = date?.charAt(3) === "1" || false
 
   return [
     /[0-3]/,
