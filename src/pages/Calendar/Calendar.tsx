@@ -13,19 +13,19 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import Modal from "../../components/Modal/Modal"
 import Button from "../../components/UI/Button"
 import Loader from "../../components/UI/Loader/Loader"
-import { convertToDate, convertDateToString } from "../../helpers"
-import { setSuccess, setError } from "../../store/appSlice"
+import { convertDateToString, convertToDate } from "../../helpers"
+import { setError, setSuccess } from "../../store/appSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import {
+  deleteTask,
   getTasks,
   setTask,
   setTaskToEdit,
   taskInitialState,
 } from "../../store/taskSlice"
 import { Task, User } from "../../store/types"
-import "./Calendar.scss"
 import TaskForm from "../TaskManagers/TaskForm/TaskForm"
-import { deleteTask } from "../../store/taskSlice"
+import "./Calendar.scss"
 
 const Calendar = () => {
   const dispatch = useAppDispatch()
