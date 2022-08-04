@@ -40,7 +40,8 @@ const Calendar = () => {
   const [loading, setLoading] = useState(false)
   const [task, setTask] = useState<any>(null)
   const [slot, setSlot] = useState<any>(null)
-
+  const [bcView, setBCView] = useState("month")
+  const [date, setDate] = useState(new Date())
   useEffect(() => {
     getData()
   }, [])
@@ -135,8 +136,15 @@ const Calendar = () => {
     setSlot(task)
   }, [])
 
+  const onShowMore = (_: any, date: Date) => {
+    setDate(date)
+    setBCView("week")
+  }
+
+  const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate])
+
   return (
-    <>
+    <div className="pb-6 pt-3">
       <Loader loading={loading} />
       <EventCalendar
         className="fadeIn"
@@ -147,7 +155,12 @@ const Calendar = () => {
         selectable={true}
         longPressThreshold={100}
         onSelectSlot={onSelectSlot}
-        defaultView="month"
+        onShowMore={onShowMore}
+        //@ts-ignore
+        view={bcView}
+        date={date}
+        onNavigate={onNavigate}
+        onView={setBCView}
         views={["month", "week", "agenda"]}
         style={{ height: "100vh" }}
       />
@@ -167,7 +180,7 @@ const Calendar = () => {
           <TaskForm setModal={setSlot} />
         </Suspense>
       </Modal>
-    </>
+    </div>
   )
 }
 
