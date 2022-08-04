@@ -74,7 +74,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
 
   const reset = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
-    setState(taskInitialState)
+    setState(task || taskInitialState)
   }
 
   const deleteT = async (e?: React.MouseEvent<HTMLButtonElement>) => {
@@ -184,7 +184,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                 onClick={deleteT}
               />
             )}
-            {isEdit ? (
+            {isEdit && !setModal ? (
               <Button
                 onClick={clear}
                 className="mx-2 card-footer-item is-warning"
@@ -195,7 +195,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                 onClick={reset}
                 className="mx-2 card-footer-item is-warning"
                 text="Reset"
-                disabled={equal(state, taskInitialState)}
+                disabled={equal(state, task || taskInitialState)}
               />
             )}
           </div>
