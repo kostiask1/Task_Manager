@@ -165,6 +165,7 @@ const Calendar = () => {
         eventPropGetter={eventPropGetter}
         onSelectEvent={onSelectEvent}
         selectable={true}
+        longPressThreshold={100}
         onSelectSlot={onSelectSlot}
         defaultView="month"
         style={{ height: "100vh" }}

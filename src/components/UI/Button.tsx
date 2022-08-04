@@ -15,7 +15,7 @@ const Button: FC<ButtonProps> = ({
   return (
     <button
       type={type}
-      className={`button ${className}`}
+      className={`button ${className ?? ""}`}
       onClick={onClick}
       disabled={disabled}
     >

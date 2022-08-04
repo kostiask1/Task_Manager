@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, useCallback } from "react"
 import InputMask from "react-input-mask"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import Textarea from "../../../components/UI/Textarea"
 import { dateFormat, equal } from "../../../helpers"
-import { setSuccess } from "../../../store/appSlice"
+import { setSuccess, setError } from "../../../store/appSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import {
   deleteTask,
@@ -79,15 +79,36 @@ const TaskForm = () => {
     dispatch(setSuccess("Task deleted successfully"))
   }
 
+  const complete = useCallback(
+    async (e: React.FormEvent, completed: boolean) => {
+      e.preventDefault()
+      if (state) {
+        const saveTask: any = { ...state }
+        saveTask.completed = completed
+        saveTask.updatedAt = new Date().getTime()
+        await dispatch(setTask(saveTask))
+        dispatch(setTaskToEdit(saveTask))
+        setState(saveTask)
+        if (completed) {
+          dispatch(setSuccess("Task completed"))
+        } else {
+          dispatch(setError("Task returned"))
+        }
+      }
+    },
+    [task]
+  )
+
   const formatChars: Array<RegExp | string> = useMemo(
     () => dateFormat(state.end as string),
     [state.end]
   )
+
   return (
     <>
       <form className="card" key={state.id} onSubmit={addTaskToUser}>
         <header className="card-header">
-          <div className="card-header-title">
+          <div className="card-header-title is-align-items-center">
             {stateName} Task -
             <Input
               type="text"
@@ -98,6 +119,13 @@ const TaskForm = () => {
               placeholder="Task Title"
               required
             />
+            {!!state.start && (
+              <Button
+                className={state.completed ? "is-primary" : "is-danger"}
+                onClick={(e) => complete(e, !state.completed)}
+                text={`Completed: ${state.completed ? "Yes" : "No"}`}
+              />
+            )}
           </div>
           <button className="card-header-icon" aria-label="more options">
             <span className="icon">
@@ -107,6 +135,7 @@ const TaskForm = () => {
         </header>
         <div className="card-content">
           <div className="content">
+            <label htmlFor="description">Description</label>
             <Textarea
               value={state.description}
               onChange={handleChange}
@@ -115,12 +144,14 @@ const TaskForm = () => {
               required
             />
             <br />
+            <label htmlFor="end">Deadline</label>
             <InputMask
               className="input"
               mask={formatChars}
               maskPlaceholder="dd-mm-yyyy"
               alwaysShowMask={true}
               name="end"
+              id="end"
               value={state.end}
               onChange={handleChange}
             />
