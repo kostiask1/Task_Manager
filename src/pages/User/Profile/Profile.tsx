@@ -7,6 +7,7 @@ import {
   updateProfile,
 } from "firebase/auth"
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react"
+import Modal from "../../../components/Modal/Modal"
 import Button from "../../../components/UI/Button"
 import Checkbox from "../../../components/UI/Checkbox/Checkbox"
 import Input from "../../../components/UI/Input"
@@ -15,14 +16,13 @@ import {
   uploadDoc,
   uploadImage,
 } from "../../../firebase/firestore"
+import { equal } from "../../../helpers"
+import { useCallbackPrompt } from "../../../hooks/useCallbackPrompt"
 import { setError, setSuccess } from "../../../store/appSlice"
-import { setUser } from "../../../store/authSlice"
+import { deleteAccount, setUser } from "../../../store/authSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { User } from "../../../store/types"
 import "./Profile.scss"
-import { equal } from "../../../helpers"
-import { useCallbackPrompt } from "../../../hooks/useCallbackPrompt"
-import Modal from "../../../components/Modal/Modal"
 
 const Profile = () => {
   const dispatch = useAppDispatch()
@@ -137,10 +137,16 @@ const Profile = () => {
     setUserData((state) => ({ ...state, [name]: value }))
   }
 
+  const deleteUser = () => {
+    setLoading(true)
+    dispatch(setSuccess("Wait a minute please"))
+    dispatch(deleteAccount(user.id, user.profileImg))
+  }
+
   return (
     <div className="columns fadeIn is-justify-content-center">
-      <div className="column is-one-fifth">
-        <figure className="image ml-1 is-128x128">
+      <div className="column is-flex is-flex-direction-column is-one-fifth is-align-items-center">
+        <figure className="image is-128x128">
           <img
             ref={imageRef}
             className="is-rounded"
@@ -157,6 +163,11 @@ const Profile = () => {
             alt="Profile img"
           />
         </figure>
+        <Button
+          onClick={deleteUser}
+          className="is-danger is-fullwidth mt-5"
+          text="Delete profile"
+        />
       </div>
       <form className="form column is-half" onSubmit={submitHandler}>
         <Input

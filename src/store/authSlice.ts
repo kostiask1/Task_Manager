@@ -1,13 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import {
   createUserWithEmailAndPassword,
+  deleteUser,
   getAuth,
   sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth"
-import { doc, getDoc } from "firebase/firestore/lite"
+import { deleteDoc, doc, getDoc } from "firebase/firestore/lite"
 import { db } from "../firebase/base"
-import { uploadDoc } from "../firebase/firestore"
+import { deleteImage, uploadDoc } from "../firebase/firestore"
 import { setError, setLoading, setSuccess } from "./appSlice"
 import { AuthState, SignInData, SignUpData, User } from "./types"
 
@@ -135,13 +136,25 @@ export const getUserById = (id: string) => {
         userData.emailVerified =
           _auth.currentUser?.emailVerified ?? userData.emailVerified
         dispatch(setUser(userData))
-      } else {
-        dispatch(setError("No such user"))
       }
     } catch (err) {
       dispatch(setError("Error dispatching setUser"))
     } finally {
       dispatch(setLoading(false))
     }
+  }
+}
+
+export const deleteAccount = (id: string, image: string) => {
+  return async (dispatch: any) => {
+    image && (await deleteImage(image))
+    await deleteDoc(doc(db, "users", id))
+    await deleteDoc(doc(db, "tasks", id))
+    const acc = _auth.currentUser
+    acc &&
+      deleteUser(acc as any).then(() => {
+        dispatch(setSuccess("Your account was deleted"))
+        dispatch(signout())
+      })
   }
 }
