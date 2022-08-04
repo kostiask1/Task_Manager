@@ -7,7 +7,7 @@ import {
   updateProfile,
 } from "firebase/auth"
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react"
-import Modal from "../../../components/Modal/Modal"
+import Prompt from "../../../components/Prompt/Prompt"
 import Button from "../../../components/UI/Button"
 import Checkbox from "../../../components/UI/Checkbox/Checkbox"
 import Input from "../../../components/UI/Input"
@@ -29,6 +29,7 @@ const Profile = () => {
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const [userData, setUserData] = useState<User>(user)
   const [files, setFiles] = useState<FileList | null>(null)
+  const [prompt, setPrompt] = useState<boolean>(false)
   const [loading, setLoading] = useState(false)
   const imageRef = useRef<HTMLImageElement>(null)
   const imageNameRef = useRef<HTMLSpanElement>(null)
@@ -164,7 +165,7 @@ const Profile = () => {
           />
         </figure>
         <Button
-          onClick={deleteUser}
+          onClick={() => setPrompt(true)}
           className="is-danger is-fullwidth mt-5"
           text="Delete profile"
         />
@@ -251,29 +252,18 @@ const Profile = () => {
           disabled={(isEqual && !files) || loading}
         />
       </form>
-      <Modal id="modal" show={showPrompt} hide={() => {}}>
-        <div className="box is-flex is-align-items-center is-flex-direction-column">
-          <h2 className="is-size-4">
-            If you leave your settings will not be saved!
-          </h2>
-          <div className="columns mt-5">
-            <div className="column">
-              <Button
-                className="is-primary"
-                onClick={() => cancelNavigation()}
-                text="Stay"
-              />
-            </div>
-            <div className="column">
-              <Button
-                className="is-danger"
-                onClick={() => confirmNavigation()}
-                text="Leave"
-              />
-            </div>
-          </div>
-        </div>
-      </Modal>
+      <Prompt
+        title="If you leave your settings will not be saved!?"
+        show={showPrompt}
+        onCancel={cancelNavigation}
+        onConfirm={confirmNavigation}
+      />
+      <Prompt
+        title="Delete account?"
+        show={prompt}
+        onCancel={() => setPrompt(false)}
+        onConfirm={deleteUser}
+      />
     </div>
   )
 }
