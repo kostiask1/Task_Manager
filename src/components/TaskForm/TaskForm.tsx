@@ -93,9 +93,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
         await dispatch(setTask(saveTask))
         dispatch(setTaskToEdit(saveTask))
         setState(saveTask)
-        if (setModal) {
-          setModal(saveTask)
-        }
+        setModal && setModal(saveTask)
         if (completed) {
           dispatch(setSuccess("Task completed"))
         } else {

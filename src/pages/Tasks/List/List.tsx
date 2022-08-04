@@ -1,4 +1,4 @@
-import { lazy, useEffect, Suspense, useState } from "react"
+import { lazy, Suspense, useEffect, useState } from "react"
 import Loader from "../../../components/UI/Loader/Loader"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { getTasks } from "../../../store/taskSlice"

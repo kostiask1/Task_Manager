@@ -21,9 +21,7 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
       saveTask.completed = completed
       saveTask.updatedAt = new Date().getTime()
       await dispatch(setTask(saveTask))
-      if (setModal) {
-        setModal(saveTask)
-      }
+      setModal && setModal(saveTask)
       if (completed) {
         dispatch(setSuccess("Task completed"))
       } else {

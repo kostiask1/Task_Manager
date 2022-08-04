@@ -42,6 +42,7 @@ const Calendar = () => {
   const [slot, setSlot] = useState<any>(null)
   const [bcView, setBCView] = useState("month")
   const [date, setDate] = useState(new Date())
+
   useEffect(() => {
     getData()
   }, [])
