@@ -1,7 +1,7 @@
-import "./Prompt.scss"
 import { FC } from "react"
 import Modal from "../Modal/Modal"
 import Button from "../UI/Button"
+import "./Prompt.scss"
 
 interface Props {
   title: string
@@ -22,18 +22,10 @@ const Prompt: FC<Props> = ({
         <h2 className="is-size-4">{title}</h2>
         <div className="columns mt-5">
           <div className="column">
-            <Button
-              className="is-primary"
-              onClick={() => confirm()}
-              text="Confirm"
-            />
+            <Button className="is-primary" onClick={confirm} text="Confirm" />
           </div>
           <div className="column">
-            <Button
-              className="is-danger"
-              onClick={() => cancel()}
-              text="Cancel"
-            />
+            <Button className="is-danger" onClick={cancel} text="Cancel" />
           </div>
         </div>
       </div>

@@ -29,13 +29,13 @@ const Profile = () => {
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const [userData, setUserData] = useState<User>(user)
   const [files, setFiles] = useState<FileList | null>(null)
-  const [prompt, setPrompt] = useState<boolean>(false)
   const [loading, setLoading] = useState(false)
   const imageRef = useRef<HTMLImageElement>(null)
   const imageNameRef = useRef<HTMLSpanElement>(null)
   const isEqual = useMemo(() => equal(user, userData), [user, userData])
+  const [promptDelete, setPromptDelete] = useState<boolean>(false)
 
-  const [showPrompt, confirmNavigation, cancelNavigation]: any =
+  const [promptNavgation, confirmNavigation, cancelNavigation]: any =
     useCallbackPrompt(!isEqual || loading)
 
   const submitHandler = (e: FormEvent) => {
@@ -165,7 +165,7 @@ const Profile = () => {
           />
         </figure>
         <Button
-          onClick={() => setPrompt(true)}
+          onClick={() => setPromptDelete(true)}
           className="is-danger is-fullwidth mt-5"
           text="Delete profile"
         />
@@ -254,14 +254,14 @@ const Profile = () => {
       </form>
       <Prompt
         title="If you leave your settings will not be saved!?"
-        show={showPrompt}
+        show={promptNavgation}
         onCancel={cancelNavigation}
         onConfirm={confirmNavigation}
       />
       <Prompt
         title="Delete account?"
-        show={prompt}
-        onCancel={() => setPrompt(false)}
+        show={promptDelete}
+        onCancel={() => setPromptDelete(false)}
         onConfirm={deleteUser}
       />
     </div>
