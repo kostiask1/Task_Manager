@@ -1,9 +1,9 @@
 import { useCallback, FC } from "react"
-import Button from "../../../components/UI/Button"
-import { setError, setSuccess } from "../../../store/appSlice"
-import { useAppDispatch } from "../../../store/store"
-import { deleteTask, setTask, setTaskToEdit } from "../../../store/taskSlice"
-import { Task as TaskProps } from "../../../store/types"
+import Button from "../UI/Button"
+import { setError, setSuccess } from "../../store/appSlice"
+import { useAppDispatch } from "../../store/store"
+import { deleteTask, setTask, setTaskToEdit } from "../../store/taskSlice"
+import { Task as TaskProps } from "../../store/types"
 import "./Task.scss"
 
 interface TaskInterface {
@@ -38,6 +38,9 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
   ) => {
     e.preventDefault()
     await dispatch(deleteTask(task))
+    if (setModal) {
+      setModal(null)
+    }
     dispatch(setSuccess("Task deleted successfully"))
   }
 

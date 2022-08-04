@@ -1,18 +1,18 @@
 import { useEffect, useMemo, useState, useCallback, FC } from "react"
 import InputMask from "react-input-mask"
-import Button from "../../../components/UI/Button"
-import Input from "../../../components/UI/Input"
-import Textarea from "../../../components/UI/Textarea"
-import { dateFormat, equal } from "../../../helpers"
-import { setSuccess, setError } from "../../../store/appSlice"
-import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
+import Button from "../UI/Button"
+import Input from "../UI/Input"
+import Textarea from "../UI/Textarea"
+import { dateFormat, equal } from "../../helpers"
+import { setSuccess, setError } from "../../store/appSlice"
+import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import {
   deleteTask,
   setTask,
   setTaskToEdit,
   taskInitialState,
-} from "../../../store/taskSlice"
-import { Task, User } from "../../../store/types"
+} from "../../store/taskSlice"
+import { Task, User } from "../../store/types"
 import "./TaskForm.scss"
 
 interface TaskInterface {

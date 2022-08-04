@@ -3,7 +3,7 @@ import getDay from "date-fns/getDay"
 import enUS from "date-fns/locale/en-US"
 import parse from "date-fns/parse"
 import startOfWeek from "date-fns/startOfWeek"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { lazy, useCallback, useEffect, useMemo, useState } from "react"
 import {
   Calendar as EventCalendar,
   dateFnsLocalizer,
@@ -20,9 +20,9 @@ import {
   taskInitialState,
 } from "../../store/taskSlice"
 import { Task as TaskProps, User } from "../../store/types"
-import Task from "../TaskManagers/Task"
-import TaskForm from "../TaskManagers/TaskForm/TaskForm"
 import "./Calendar.scss"
+const Task = lazy(() => import("../../components/Task"))
+const TaskForm = lazy(() => import("../../components/TaskForm"))
 
 const Calendar = () => {
   const dispatch = useAppDispatch()

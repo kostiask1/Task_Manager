@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, lazy } from "react"
 import Loader from "../../../components/UI/Loader/Loader"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { getTasks } from "../../../store/taskSlice"
 import { Task as TaskProps, User } from "../../../store/types"
-import Task from "../Task"
+const Task = lazy(() => import("../../../components/Task"))
 import "./List.scss"
 
 const List = () => {
@@ -20,9 +20,8 @@ const List = () => {
 
   return (
     <div className="columns tasks-list">
-      {tasks.map((task) => (
-        <Task task={task} key={task.id} />
-      ))}
+      {!!tasks.length &&
+        tasks.map((task) => <Task task={task} key={task.id} />)}
       <Loader loading={loading} />
     </div>
   )

@@ -1,15 +1,14 @@
-import React, { FC, Suspense } from "react"
+import { FC, Suspense, lazy } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 import Loader from "./components/UI/Loader/Loader"
-import Board from "./pages/TaskManagers/Board/Board"
 import { RootState, useAppSelector } from "./store/store"
-const Calendar = React.lazy(() => import("./pages/Calendar/Calendar"))
-const About = React.lazy(() => import("./pages/About"))
-const Auth = React.lazy(() => import("./pages/Auth"))
-// const Catalog = React.lazy(() => import("./pages/Catalog"))
-const General = React.lazy(() => import("./pages/User"))
-const Password = React.lazy(() => import("./pages/User/Password"))
-const Profile = React.lazy(() => import("./pages/User/Profile"))
+const Tasks = lazy(() => import("./pages/Tasks"))
+const Calendar = lazy(() => import("./pages/Calendar"))
+const About = lazy(() => import("./pages/About"))
+const Auth = lazy(() => import("./pages/Auth"))
+const General = lazy(() => import("./pages/User"))
+const Password = lazy(() => import("./pages/User/Password"))
+const Profile = lazy(() => import("./pages/User/Profile"))
 
 export const routesArray = [
   {
@@ -19,14 +18,6 @@ export const routesArray = [
     path: "auth",
     element: <Auth />,
   },
-  // {
-  //   name: "Catalog",
-  //   private: false,
-  //   show: true,
-  //   visible: true,
-  //   path: "catalog",
-  //   element: <Catalog />,
-  // },
   {
     name: "Calendar",
     private: true,
@@ -39,14 +30,8 @@ export const routesArray = [
     private: true,
     show: true,
     path: "tasks",
-    element: <Board />,
+    element: <Tasks />,
   },
-  // {
-  //   name: "Catalog",
-  //   private: false,
-  //   path: "/",
-  //   element: <Navigate to="catalog" />,
-  // },
   {
     name: "Profile",
     private: true,
