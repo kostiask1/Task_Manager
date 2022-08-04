@@ -19,7 +19,7 @@ import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import {
   deleteTask,
   getTasks,
-  setTask,
+  setTask as updateTask,
   setTaskToEdit,
   taskInitialState,
 } from "../../store/taskSlice"
@@ -32,7 +32,7 @@ const Calendar = () => {
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const tasks: Task[] = useAppSelector((state: RootState) => state.tasks.array)
   const [loading, setLoading] = useState(true)
-  const [event, setEvent] = useState<any>(null)
+  const [task, setTask] = useState<any>(null)
   const [slot, setSlot] = useState<any>(null)
 
   useEffect(() => {
@@ -54,12 +54,8 @@ const Calendar = () => {
   const generateEvents = useCallback((tasks: Task[]): Event[] => {
     return tasks.map((task: any) => ({
       ...task,
-      start: task.deadline
-        ? convertToDate(task.deadline)
-        : new Date(task.createdAt),
-      end: task.deadline
-        ? convertToDate(task.deadline)
-        : new Date(task.createdAt),
+      start: task.end ? convertToDate(task.end) : new Date(task.start),
+      end: task.end ? convertToDate(task.end) : new Date(task.start),
     }))
   }, [])
 
@@ -78,9 +74,14 @@ const Calendar = () => {
       }),
     []
   )
-  const onSelectEvent = useCallback((calEvent: any) => setEvent(calEvent), [])
+  const onSelectEvent = useCallback((calEvent: any) => {
+    const copy = { ...calEvent }
+    copy.start = convertDateToString(copy.start)
+    copy.end = convertDateToString(copy.end)
+    setTask(copy)
+  }, [])
 
-  const eventPropGetter = useCallback((event: any, start: Date, end: Date) => {
+  const eventPropGetter = useCallback((task: any, start: Date, end: Date) => {
     const daysLeft = Math.ceil(
       (end.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
     )
@@ -90,16 +91,16 @@ const Calendar = () => {
       width: "calc(100% - 10px)",
       backgroundColor: "",
     }
-    if (!event.deadline) {
+    if (!task.end) {
       style.backgroundColor = "#27557b"
     }
-    if (daysLeft >= 0 && event.deadline) {
+    if (daysLeft >= 0 && task.end) {
       style.backgroundColor = `hsl(${0 + Math.min(16, daysLeft) * 3}, 90% ,50%)`
     }
     if (daysLeft < 0) {
       style.backgroundColor = "#222222"
     }
-    if (event.completed) {
+    if (task.completed) {
       style.backgroundColor = "#00d1b2"
     }
     return { style }
@@ -107,42 +108,38 @@ const Calendar = () => {
 
   const complete = useCallback(
     async (completed: boolean) => {
-      if (event) {
-        const saveTask: any = { ...event }
-        delete saveTask.start
-        delete saveTask.end
+      if (task) {
+        const saveTask: any = { ...task }
         saveTask.completed = completed
         saveTask.updatedAt = new Date().getTime()
 
-        await dispatch(setTask(saveTask))
+        await dispatch(updateTask(saveTask))
         if (completed) {
           dispatch(setSuccess("Task completed"))
         } else {
           dispatch(setError("Task returned"))
         }
         getData()
-        setEvent(saveTask)
+        setTask(saveTask)
       }
     },
-    [event]
+    [task]
   )
 
   const onSelectSlot = useCallback((slotInfo: any) => {
     dispatch(
       setTaskToEdit({
         ...taskInitialState,
-        deadline: convertDateToString(slotInfo.end),
+        end: convertDateToString(slotInfo.start),
       })
     )
     setSlot(true)
   }, [])
 
-  const setUpdateEvent = useCallback((event: any) => {
-    const eventCopy = { ...event }
-    delete eventCopy.start
-    delete eventCopy.end
+  const setUpdateEvent = useCallback((task: any) => {
+    const eventCopy = { ...task }
     dispatch(setTaskToEdit(eventCopy))
-    setEvent(null)
+    setTask(null)
     setSlot(true)
   }, [])
 
@@ -154,7 +151,7 @@ const Calendar = () => {
   const handleDeleteTask = useCallback(async (task: Task) => {
     await dispatch(deleteTask(task))
     dispatch(setSuccess("Task deleted"))
-    setEvent(null)
+    setTask(null)
   }, [])
   return (
     <>
@@ -169,29 +166,29 @@ const Calendar = () => {
         defaultView="month"
         style={{ height: "100vh" }}
       />
-      <Modal id="event" show={!!event} hide={() => setEvent(null)}>
-        {event && (
+      <Modal id="task" show={!!task} hide={() => setTask(null)}>
+        {task && (
           <div className="box is-flex is-align-items-center is-flex-direction-column">
             <h2 className="is-size-3">Set task completed?</h2>
             <div className="text pt-2 is-size-5">
-              Task: {event.title}
+              Task: {task.title}
               <br />
-              Description: {event.description}
+              Description: {task.description}
               <br />
-              {event.deadline && "Due date: " + event.deadline}
+              {task.end && "Due date: " + task.end}
             </div>
             <div className="columns mt-5">
               <div className="column">
                 <Button
-                  className={event.completed ? "is-primary" : "is-danger"}
-                  onClick={() => complete(!event.completed)}
-                  text={`Completed: ${event.completed ? "Yes" : "No"}`}
+                  className={task.completed ? "is-primary" : "is-danger"}
+                  onClick={() => complete(!task.completed)}
+                  text={`Completed: ${task.completed ? "Yes" : "No"}`}
                 />
               </div>
               <div className="column">
                 <Button
                   className={"is-primary"}
-                  onClick={() => setUpdateEvent(event)}
+                  onClick={() => setUpdateEvent(task)}
                   text="Edit"
                 />
               </div>
@@ -199,7 +196,7 @@ const Calendar = () => {
                 <Button
                   className="mx-2 card-footer-item is-danger"
                   text="Delete"
-                  onClick={() => handleDeleteTask(event)}
+                  onClick={() => handleDeleteTask(task)}
                 />
               </div>
             </div>

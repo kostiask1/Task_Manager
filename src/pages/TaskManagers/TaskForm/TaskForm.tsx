@@ -40,7 +40,7 @@ const TaskForm = () => {
     if (!isEdit) {
       saveTask.id = new Date().getTime()
       saveTask.completed = false
-      saveTask.createdAt = new Date().getTime()
+      saveTask.start = new Date().getTime()
     }
     saveTask.updatedAt = new Date().getTime()
     saveTask.uid = user.id
@@ -77,8 +77,8 @@ const TaskForm = () => {
   }
 
   const formatChars: Array<RegExp | string> = useMemo(
-    () => dateFormat(state.deadline as string),
-    [state.deadline]
+    () => dateFormat(state.end as string),
+    [state.end]
   )
   return (
     <>
@@ -117,8 +117,8 @@ const TaskForm = () => {
               mask={formatChars}
               maskPlaceholder="dd-mm-yyyy"
               alwaysShowMask={true}
-              name="deadline"
-              value={state.deadline}
+              name="end"
+              value={state.end}
               onChange={handleChange}
             />
           </div>

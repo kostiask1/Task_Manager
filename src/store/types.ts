@@ -33,8 +33,8 @@ export interface Task {
   title: string
   parentTask?: string | null
   childTask?: string | null
-  deadline?: string
-  createdAt: number
+  end?: string
+  start: number
   updatedAt?: number
 }
 

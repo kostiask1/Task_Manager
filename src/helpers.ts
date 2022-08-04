@@ -30,16 +30,14 @@ export const convertToDate = (date: string): Date => {
   const month = date.slice(3, 5)
   const year = date.slice(6, 10)
   const dateString = `${year}/${month}/${day}`
-  const dateObject = new Date(dateString)
-  return dateObject
+  return new Date(dateString)
 }
 
 export const convertDateToString = (date: Date): string => {
   let month = (date.getUTCMonth() + 1).toString() //months from 1-12
   month.length < 2 && (month = "0" + month)
-  let day = date.getUTCDate().toString()
+  let day = date.getDay().toString()
   day.length < 2 && (day = "0" + day)
   const year = date.getUTCFullYear()
-  const dateString = `${day}-${month}-${year}`
-  return dateString
+  return `${day}-${month}-${year}`
 }

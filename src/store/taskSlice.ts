@@ -20,8 +20,8 @@ export const taskInitialState: Task = {
   completed: false,
   description: "",
   title: "",
-  deadline: "",
-  createdAt: 0,
+  end: "",
+  start: 0,
   updatedAt: 0,
 }
 
@@ -68,8 +68,8 @@ export const setTask = (task: Task) => {
   return async (dispatch: any, getState: any) => {
     const tasks = getState().tasks.array
     const tasksCopy = [...tasks]
-    const arrayWithoutDeadlines: Task[] = []
-    const arrayWithDeadlines: Task[] = []
+    const tasksWithoutEndDates: Task[] = []
+    const tasksWithEndDates: Task[] = []
 
     const indexOfTask = tasks.findIndex((t: Task) => t.id === task.id)
     const existTask = indexOfTask !== -1
@@ -82,35 +82,35 @@ export const setTask = (task: Task) => {
 
     for (let i = 0; i < tasksCopy.length; i++) {
       const item = tasksCopy[i]
-      if (item.deadline) {
-        arrayWithDeadlines.push(item)
+      if (item.end) {
+        tasksWithEndDates.push(item)
       } else {
-        arrayWithoutDeadlines.push(item)
+        tasksWithoutEndDates.push(item)
       }
     }
 
-    arrayWithDeadlines.sort((a: Task, b: Task) => {
-      const deadlineA = (a.deadline && convertToDate(a.deadline).getTime()) || 0
-      const deadlineB = (b.deadline && convertToDate(b.deadline).getTime()) || 0
-      if (deadlineA < deadlineB) {
+    tasksWithEndDates.sort((a: Task, b: Task) => {
+      const endA = (a.end && convertToDate(a.end).getTime()) || 0
+      const endB = (b.end && convertToDate(b.end).getTime()) || 0
+      if (endA < endB) {
         return -1
       }
-      if (deadlineA > deadlineB) {
+      if (endA > endB) {
         return 1
       }
       return 0
     })
-    arrayWithoutDeadlines.sort((a: Task, b: Task) => {
-      if ((a.updatedAt || a.createdAt) < (b.updatedAt || b.createdAt)) {
+    tasksWithoutEndDates.sort((a: Task, b: Task) => {
+      if ((a.updatedAt || a.start) < (b.updatedAt || b.start)) {
         return 1
       }
-      if ((a.updatedAt || a.createdAt) > (b.updatedAt || b.createdAt)) {
+      if ((a.updatedAt || a.start) > (b.updatedAt || b.start)) {
         return -1
       }
       return 0
     })
 
-    const newArray = [...arrayWithDeadlines, ...arrayWithoutDeadlines]
+    const newArray = [...tasksWithEndDates, ...tasksWithoutEndDates]
 
     await setDoc(doc(db, "tasks", task.uid), {
       tasks: newArray as Task[],

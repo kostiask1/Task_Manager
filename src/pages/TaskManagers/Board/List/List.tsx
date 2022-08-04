@@ -51,7 +51,7 @@ const List = () => {
               <div className="content">
                 {task.description}
                 <br />
-                <time dateTime={task.deadline}>{task.deadline}</time>
+                <time dateTime={task.end}>{task.end}</time>
               </div>
             </div>
             <footer className="card-footer p-3">
