@@ -13,3 +13,10 @@
   width: 50%;
   flex-basis: 50%;
 }
+
+@media (max-width: 768px) {
+  .tasks-list .column {
+    width: 100%;
+    flex-basis: 100%;
+  }
+}
