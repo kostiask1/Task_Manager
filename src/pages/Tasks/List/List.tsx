@@ -12,9 +12,10 @@ const List = () => {
   const tasks: TaskProps[] = useAppSelector(
     (state: RootState) => state.tasks.array
   )
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    setLoading(!tasks.length)
     dispatch(getTasks(user.id)).then(() => setLoading(false))
   }, [])
 

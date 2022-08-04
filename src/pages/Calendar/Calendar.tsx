@@ -37,7 +37,7 @@ const Calendar = () => {
   const tasks: TaskProps[] = useAppSelector(
     (state: RootState) => state.tasks.array
   )
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [task, setTask] = useState<any>(null)
   const [slot, setSlot] = useState<any>(null)
 
@@ -50,7 +50,7 @@ const Calendar = () => {
   }, [tasks])
 
   const getData = useCallback(() => {
-    setLoading(true)
+    setLoading(!tasks.length)
     dispatch(getTasks(user.id)).then(() => {
       generateEvents(tasks)
       setLoading(false)
