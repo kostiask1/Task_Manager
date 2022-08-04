@@ -63,21 +63,21 @@ const Calendar = () => {
     (tasks: TaskProps[]): Event[] =>
       tasks.map((task: any) => ({
         ...task,
-        start: task.end ? convertToDate(task.end) : new Date(task.start),
-        end: task.end ? convertToDate(task.end) : new Date(task.start),
+        start: task.end ? convertToDate(task.end) : convertToDate(task.start),
+        end: task.end ? convertToDate(task.end) : convertToDate(task.start),
         hasEndDate: task.end ? true : false,
       })),
     []
   )
 
   const events = useMemo(() => generateEvents(tasks), [tasks])
-  console.log("startOfWeek:", startOfWeek)
+
   const localizer = useMemo(
     () =>
       dateFnsLocalizer({
         format,
         parse,
-        startOfWeek: (date:Date)=>startOfWeek(date,{weekStartsOn: 1}),
+        startOfWeek: (date: Date) => startOfWeek(date, { weekStartsOn: 1 }),
         getDay,
         locales: {
           "en-US": enUS,

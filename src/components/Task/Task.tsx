@@ -1,9 +1,9 @@
-import { useCallback, FC } from "react"
-import Button from "../UI/Button"
+import { FC, useCallback } from "react"
 import { setError, setSuccess } from "../../store/appSlice"
 import { useAppDispatch } from "../../store/store"
 import { deleteTask, setTask, setTaskToEdit } from "../../store/taskSlice"
 import { Task as TaskProps } from "../../store/types"
+import Button from "../UI/Button"
 import "./Task.scss"
 
 interface TaskInterface {
@@ -71,7 +71,9 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
           <div className="content">
             <p className="description">Description: {task.description}</p>
             <br />
-            <time dateTime={task.end}>Due: {task.end}</time>
+            <time dateTime={task.end}>
+              Due: {task.end || "No deadline specified"}
+            </time>
           </div>
         </div>
         <footer className="card-footer p-3">

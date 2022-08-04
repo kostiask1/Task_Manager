@@ -25,12 +25,16 @@ export const dateFormat = (date: string): Array<string | RegExp> => {
   ]
 }
 
-export const convertToDate = (date: string): Date => {
-  const day = date.slice(0, 2)
-  const month = date.slice(3, 5)
-  const year = date.slice(6, 10)
-  const dateString = `${year}/${month}/${day}`
-  return new Date(dateString)
+export const convertToDate = (date: string | number): Date => {
+  if (typeof date === "string") {
+    const day = date.slice(0, 2)
+    const month = date.slice(3, 5)
+    const year = date.slice(6, 10)
+    const dateString = `${year}/${month}/${day}`
+    return new Date(dateString)
+  } else {
+    return new Date(date)
+  }
 }
 
 export const convertDateToString = (date: Date): string => {
