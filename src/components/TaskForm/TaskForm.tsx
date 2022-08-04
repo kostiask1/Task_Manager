@@ -126,7 +126,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               value={state.title}
               onChange={handleChange}
               placeholder="Task Title"
-              maxLength={30}
+              maxLength={40}
               required
             />
             {!!state.start && (
