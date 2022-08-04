@@ -1,4 +1,4 @@
-import List from "./List/"
+import List from "../List"
 import "./Board.scss"
 import TaskForm from "../TaskForm/"
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useCallback } from "react"
+import { useEffect, useMemo, useState, useCallback, FC } from "react"
 import InputMask from "react-input-mask"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
@@ -15,7 +15,11 @@ import {
 import { Task, User } from "../../../store/types"
 import "./TaskForm.scss"
 
-const TaskForm = () => {
+interface TaskInterface {
+  setModal?: undefined | Function
+}
+
+const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
 
@@ -89,6 +93,9 @@ const TaskForm = () => {
         await dispatch(setTask(saveTask))
         dispatch(setTaskToEdit(saveTask))
         setState(saveTask)
+        if (setModal) {
+          setModal(saveTask)
+        }
         if (completed) {
           dispatch(setSuccess("Task completed"))
         } else {
@@ -106,7 +113,7 @@ const TaskForm = () => {
 
   return (
     <>
-      <form className="card" key={state.id} onSubmit={addTaskToUser}>
+      <form className="card task" key={state.id} onSubmit={addTaskToUser}>
         <header className="card-header">
           <div className="card-header-title is-align-items-center">
             {stateName} Task -
@@ -117,21 +124,19 @@ const TaskForm = () => {
               value={state.title}
               onChange={handleChange}
               placeholder="Task Title"
+              maxLength={30}
               required
             />
             {!!state.start && (
               <Button
-                className={state.completed ? "is-primary" : "is-danger"}
+                className={`complete-task-btn ${
+                  state.completed ? "is-primary" : "is-danger"
+                }`}
                 onClick={(e) => complete(e, !state.completed)}
                 text={`Completed: ${state.completed ? "Yes" : "No"}`}
               />
             )}
           </div>
-          <button className="card-header-icon" aria-label="more options">
-            <span className="icon">
-              <i className="fas fa-angle-down" aria-hidden="true"></i>
-            </span>
-          </button>
         </header>
         <div className="card-content">
           <div className="content">

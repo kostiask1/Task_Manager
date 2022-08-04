@@ -11,26 +11,25 @@ import {
 } from "react-big-calendar"
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import Modal from "../../components/Modal/Modal"
-import Button from "../../components/UI/Button"
 import Loader from "../../components/UI/Loader/Loader"
 import { convertDateToString, convertToDate } from "../../helpers"
-import { setError, setSuccess } from "../../store/appSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import {
-  deleteTask,
   getTasks,
-  setTask as updateTask,
   setTaskToEdit,
   taskInitialState,
 } from "../../store/taskSlice"
-import { Task, User } from "../../store/types"
+import { Task as TaskProps, User } from "../../store/types"
+import Task from "../TaskManagers/Task"
 import TaskForm from "../TaskManagers/TaskForm/TaskForm"
 import "./Calendar.scss"
 
 const Calendar = () => {
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
-  const tasks: Task[] = useAppSelector((state: RootState) => state.tasks.array)
+  const tasks: TaskProps[] = useAppSelector(
+    (state: RootState) => state.tasks.array
+  )
   const [loading, setLoading] = useState(true)
   const [task, setTask] = useState<any>(null)
   const [slot, setSlot] = useState<any>(null)
@@ -52,7 +51,7 @@ const Calendar = () => {
   }, [])
 
   const generateEvents = useCallback(
-    (tasks: Task[]): Event[] =>
+    (tasks: TaskProps[]): Event[] =>
       tasks.map((task: any) => ({
         ...task,
         start: task.end ? convertToDate(task.end) : new Date(task.start),
@@ -109,26 +108,6 @@ const Calendar = () => {
     return { style }
   }, [])
 
-  const complete = useCallback(
-    async (completed: boolean) => {
-      if (task) {
-        const saveTask: any = { ...task }
-        saveTask.completed = completed
-        saveTask.updatedAt = new Date().getTime()
-
-        await dispatch(updateTask(saveTask))
-        if (completed) {
-          dispatch(setSuccess("Task completed"))
-        } else {
-          dispatch(setError("Task returned"))
-        }
-        getData()
-        setTask(saveTask)
-      }
-    },
-    [task]
-  )
-
   const onSelectSlot = useCallback((slotInfo: any) => {
     dispatch(
       setTaskToEdit({
@@ -139,23 +118,16 @@ const Calendar = () => {
     setSlot(true)
   }, [])
 
-  const setUpdateEvent = useCallback((task: any) => {
-    const eventCopy = { ...task }
-    dispatch(setTaskToEdit(eventCopy))
-    setTask(null)
-    setSlot(true)
-  }, [])
-
   const handleCloseTaskModal = useCallback(() => {
     dispatch(setTaskToEdit(null))
     setSlot(null)
   }, [])
 
-  const handleDeleteTask = useCallback(async (task: Task) => {
-    await dispatch(deleteTask(task))
-    dispatch(setSuccess("Task deleted"))
+  const setUpdateTask = useCallback((task: TaskProps) => {
     setTask(null)
+    setSlot(task)
   }, [])
+
   return (
     <>
       <Loader loading={loading} />
@@ -172,43 +144,11 @@ const Calendar = () => {
       />
       <Modal id="task" show={!!task} hide={() => setTask(null)}>
         {task && (
-          <div className="box is-flex is-align-items-center is-flex-direction-column">
-            <h2 className="is-size-3">Set task completed?</h2>
-            <div className="text pt-2 is-size-5">
-              Task: {task.title}
-              <br />
-              Description: {task.description}
-              <br />
-              {task.end && task.hasEndDate && "Due date: " + task.end}
-            </div>
-            <div className="columns mt-5">
-              <div className="column">
-                <Button
-                  className={task.completed ? "is-primary" : "is-danger"}
-                  onClick={() => complete(!task.completed)}
-                  text={`Completed: ${task.completed ? "Yes" : "No"}`}
-                />
-              </div>
-              <div className="column">
-                <Button
-                  className={"is-primary"}
-                  onClick={() => setUpdateEvent(task)}
-                  text="Edit"
-                />
-              </div>
-              <div className="column">
-                <Button
-                  className="mx-2 card-footer-item is-danger"
-                  text="Delete"
-                  onClick={() => handleDeleteTask(task)}
-                />
-              </div>
-            </div>
-          </div>
+          <Task task={task} setModalUpdate={setUpdateTask} setModal={setTask} />
         )}
       </Modal>
-      <Modal id="slot" show={slot} hide={handleCloseTaskModal}>
-        <TaskForm />
+      <Modal id="slot" show={slot} key={slot} hide={handleCloseTaskModal}>
+        <TaskForm setModal={setSlot} />
       </Modal>
     </>
   )
