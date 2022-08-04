@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useRef, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { routesArray } from "../../routes"
 import { signout } from "../../store/authSlice"
@@ -14,13 +14,15 @@ function Navbar() {
   const burgerRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
+  useEffect(() => toggleNavMenu, [location.pathname])
+
   const dispatch = useAppDispatch()
 
   const logout = () => dispatch(signout())
 
   const isActivePage = (route: string) => location.pathname.includes(route)
 
-  const handleBurgerClick = () => {
+  const toggleNavMenu = () => {
     burgerRef.current?.classList.toggle("is-active")
     menuRef.current?.classList.toggle("is-active")
   }
@@ -48,7 +50,7 @@ function Navbar() {
             aria-expanded="false"
             data-target="navbarBasicExample"
             ref={burgerRef}
-            onClick={handleBurgerClick}
+            onClick={toggleNavMenu}
           >
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
