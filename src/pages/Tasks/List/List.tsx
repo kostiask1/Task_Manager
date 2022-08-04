@@ -1,10 +1,10 @@
-import { useEffect, useState, lazy } from "react"
+import { lazy, useEffect, Suspense, useState } from "react"
 import Loader from "../../../components/UI/Loader/Loader"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { getTasks } from "../../../store/taskSlice"
 import { Task as TaskProps, User } from "../../../store/types"
-const Task = lazy(() => import("../../../components/Task"))
 import "./List.scss"
+const Task = lazy(() => import("../../../components/Task"))
 
 const List = () => {
   const dispatch = useAppDispatch()
@@ -20,9 +20,11 @@ const List = () => {
 
   return (
     <div className="columns tasks-list">
-      {!!tasks.length &&
-        tasks.map((task) => <Task task={task} key={task.id} />)}
-      <Loader loading={loading} />
+      <Suspense fallback={<Loader loading={true} />}>
+        {!!tasks.length &&
+          tasks.map((task) => <Task task={task} key={task.id} />)}
+        <Loader loading={loading} />
+      </Suspense>
     </div>
   )
 }

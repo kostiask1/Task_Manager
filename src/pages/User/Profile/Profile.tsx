@@ -138,7 +138,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="columns is-justify-content-center">
+    <div className="columns fadeIn is-justify-content-center">
       <div className="column is-one-fifth">
         <figure className="image ml-1 is-128x128">
           <img

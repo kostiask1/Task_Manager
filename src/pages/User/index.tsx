@@ -15,7 +15,7 @@ const General: FC = () => {
   )
 
   return (
-    <div className="columns">
+    <div className="columns fadeIn">
       <div className="column is-one-quarter">
         <aside className="menu">
           <p className="menu-label">General</p>

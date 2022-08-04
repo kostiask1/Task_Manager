@@ -63,7 +63,7 @@ const Password = () => {
   }
 
   return (
-    <div className="columns is-justify-content-center">
+    <div className="columns is-justify-content-center fadeIn">
       <form className="form column is-half" onSubmit={submitHandler}>
         <Input
           type="password"

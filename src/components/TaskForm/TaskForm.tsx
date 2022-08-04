@@ -113,7 +113,11 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
 
   return (
     <>
-      <form className="card task" key={state.id} onSubmit={addTaskToUser}>
+      <form
+        className="card task fadeIn"
+        key={state.id}
+        onSubmit={addTaskToUser}
+      >
         <header className="card-header">
           <div className="card-header-title is-align-items-center">
             {stateName} Task -

@@ -3,7 +3,14 @@ import getDay from "date-fns/getDay"
 import enUS from "date-fns/locale/en-US"
 import parse from "date-fns/parse"
 import startOfWeek from "date-fns/startOfWeek"
-import { lazy, useCallback, useEffect, useMemo, useState } from "react"
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import {
   Calendar as EventCalendar,
   dateFnsLocalizer,
@@ -132,6 +139,7 @@ const Calendar = () => {
     <>
       <Loader loading={loading} />
       <EventCalendar
+        className="fadeIn"
         localizer={localizer}
         events={events}
         eventPropGetter={eventPropGetter}
@@ -140,15 +148,24 @@ const Calendar = () => {
         longPressThreshold={100}
         onSelectSlot={onSelectSlot}
         defaultView="month"
+        views={["month", "week", "agenda"]}
         style={{ height: "100vh" }}
       />
       <Modal id="task" show={!!task} hide={() => setTask(null)}>
         {task && (
-          <Task task={task} setModalUpdate={setUpdateTask} setModal={setTask} />
+          <Suspense fallback={<Loader loading={true} />}>
+            <Task
+              task={task}
+              setModalUpdate={setUpdateTask}
+              setModal={setTask}
+            />
+          </Suspense>
         )}
       </Modal>
       <Modal id="slot" show={slot} key={slot} hide={handleCloseTaskModal}>
-        <TaskForm setModal={setSlot} />
+        <Suspense fallback={<Loader loading={true} />}>
+          <TaskForm setModal={setSlot} />
+        </Suspense>
       </Modal>
     </>
   )

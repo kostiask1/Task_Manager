@@ -54,7 +54,7 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
   }, [])
 
   return (
-    <div className="column task" key={task.id}>
+    <div className="column task fadeIn" key={task.id}>
       <div className="card mb-5">
         <header className="card-header is-align-items-center">
           <div className="card-header-title">
