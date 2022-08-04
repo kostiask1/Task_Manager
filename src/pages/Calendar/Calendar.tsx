@@ -71,13 +71,13 @@ const Calendar = () => {
   )
 
   const events = useMemo(() => generateEvents(tasks), [tasks])
-
+  console.log("startOfWeek:", startOfWeek)
   const localizer = useMemo(
     () =>
       dateFnsLocalizer({
         format,
         parse,
-        startOfWeek,
+        startOfWeek: (date:Date)=>startOfWeek(date,{weekStartsOn: 1}),
         getDay,
         locales: {
           "en-US": enUS,

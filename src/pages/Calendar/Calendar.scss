@@ -2,3 +2,24 @@
 .rbc-agenda-time-cell {
   border-left: 1px solid #ddd;
 }
+.rbc-time-view {
+  .rbc-label {
+    display: none;
+  }
+  .rbc-allday-cell {
+    height: calc(100vh - 98px);
+    max-height: unset;
+  }
+  .rbc-time-content {
+    display: none;
+  }
+}
+
+.rbc-agenda-table {
+  .rbc-agenda-time-cell {
+    display: none;
+  }
+  .rbc-header:nth-child(2) {
+    display: none;
+  }
+}
