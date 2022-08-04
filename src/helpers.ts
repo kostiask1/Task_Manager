@@ -36,7 +36,7 @@ export const convertToDate = (date: string): Date => {
 export const convertDateToString = (date: Date): string => {
   let month = (date.getUTCMonth() + 1).toString() //months from 1-12
   month.length < 2 && (month = "0" + month)
-  let day = date.getDay().toString()
+  let day = date.getDate().toString()
   day.length < 2 && (day = "0" + day)
   const year = date.getUTCFullYear()
   return `${day}-${month}-${year}`

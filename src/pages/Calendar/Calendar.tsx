@@ -51,13 +51,16 @@ const Calendar = () => {
     })
   }, [])
 
-  const generateEvents = useCallback((tasks: Task[]): Event[] => {
-    return tasks.map((task: any) => ({
-      ...task,
-      start: task.end ? convertToDate(task.end) : new Date(task.start),
-      end: task.end ? convertToDate(task.end) : new Date(task.start),
-    }))
-  }, [])
+  const generateEvents = useCallback(
+    (tasks: Task[]): Event[] =>
+      tasks.map((task: any) => ({
+        ...task,
+        start: task.end ? convertToDate(task.end) : new Date(task.start),
+        end: task.end ? convertToDate(task.end) : new Date(task.start),
+        hasEndDate: task.end ? true : false,
+      })),
+    []
+  )
 
   const events = useMemo(() => generateEvents(tasks), [tasks])
 
@@ -77,7 +80,7 @@ const Calendar = () => {
   const onSelectEvent = useCallback((calEvent: any) => {
     const copy = { ...calEvent }
     copy.start = convertDateToString(copy.start)
-    copy.end = convertDateToString(copy.end)
+    copy.end = copy.hasEndDate ? convertDateToString(copy.end) : ""
     setTask(copy)
   }, [])
 
@@ -89,16 +92,16 @@ const Calendar = () => {
       color: "white",
       margin: "2px 5px",
       width: "calc(100% - 10px)",
-      backgroundColor: "",
-    }
-    if (!task.end) {
-      style.backgroundColor = "#27557b"
+      backgroundColor: "#27557b",
     }
     if (daysLeft >= 0 && task.end) {
       style.backgroundColor = `hsl(${0 + Math.min(16, daysLeft) * 3}, 90% ,50%)`
     }
     if (daysLeft < 0) {
       style.backgroundColor = "#222222"
+    }
+    if (!task.hasEndDate || !task.end) {
+      style.backgroundColor = "#27557b"
     }
     if (task.completed) {
       style.backgroundColor = "#00d1b2"
@@ -175,7 +178,7 @@ const Calendar = () => {
               <br />
               Description: {task.description}
               <br />
-              {task.end && "Due date: " + task.end}
+              {task.end && task.hasEndDate && "Due date: " + task.end}
             </div>
             <div className="columns mt-5">
               <div className="column">

@@ -42,6 +42,9 @@ const TaskForm = () => {
       saveTask.completed = false
       saveTask.start = new Date().getTime()
     }
+    if (saveTask.end === "dd-mm-yyyy") {
+      saveTask.end = ""
+    }
     saveTask.updatedAt = new Date().getTime()
     saveTask.uid = user.id
     await dispatch(setTask(saveTask))
