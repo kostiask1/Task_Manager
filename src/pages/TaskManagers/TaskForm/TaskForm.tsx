@@ -90,6 +90,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
         const saveTask: any = { ...state }
         saveTask.completed = completed
         saveTask.updatedAt = new Date().getTime()
+        console.log("saveTask:", saveTask)
         await dispatch(setTask(saveTask))
         dispatch(setTaskToEdit(saveTask))
         setState(saveTask)
@@ -103,7 +104,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
         }
       }
     },
-    [task]
+    [state]
   )
 
   const formatChars: Array<RegExp | string> = useMemo(
