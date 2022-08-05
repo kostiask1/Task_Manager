@@ -138,10 +138,11 @@ const Profile = () => {
     setUserData((state) => ({ ...state, [name]: value }))
   }
 
-  const deleteUser = () => {
+  const deleteUser = async () => {
     setLoading(true)
     dispatch(setSuccess("Wait a minute please"))
-    dispatch(deleteAccount(user.id, user.profileImg))
+    await dispatch(deleteAccount(user.id, user.profileImg))
+    setLoading(false)
   }
 
   return (
@@ -261,6 +262,7 @@ const Profile = () => {
       <Prompt
         title="Delete account?"
         show={promptDelete}
+        disabled={loading}
         onCancel={() => setPromptDelete(false)}
         onConfirm={deleteUser}
       />
