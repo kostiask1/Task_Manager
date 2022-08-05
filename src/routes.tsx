@@ -6,18 +6,26 @@ import useNetwork from "./hooks/useNetwork"
 const Tasks = lazy(() => import("./pages/Tasks"))
 const Calendar = lazy(() => import("./pages/Calendar"))
 const About = lazy(() => import("./pages/About"))
-const Auth = lazy(() => import("./pages/Auth"))
+const SignIn = lazy(() => import("./pages/Auth/SignIn"))
+const SignUp = lazy(() => import("./pages/Auth/SignUp"))
 const General = lazy(() => import("./pages/User"))
 const Password = lazy(() => import("./pages/User/Password"))
 const Profile = lazy(() => import("./pages/User/Profile"))
 
 export const routesArray = [
   {
-    name: "Auth",
+    name: "SignIn",
     private: false,
     show: false,
-    path: "auth",
-    element: <Auth />,
+    path: "signin",
+    element: <SignIn />,
+  },
+  {
+    name: "SignUp",
+    private: false,
+    show: false,
+    path: "signup",
+    element: <SignUp />,
   },
   {
     name: "Calendar",

@@ -2,8 +2,9 @@ import { FC, FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import { signup } from "../../../store/authSlice"
-import { useAppDispatch } from "../../../store/store"
+import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { SignUpData } from "../../../store/types"
+import { Link, Navigate } from "react-router-dom"
 
 const signUpData = {
   firstName: "",
@@ -13,6 +14,10 @@ const signUpData = {
 }
 
 const Signup: FC = () => {
+  const authenticated = useAppSelector(
+    (state: RootState) => state.auth.authenticated
+  )
+
   const [userData, setUserData] = useState<SignUpData>(signUpData)
   const [loading, setLoading] = useState(false)
   const dispatch = useAppDispatch()
@@ -28,10 +33,13 @@ const Signup: FC = () => {
     const value = event.target.value
     setUserData((state) => ({ ...state, [name]: value }))
   }
+
+  if (authenticated) return <Navigate to="/profile" />
+
   return (
-    <section className="section">
+    <section className="section auth fadeIn">
       <h2 className="has-text-centered is-size-2 mb-3">Sign Up</h2>
-      <form className="form" onSubmit={submitHandler}>
+      <form className="form" autoComplete="off" onSubmit={submitHandler}>
         <Input
           type="text"
           name="firstName"
@@ -76,6 +84,7 @@ const Signup: FC = () => {
           maxLength={30}
           required
         />
+        <Link to="/signin">Already have account? - Sign in</Link>
         <Button
           text={loading ? "Loading..." : "Create Account"}
           className="is-primary is-fullwidth mt-5"

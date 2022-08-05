@@ -66,6 +66,11 @@ img {
   animation: fadeIn 0.25s ease-in-out forwards;
 }
 
+.auth {
+  width: clamp(320px, 80%, 600px);
+  margin: 0 auto;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0.4;

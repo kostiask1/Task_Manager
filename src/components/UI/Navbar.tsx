@@ -132,9 +132,14 @@ function Navbar() {
                 </div>
               </div>
             ) : (
-              <Link to="auth" className="navbar-item button is-light">
-                Auth
-              </Link>
+              <>
+                <Link to="/signin" className="navbar-item button is-light mr-1">
+                  Sign In
+                </Link>
+                <Link to="/signup" className="navbar-item button is-light">
+                  Sign Up
+                </Link>
+              </>
             )}
           </div>
         </div>
