@@ -2,7 +2,12 @@
 .navbar-item.button {
   max-width: 100px;
 }
-
+.navbar-link:not(.is-arrowless)::after {
+  transition: transform 0.3s;
+}
+.navbar-item.has-dropdown.is-active .navbar-link:not(.is-arrowless)::after {
+  transform: rotate(135deg);
+}
 @media (min-width: 1020px) {
   .button.signin {
     margin-right: 10px;

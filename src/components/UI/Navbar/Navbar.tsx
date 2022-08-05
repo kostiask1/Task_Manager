@@ -14,8 +14,12 @@ function Navbar() {
   }))
   const burgerRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => toggleNavMenu, [location.pathname])
+  useEffect(() => {
+    burgerRef.current?.classList.remove("is-active")
+    menuRef.current?.classList.remove("is-active")
+  }, [location.pathname])
 
   const dispatch = useAppDispatch()
 
@@ -49,7 +53,7 @@ function Navbar() {
             className="navbar-burger"
             aria-label="menu"
             aria-expanded="false"
-            data-target="navbarBasicExample"
+            data-target="navbar"
             ref={burgerRef}
             onClick={toggleNavMenu}
           >
@@ -59,7 +63,7 @@ function Navbar() {
           </button>
         </div>
         <div
-          id="navbarBasicExample"
+          id="navbar"
           ref={menuRef}
           className="navbar-menu is-align-items-center"
         >
@@ -93,7 +97,13 @@ function Navbar() {
           </div>
           <div className="navbar-end">
             {authenticated && user ? (
-              <div className="navbar-item has-dropdown is-hoverable">
+              <div
+                className="navbar-item has-dropdown"
+                ref={dropdownRef}
+                onClick={() =>
+                  dropdownRef.current?.classList.toggle("is-active")
+                }
+              >
                 <div className="navbar-link">
                   <p className="is-size-6">{user?.firstName || "Profile"}</p>
                   <figure className="image ml-1 is-48x48">
@@ -113,7 +123,7 @@ function Navbar() {
                     />
                   </figure>
                 </div>
-                <div className="navbar-dropdown is-right">
+                <div className="navbar-dropdown is-right fadeIn">
                   <Link
                     className="is-flex is-flex-direction-row px-2 is-align-items-center"
                     to="profile"
