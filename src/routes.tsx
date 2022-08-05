@@ -2,6 +2,7 @@ import { FC, Suspense, lazy } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 import Loader from "./components/UI/Loader/Loader"
 import { RootState, useAppSelector } from "./store/store"
+import useNetwork from "./hooks/useNetwork"
 const Tasks = lazy(() => import("./pages/Tasks"))
 const Calendar = lazy(() => import("./pages/Calendar"))
 const About = lazy(() => import("./pages/About"))
@@ -67,6 +68,11 @@ const Routing: FC = () => {
     authenticated: state.auth.authenticated,
     loading: state.app.loading,
   }))
+  const isOnline = useNetwork()
+
+  if (!isOnline) {
+    return <div>No internet connection</div>
+  }
   return !loading ? (
     <Suspense fallback={<Loader loading={true} />}>
       <Routes>
