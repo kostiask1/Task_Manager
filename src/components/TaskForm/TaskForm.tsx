@@ -27,6 +27,9 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     (state: RootState) => state.tasks.editingTask
   )
   const [state, setState] = useState<Task>(task || taskInitialState)
+  const [loadingComplete, setLoadingComplete] = useState(false)
+  const [loadingSave, setLoadingSave] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
@@ -40,7 +43,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const addTaskToUser = async (e: React.FormEvent) => {
     e.preventDefault()
     const saveTask: Task = { ...state }
-
+    setLoadingSave(true)
     if (!isEdit) {
       saveTask.id = new Date().getTime()
       saveTask.completed = false
@@ -52,6 +55,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     saveTask.updatedAt = new Date().getTime()
     saveTask.uid = user.id
     await dispatch(setTask(saveTask))
+    setLoadingSave(false)
     isEdit
       ? dispatch(setSuccess("Task updated successfully"))
       : dispatch(setSuccess("Task created successfully"))
@@ -79,7 +83,9 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
 
   const deleteT = async (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
+    setDeleting(true)
     await dispatch(deleteTask(state))
+    setDeleting(false)
     dispatch(setSuccess("Task deleted successfully"))
   }
 
@@ -87,11 +93,13 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     async (e: React.FormEvent, completed: boolean) => {
       e.preventDefault()
       if (state) {
+        setLoadingComplete(true)
         const saveTask: any = { ...state }
         saveTask.completed = completed
         saveTask.updatedAt = new Date().getTime()
         await dispatch(setTask(saveTask))
         dispatch(setTaskToEdit(saveTask))
+        setLoadingComplete(false)
         setState(saveTask)
         setModal && setModal(saveTask)
         if (completed) {
@@ -135,7 +143,11 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                   state.completed ? "is-primary" : "is-danger"
                 }`}
                 onClick={(e) => complete(e, !state.completed)}
-                text={`Completed: ${state.completed ? "Yes" : "No"}`}
+                text={`${
+                  loadingComplete
+                    ? "Updating..."
+                    : `Completed: ${state.completed ? "Yes" : "No"}`
+                }`}
               />
             )}
           </div>
@@ -169,21 +181,22 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
             {isEdit ? (
               <Button
                 className="mx-2 card-footer-item is-success"
-                text="Update"
-                disabled={equal(state, task)}
+                text={loadingSave ? "Updating..." : "Update"}
+                disabled={loadingSave || equal(state, task)}
               />
             ) : (
               <Button
                 className="mx-2 card-footer-item is-success"
-                text="Save"
-                disabled={equal(state, taskInitialState)}
+                text={loadingSave ? "Saving..." : "Save"}
+                disabled={loadingSave || equal(state, taskInitialState)}
               />
             )}
             {isEdit && (
               <Button
                 className="mx-2 card-footer-item is-danger"
-                text="Delete"
+                text={deleting ? "Deleting..." : "Delete"}
                 onClick={deleteT}
+                disabled={deleting}
               />
             )}
             {isEdit && !setModal ? (

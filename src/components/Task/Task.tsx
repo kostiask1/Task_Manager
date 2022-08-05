@@ -1,4 +1,4 @@
-import { FC, useCallback } from "react"
+import { FC, useCallback, useState } from "react"
 import { setError, setSuccess } from "../../store/appSlice"
 import { useAppDispatch } from "../../store/store"
 import { deleteTask, setTask, setTaskToEdit } from "../../store/taskSlice"
@@ -13,14 +13,18 @@ interface TaskInterface {
 }
 
 const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
+  const [loading, setLoading] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const dispatch = useAppDispatch()
 
   const complete = useCallback(async (task: TaskProps, completed: boolean) => {
     if (task) {
+      setLoading(true)
       const saveTask: any = { ...task }
       saveTask.completed = completed
       saveTask.updatedAt = new Date().getTime()
       await dispatch(setTask(saveTask))
+      setLoading(false)
       setModal && setModal(saveTask)
       if (completed) {
         dispatch(setSuccess("Task completed"))
@@ -35,7 +39,9 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
     task: TaskProps
   ) => {
     e.preventDefault()
+    setDeleting(true)
     await dispatch(deleteTask(task))
+    setDeleting(false)
     if (setModal) {
       setModal(null)
     }
@@ -63,7 +69,12 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
               }`}
               style={{ height: "100%" }}
               onClick={() => complete(task, !task.completed)}
-              text={`Completed: ${task.completed ? "Yes" : "No"}`}
+              text={`${
+                loading
+                  ? "Updating..."
+                  : `Completed: ${task.completed ? "Yes" : "No"}`
+              }`}
+              disabled={loading}
             />
           </div>
         </header>
@@ -85,8 +96,9 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
             />
             <Button
               className="mx-2 card-footer-item is-danger"
-              text="Delete"
+              text={deleting ? "Deleting..." : "Delete"}
               onClick={(e) => deleteT(e, task)}
+              disabled={deleting}
             />
           </div>
         </footer>
