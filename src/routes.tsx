@@ -1,8 +1,8 @@
-import { FC, Suspense, lazy } from "react"
+import { FC, lazy, Suspense, ReactNode } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 import Loader from "./components/UI/Loader/Loader"
-import { RootState, useAppSelector } from "./store/store"
 import useNetwork from "./hooks/useNetwork"
+import { RootState, useAppSelector } from "./store/store"
 const Tasks = lazy(() => import("./pages/Tasks"))
 const Calendar = lazy(() => import("./pages/Calendar"))
 const About = lazy(() => import("./pages/About"))
@@ -12,7 +12,20 @@ const General = lazy(() => import("./pages/User"))
 const Password = lazy(() => import("./pages/User/Password"))
 const Profile = lazy(() => import("./pages/User/Profile"))
 
-export const routesArray = [
+interface RouteProps {
+  path: string
+  element?: ReactNode
+  children?: RouteProps[]
+}
+
+interface RoutesArray extends RouteProps {
+  name: string
+  private?: boolean
+  visible?: boolean
+  show?: boolean
+}
+
+export const routesArray: RoutesArray[] = [
   {
     name: "SignIn",
     private: false,
@@ -62,11 +75,11 @@ export const routesArray = [
   },
 ]
 
-const unWrapRoute = (route: any) => {
+const unWrapRoute = (route: RouteProps) => {
   return (
     <Route key={route.path} path={route.path} element={route.element}>
       {route.children?.length &&
-        route.children.map((child: any) => unWrapRoute(child))}
+        route.children.map((child: RouteProps) => unWrapRoute(child))}
     </Route>
   )
 }

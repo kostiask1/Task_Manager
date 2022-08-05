@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { AppState } from "./types"
+import { AppDispatch } from "./store"
 
 const initialState: AppState = {
   loading: true,
@@ -31,7 +32,7 @@ export const { loading, error, success } = app.actions
 
 // Set loading
 export const setLoading = (value: boolean) => {
-  return (dispatch: any) => {
+  return (dispatch: AppDispatch) => {
     dispatch(loading(value))
   }
 }
@@ -40,7 +41,7 @@ let timer: boolean = false
 
 // Set error
 export const setError = (msg: string) => {
-  return (dispatch: any) => {
+  return (dispatch: AppDispatch) => {
     if (timer) {
       dispatch(error(""))
       timer = false
@@ -52,7 +53,7 @@ export const setError = (msg: string) => {
 
 // Set success
 export const setSuccess = (msg: string) => {
-  return (dispatch: any) => {
+  return (dispatch: AppDispatch) => {
     if (timer) {
       dispatch(success(""))
       timer = false

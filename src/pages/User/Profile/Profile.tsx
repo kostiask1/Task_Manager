@@ -49,7 +49,7 @@ const Profile = () => {
       if (files) {
         user.profileImg && deleteImage(user.profileImg)
         uploadImage(files, user.id + new Date().getTime(), "users").then(
-          (imageUrl: any) => {
+          (imageUrl: string) => {
             dispatch(setSuccess("Image updated successfully"))
             setProfileImg(null, imageUrl)
             setFiles(null)

@@ -24,7 +24,7 @@ export const uploadImage = async (
 ) => {
   let file = Array.from(filesRaw)[0]
   const storageRef = ref(storage, `${folder}/` + name)
-  let request = new Promise(async (resolve) => {
+  let request: Promise<string> = new Promise(async (resolve) => {
     const fileRef = uploadBytesResumable(storageRef, file)
     fileRef.on(
       "state_changed",

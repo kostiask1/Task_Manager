@@ -20,7 +20,7 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
   const complete = useCallback(async (task: TaskProps, completed: boolean) => {
     if (task) {
       setLoading(true)
-      const saveTask: any = { ...task }
+      const saveTask: TaskProps = { ...task }
       saveTask.completed = completed
       saveTask.updatedAt = new Date().getTime()
       await dispatch(setTask(saveTask))

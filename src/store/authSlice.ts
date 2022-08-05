@@ -11,6 +11,7 @@ import { db } from "../firebase/base"
 import { deleteImage, uploadDoc } from "../firebase/firestore"
 import { setError, setLoading, setSuccess } from "./appSlice"
 import { AuthState, SignInData, SignUpData, User } from "./types"
+import { AppDispatch } from "./store"
 
 const initialState: AuthState = {
   user: {
@@ -50,13 +51,13 @@ export const { setUserData, signOut } = auth.actions
 const _auth = getAuth()
 
 export const setUser = (data: User) => {
-  return (dispatch: any) => {
+  return (dispatch: AppDispatch) => {
     dispatch(setUserData(data))
   }
 }
 // Create user
 export const signup = (data: SignUpData, onError: () => void) => {
-  return async (dispatch: any) => {
+  return async (dispatch: AppDispatch) => {
     try {
       createUserWithEmailAndPassword(_auth, data.email, data.password)
         .then((res) => {
@@ -95,7 +96,7 @@ export const signup = (data: SignUpData, onError: () => void) => {
 
 // Log in
 export const signin = (data: SignInData, onError: () => void) => {
-  return async (dispatch: any) => {
+  return async (dispatch: AppDispatch) => {
     try {
       await signInWithEmailAndPassword(_auth, data.email, data.password).then(
         ({ user }) =>
@@ -114,7 +115,7 @@ export const signin = (data: SignInData, onError: () => void) => {
 
 // Log out
 export const signout = () => {
-  return async (dispatch: any) => {
+  return async (dispatch: AppDispatch) => {
     try {
       await _auth.signOut()
       dispatch(signOut())
@@ -126,7 +127,7 @@ export const signout = () => {
 
 // Get user by id
 export const getUserById = (id: string) => {
-  return async (dispatch: any) => {
+  return async (dispatch: AppDispatch) => {
     try {
       const docRef = doc(db, "users", id)
       const docSnap = await getDoc(docRef)
@@ -146,15 +147,13 @@ export const getUserById = (id: string) => {
 }
 
 export const deleteAccount = (id: string, image: string) => {
-  return async (dispatch: any) => {
+  return async (dispatch: AppDispatch) => {
     image && (await deleteImage(image))
     await deleteDoc(doc(db, "users", id))
     await deleteDoc(doc(db, "tasks", id))
-    const acc = _auth.currentUser
-    acc &&
-      deleteUser(acc as any).then(() => {
-        dispatch(setSuccess("Your account was deleted"))
-        dispatch(signout())
-      })
+    deleteUser(_auth.currentUser as any).then(() => {
+      dispatch(setSuccess("Your account was deleted"))
+      dispatch(signout())
+    })
   }
 }

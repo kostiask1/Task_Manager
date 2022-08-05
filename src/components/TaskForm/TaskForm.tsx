@@ -95,7 +95,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       e.preventDefault()
       if (state) {
         setLoadingComplete(true)
-        const saveTask: any = { ...state }
+        const saveTask: Task = { ...state }
         saveTask.completed = completed
         saveTask.updatedAt = new Date().getTime()
         await dispatch(setTask(saveTask))

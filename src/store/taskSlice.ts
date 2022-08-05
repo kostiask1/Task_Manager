@@ -3,6 +3,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../firebase/base"
 import { convertToDate, equal } from "../helpers"
 import { Task } from "./types"
+import { AppDispatch, RootState } from "./store"
 
 interface TasksState {
   array: Task[]
@@ -13,8 +14,6 @@ const initialState: TasksState = {
   array: [],
   editingTask: null,
 }
-
-let stateTasks: Task[] = []
 
 export const taskInitialState: Task = {
   id: 0,
@@ -33,7 +32,6 @@ const task = createSlice({
   reducers: {
     tasks: (state: TasksState, action: PayloadAction<Task[]>) => {
       state.array = action.payload
-      stateTasks = action.payload
     },
     editingTask: (state: TasksState, action: PayloadAction<Task | null>) => {
       state.editingTask = action.payload
@@ -48,18 +46,19 @@ export default task.reducer
 export const { tasks, editingTask } = task.actions
 
 export const setTasks = (tasksArray: Task[]) => {
-  return (dispatch: any) => {
+  return (dispatch: AppDispatch) => {
     dispatch(tasks(tasksArray))
   }
 }
 
 export const getTasks = (uid: string) => {
-  return async (dispatch: any) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
     const docRef = doc(db, "tasks", uid)
     const docSnap = await getDoc(docRef)
-    const user = docSnap.data() as any
+    const user = docSnap.data() as { tasks: Task[] }
 
     if (user && user.tasks?.length) {
+      const stateTasks = getState().tasks.array
       !equal(stateTasks, user.tasks) && dispatch(setTasks(user.tasks as Task[]))
     } else {
       dispatch(setTasks([]))
@@ -68,7 +67,7 @@ export const getTasks = (uid: string) => {
 }
 
 export const setTask = (task: Task) => {
-  return async (dispatch: any, getState: any) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
     const tasks = getState().tasks.array
     const tasksCopy = [...tasks]
     const tasksWithoutEndDates: Task[] = []
@@ -124,7 +123,7 @@ export const setTask = (task: Task) => {
 }
 
 export const deleteTask = (task: Task) => {
-  return async (dispatch: any, getState: any) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
     const tasks = getState().tasks.array
     let tempArray: Task[] = [...tasks]
     tempArray = tempArray.filter((t: Task) => t.id !== task.id)
@@ -137,7 +136,7 @@ export const deleteTask = (task: Task) => {
 }
 
 export const setTaskToEdit = (task: Task | null) => {
-  return (dispatch: any) => {
+  return (dispatch: AppDispatch) => {
     dispatch(editingTask(task || taskInitialState))
   }
 }

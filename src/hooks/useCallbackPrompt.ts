@@ -7,7 +7,7 @@ export function useCallbackPrompt(when: boolean): (boolean | (() => void))[] {
   const navigate = useNavigate()
   const location = useLocation()
   const [showPrompt, setShowPrompt] = useState(false)
-  const [lastLocation, setLastLocation] = useState<any>(null)
+  const [lastLocation, setLastLocation] = useState<any>(location)
   const [confirmedNavigation, setConfirmedNavigation] = useState(false)
 
   const cancelNavigation = useCallback(() => {
