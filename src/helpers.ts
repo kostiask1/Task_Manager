@@ -45,3 +45,5 @@ export const convertDateToString = (date: Date): string => {
   const year = date.getUTCFullYear()
   return `${day}-${month}-${year}`
 }
+
+export const hasNetworkConnection = (): boolean => navigator.onLine
