@@ -74,7 +74,7 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
                   ? "Updating..."
                   : `Completed: ${task.completed ? "Yes" : "No"}`
               }`}
-              disabled={loading}
+              disabled={loading || deleting}
             />
           </div>
         </header>
@@ -93,12 +93,13 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
               onClick={() => setTaskToUpdate(task)}
               className="card-footer-item is-primary"
               text="Edit"
+              disabled={loading || deleting}
             />
             <Button
               className="mx-2 card-footer-item is-danger"
               text={deleting ? "Deleting..." : "Delete"}
               onClick={(e) => deleteT(e, task)}
-              disabled={deleting}
+              disabled={loading || deleting}
             />
           </div>
         </footer>

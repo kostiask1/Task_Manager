@@ -85,6 +85,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     e?.preventDefault()
     setDeleting(true)
     await dispatch(deleteTask(state))
+    dispatch(setTaskToEdit(taskInitialState))
     setDeleting(false)
     dispatch(setSuccess("Task deleted successfully"))
   }
@@ -148,6 +149,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                     ? "Updating..."
                     : `Completed: ${state.completed ? "Yes" : "No"}`
                 }`}
+                disabled={loadingComplete || loadingSave || deleting}
               />
             )}
           </div>
@@ -182,13 +184,23 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               <Button
                 className="mx-2 card-footer-item is-success"
                 text={loadingSave ? "Updating..." : "Update"}
-                disabled={loadingSave || equal(state, task)}
+                disabled={
+                  loadingComplete ||
+                  loadingSave ||
+                  deleting ||
+                  equal(state, task)
+                }
               />
             ) : (
               <Button
                 className="mx-2 card-footer-item is-success"
                 text={loadingSave ? "Saving..." : "Save"}
-                disabled={loadingSave || equal(state, taskInitialState)}
+                disabled={
+                  loadingComplete ||
+                  loadingSave ||
+                  deleting ||
+                  equal(state, taskInitialState)
+                }
               />
             )}
             {isEdit && (
@@ -196,7 +208,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                 className="mx-2 card-footer-item is-danger"
                 text={deleting ? "Deleting..." : "Delete"}
                 onClick={deleteT}
-                disabled={deleting}
+                disabled={loadingComplete || loadingSave || deleting}
               />
             )}
             {isEdit && !setModal ? (
@@ -204,13 +216,19 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                 onClick={clear}
                 className="mx-2 card-footer-item is-warning"
                 text="Clear"
+                disabled={loadingComplete || loadingSave || deleting}
               />
             ) : (
               <Button
                 onClick={reset}
                 className="mx-2 card-footer-item is-warning"
                 text="Reset"
-                disabled={equal(state, task || taskInitialState)}
+                disabled={
+                  loadingComplete ||
+                  loadingSave ||
+                  deleting ||
+                  equal(state, task || taskInitialState)
+                }
               />
             )}
           </div>
