@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../firebase/base"
-import { convertToDate } from "../helpers"
+import { convertToDate, equal } from "../helpers"
 import { Task } from "./types"
 
 interface TasksState {
@@ -13,6 +13,8 @@ const initialState: TasksState = {
   array: [],
   editingTask: null,
 }
+
+let stateTasks: Task[] = []
 
 export const taskInitialState: Task = {
   id: 0,
@@ -31,6 +33,7 @@ const task = createSlice({
   reducers: {
     tasks: (state: TasksState, action: PayloadAction<Task[]>) => {
       state.array = action.payload
+      stateTasks = action.payload
     },
     editingTask: (state: TasksState, action: PayloadAction<Task | null>) => {
       state.editingTask = action.payload
@@ -57,7 +60,7 @@ export const getTasks = (uid: string) => {
     const user = docSnap.data() as any
 
     if (user && user.tasks?.length) {
-      dispatch(setTasks(user.tasks as Task[]))
+      !equal(stateTasks, user.tasks) && dispatch(setTasks(user.tasks as Task[]))
     } else {
       dispatch(setTasks([]))
     }
