@@ -1,0 +1,43 @@
+/* your css code */
+.navbar-item.button {
+  max-width: 100px;
+}
+
+@media (min-width: 1020px) {
+  .button.signin {
+    margin-right: 10px;
+  }
+}
+@media (max-width: 1020px) {
+  button.navbar-item {
+    color: purple;
+  }
+  .navbar-menu {
+    .navbar-end,
+    .navbar-start {
+      gap: 10px;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+  .navbar-dropdown {
+    a {
+      font-size: 1rem;
+      color: #4a4a4a;
+    }
+    .navbar-divider + .is-flex {
+      margin-top: 1rem;
+      align-items: center;
+      justify-content: center;
+      .button {
+        font-size: 1rem;
+      }
+    }
+  }
+  .navbar-item .navbar-link {
+    display: none;
+  }
+}

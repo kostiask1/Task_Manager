@@ -1,9 +1,10 @@
 import { useRef, useEffect } from "react"
-import { Link, useLocation } from "react-router-dom"
-import { routesArray } from "../../routes"
-import { signout } from "../../store/authSlice"
-import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
-import Button from "./Button"
+import { useLocation, Link } from "react-router-dom"
+import { routesArray } from "../../../routes"
+import { signout } from "../../../store/authSlice"
+import { useAppSelector, RootState, useAppDispatch } from "../../../store/store"
+import Button from "../Button"
+import "./Navbar.scss"
 
 function Navbar() {
   const location = useLocation()
@@ -133,7 +134,10 @@ function Navbar() {
               </div>
             ) : (
               <>
-                <Link to="/signin" className="navbar-item button is-light mr-1">
+                <Link
+                  to="/signin"
+                  className="navbar-item button signin is-light"
+                >
                   Sign In
                 </Link>
                 <Link to="/signup" className="navbar-item button is-light">
