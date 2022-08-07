@@ -70,6 +70,8 @@ const Profile = () => {
     if (auth.currentUser) {
       const updatedProfile: User = {
         ...userData,
+        firstName: userData.firstName.trim(),
+        lastName: userData.lastName.trim(),
         profileImg: image || userData.profileImg,
         emailVerified:
           user.email !== userData.email ? false : user.emailVerified,
