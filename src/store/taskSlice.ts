@@ -66,6 +66,7 @@ export const setTask = (task: Task) => {
     const tasksCopy = [...tasksArray]
     const tasksWithoutEndDates: Task[] = []
     const tasksWithEndDates: Task[] = []
+    const completedTasks: Task[] = []
 
     const indexOfTask = tasksArray.findIndex((t: Task) => t.id === task.id)
     const existTask = indexOfTask !== -1
@@ -78,10 +79,14 @@ export const setTask = (task: Task) => {
 
     for (let i = 0; i < tasksCopy.length; i++) {
       const item = tasksCopy[i]
-      if (item.end) {
-        tasksWithEndDates.push(item)
+      if (item.completed) {
+        completedTasks.push(item)
       } else {
-        tasksWithoutEndDates.push(item)
+        if (item.end) {
+          tasksWithEndDates.push(item)
+        } else {
+          tasksWithoutEndDates.push(item)
+        }
       }
     }
 
@@ -105,8 +110,21 @@ export const setTask = (task: Task) => {
       }
       return 0
     })
+    completedTasks.sort((a: Task, b: Task) => {
+      if ((a.updatedAt || 0) < (b.updatedAt || 0)) {
+        return 1
+      }
+      if ((a.updatedAt || 0) > (b.updatedAt || 0)) {
+        return -1
+      }
+      return 0
+    })
 
-    const newArray = [...tasksWithEndDates, ...tasksWithoutEndDates]
+    const newArray = [
+      ...tasksWithEndDates,
+      ...tasksWithoutEndDates,
+      ...completedTasks,
+    ]
 
     await setDoc(doc(db, "tasks", task.uid), {
       tasks: newArray as Task[],
