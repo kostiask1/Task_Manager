@@ -134,9 +134,3 @@ export const deleteTask = (task: Task) => {
     dispatch(setTasks(tempArray))
   }
 }
-
-export const setTaskToEdit = (task: Task | null) => {
-  return (dispatch: AppDispatch) => {
-    dispatch(editingTask(task || taskInitialState))
-  }
-}

@@ -1,7 +1,7 @@
 import { FC, useCallback, useState } from "react"
 import { setError, setSuccess } from "../../store/appSlice"
 import { useAppDispatch } from "../../store/store"
-import { deleteTask, setTask, setTaskToEdit } from "../../store/taskSlice"
+import { deleteTask, editingTask, setTask } from "../../store/taskSlice"
 import { Task as TaskProps } from "../../store/types"
 import Button from "../UI/Button"
 import "./Task.scss"
@@ -49,7 +49,7 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
   }
 
   const setTaskToUpdate = useCallback((task: TaskProps) => {
-    dispatch(setTaskToEdit(task))
+    dispatch(editingTask(task))
     if (setModalUpdate) {
       setModalUpdate(task)
     } else {

@@ -9,7 +9,7 @@ import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import {
   deleteTask,
   setTask,
-  setTaskToEdit,
+  editingTask,
   taskInitialState,
 } from "../../store/taskSlice"
 import { Task, User } from "../../store/types"
@@ -73,7 +73,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const clear = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
     setState(taskInitialState)
-    dispatch(setTaskToEdit(null))
+    dispatch(editingTask(null))
   }
 
   const reset = (e?: React.MouseEvent<HTMLButtonElement>) => {
@@ -85,7 +85,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     e?.preventDefault()
     setDeleting(true)
     await dispatch(deleteTask(state))
-    dispatch(setTaskToEdit(taskInitialState))
+    dispatch(editingTask(taskInitialState))
     setDeleting(false)
     dispatch(setSuccess("Task deleted successfully"))
   }
@@ -99,7 +99,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
         saveTask.completed = completed
         saveTask.updatedAt = new Date().getTime()
         await dispatch(setTask(saveTask))
-        dispatch(setTaskToEdit(saveTask))
+        dispatch(editingTask(saveTask))
         setLoadingComplete(false)
         setState(saveTask)
         setModal && setModal(saveTask)
