@@ -45,12 +45,6 @@ export default task.reducer
 
 export const { tasks, editingTask } = task.actions
 
-export const setTasks = (tasksArray: Task[]) => {
-  return (dispatch: AppDispatch) => {
-    dispatch(tasks(tasksArray))
-  }
-}
-
 export const getTasks = (uid: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const docRef = doc(db, "tasks", uid)
@@ -59,21 +53,21 @@ export const getTasks = (uid: string) => {
 
     if (user && user.tasks?.length) {
       const stateTasks = getState().tasks.array
-      !equal(stateTasks, user.tasks) && dispatch(setTasks(user.tasks as Task[]))
+      !equal(stateTasks, user.tasks) && dispatch(tasks(user.tasks as Task[]))
     } else {
-      dispatch(setTasks([]))
+      dispatch(tasks([]))
     }
   }
 }
 
 export const setTask = (task: Task) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    const tasks = getState().tasks.array
-    const tasksCopy = [...tasks]
+    const tasksArray = getState().tasks.array
+    const tasksCopy = [...tasksArray]
     const tasksWithoutEndDates: Task[] = []
     const tasksWithEndDates: Task[] = []
 
-    const indexOfTask = tasks.findIndex((t: Task) => t.id === task.id)
+    const indexOfTask = tasksArray.findIndex((t: Task) => t.id === task.id)
     const existTask = indexOfTask !== -1
 
     if (!existTask) {
@@ -118,19 +112,19 @@ export const setTask = (task: Task) => {
       tasks: newArray as Task[],
     })
 
-    dispatch(setTasks(newArray))
+    dispatch(tasks(newArray))
   }
 }
 
 export const deleteTask = (task: Task) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    const tasks = getState().tasks.array
-    let tempArray: Task[] = [...tasks]
+    const tasksArray = getState().tasks.array
+    let tempArray: Task[] = [...tasksArray]
     tempArray = tempArray.filter((t: Task) => t.id !== task.id)
     await setDoc(doc(db, "tasks", task.uid), {
       tasks: tempArray as Task[],
     })
 
-    dispatch(setTasks(tempArray))
+    dispatch(tasks(tempArray))
   }
 }

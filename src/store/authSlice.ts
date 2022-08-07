@@ -31,7 +31,7 @@ const auth = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUserData: (state: AuthState, action: PayloadAction<User>) => {
+    setUser: (state: AuthState, action: PayloadAction<User>) => {
       state.user = action.payload
       state.authenticated = true
     },
@@ -46,15 +46,10 @@ export default auth.reducer
 
 // Actions
 
-export const { setUserData, signOut } = auth.actions
+export const { setUser, signOut } = auth.actions
 
 const _auth = getAuth()
 
-export const setUser = (data: User) => {
-  return (dispatch: AppDispatch) => {
-    dispatch(setUserData(data))
-  }
-}
 // Create user
 export const signup = (data: SignUpData, onError: () => void) => {
   return async (dispatch: AppDispatch) => {
