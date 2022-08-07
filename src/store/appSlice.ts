@@ -30,13 +30,6 @@ export default app.reducer
 
 export const { loading, error, success } = app.actions
 
-// Set loading
-export const setLoading = (value: boolean) => {
-  return (dispatch: AppDispatch) => {
-    dispatch(loading(value))
-  }
-}
-
 let timer: boolean = false
 
 // Set error

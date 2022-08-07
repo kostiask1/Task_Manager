@@ -9,9 +9,9 @@ import {
 import { deleteDoc, doc, getDoc } from "firebase/firestore/lite"
 import { db } from "../firebase/base"
 import { deleteImage, uploadDoc } from "../firebase/firestore"
-import { setError, setLoading, setSuccess } from "./appSlice"
-import { AuthState, SignInData, SignUpData, User } from "./types"
+import { loading, setError, setSuccess } from "./appSlice"
 import { AppDispatch } from "./store"
+import { AuthState, SignInData, SignUpData, User } from "./types"
 
 const initialState: AuthState = {
   user: {
@@ -141,7 +141,7 @@ export const getUserById = (id: string) => {
     } catch (err) {
       dispatch(setError("Error dispatching setUser"))
     } finally {
-      dispatch(setLoading(false))
+      dispatch(loading(false))
     }
   }
 }

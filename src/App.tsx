@@ -4,7 +4,7 @@ import Messages from "./components/Messages/Messages"
 import Loader from "./components/UI/Loader"
 import Navbar from "./components/UI/Navbar"
 import Routing from "./routes"
-import { setLoading } from "./store/appSlice"
+import { loading } from "./store/appSlice"
 import { getUserById } from "./store/authSlice"
 import { useAppDispatch } from "./store/store"
 
@@ -17,7 +17,7 @@ function App() {
       if (user) {
         await dispatch(getUserById(user.uid))
       } else {
-        dispatch(setLoading(false))
+        dispatch(loading(false))
       }
     })
 
