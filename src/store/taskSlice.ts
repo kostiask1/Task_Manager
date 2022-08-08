@@ -5,6 +5,12 @@ import { convertToDate, equal } from "../helpers"
 import { Task } from "./types"
 import { AppDispatch, RootState } from "./store"
 
+const sortDeadlines = (array: Task[]) =>
+  array.sort(
+    (a: Task, b: Task) =>
+      convertToDate(a.end).getTime() - convertToDate(b.end).getTime()
+  )
+
 interface TasksState {
   array: Task[]
   editingTask: Task | null
@@ -90,35 +96,10 @@ export const setTask = (task: Task) => {
       }
     }
 
-    tasksWithEndDates.sort((a: Task, b: Task) => {
-      const endA = (a.end && convertToDate(a.end).getTime()) || 0
-      const endB = (b.end && convertToDate(b.end).getTime()) || 0
-      if (endA < endB) {
-        return -1
-      }
-      if (endA > endB) {
-        return 1
-      }
-      return 0
-    })
-    tasksWithoutEndDates.sort((a: Task, b: Task) => {
-      if ((a.updatedAt || a.start) < (b.updatedAt || b.start)) {
-        return 1
-      }
-      if ((a.updatedAt || a.start) > (b.updatedAt || b.start)) {
-        return -1
-      }
-      return 0
-    })
-    completedTasks.sort((a: Task, b: Task) => {
-      if ((a.updatedAt || 0) < (b.updatedAt || 0)) {
-        return 1
-      }
-      if ((a.updatedAt || 0) > (b.updatedAt || 0)) {
-        return -1
-      }
-      return 0
-    })
+    tasksWithoutEndDates.sort((a: Task, b: Task) => a.updatedAt - b.updatedAt)
+
+    sortDeadlines(tasksWithEndDates)
+    sortDeadlines(completedTasks)
 
     const newArray = [
       ...tasksWithEndDates,
