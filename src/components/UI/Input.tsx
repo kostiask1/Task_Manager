@@ -12,6 +12,7 @@ const Input: FC<InputProps> = ({
   required,
   onChange,
   label,
+  className,
   ...rest
 }) => {
   return (
@@ -19,7 +20,7 @@ const Input: FC<InputProps> = ({
       <div className="control">
         {!!label && <label htmlFor={name}>{label}</label>}
         <input
-          className="input"
+          className={className || "input"}
           type={type}
           placeholder={placeholder}
           value={value}

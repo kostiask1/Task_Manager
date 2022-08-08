@@ -12,8 +12,9 @@ import {
   editingTask,
   taskInitialState,
 } from "../../store/taskSlice"
-import { Task, User } from "../../store/types"
+import { Subtask as ISubtask, Task, User } from "../../store/types"
 import "./TaskForm.scss"
+import Subtask from "../Subtask/Subtask"
 
 interface TaskInterface {
   setModal?: undefined | Function
@@ -30,6 +31,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const [loadingComplete, setLoadingComplete] = useState(false)
   const [loadingSave, setLoadingSave] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [subtask, setSubtask] = useState<string>("")
 
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
@@ -118,6 +120,18 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     [state.end]
   )
 
+  const addSubtask = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    if (subtask.trim().length) {
+      const newTask: ISubtask = { text: subtask, completed: false }
+      setSubtask("")
+      setState((state: Task) => ({
+        ...state,
+        subtasks: [...state.subtasks, newTask],
+      }))
+    }
+  }
+
   return (
     <>
       <form
@@ -164,6 +178,26 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               name="description"
               required
             />
+            <br />
+            <ul key={JSON.stringify(state.subtasks)}>
+              {state.subtasks.map((subtask, index) => (
+                <Subtask
+                  key={subtask.text + index}
+                  data={subtask as ISubtask}
+                  tasks={state.subtasks}
+                  update={(data) =>
+                    setState((state: Task) => ({ ...state, subtasks: data }))
+                  }
+                />
+              ))}
+            </ul>
+            <Input
+              placeholder="Enter subtask"
+              value={subtask}
+              onChange={(e) => setSubtask(e.target.value)}
+            />
+            <Button onClick={addSubtask} text="Add subtask" />
+            <br />
             <br />
             <label htmlFor="end">Deadline</label>
             <InputMask

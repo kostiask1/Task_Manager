@@ -25,6 +25,11 @@ export interface AppState {
   success: string
 }
 
+export interface Subtask {
+  completed: boolean
+  text: string
+}
+
 export interface Task {
   completed: boolean
   description: string
@@ -36,6 +41,7 @@ export interface Task {
   end: string
   start: number
   updatedAt: number
+  subtasks: Subtask[] | []
 }
 
 export interface SignUpData {

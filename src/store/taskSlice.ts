@@ -30,6 +30,7 @@ export const taskInitialState: Task = {
   end: "",
   start: 0,
   updatedAt: 0,
+  subtasks: [],
 }
 
 const task = createSlice({
