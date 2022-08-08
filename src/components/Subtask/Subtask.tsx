@@ -11,9 +11,10 @@ interface Props {
   task: Task
   update?: (data: ISubtask[]) => void
   state: "create" | "edit" | "show"
+  setModal?: undefined | Function
 }
 
-const Subtask: FC<Props> = ({ data, task, update, state }) => {
+const Subtask: FC<Props> = ({ data, task, update, state, setModal }) => {
   task = JSON.parse(JSON.stringify(task))
   let subtasksArray = JSON.parse(JSON.stringify(task.subtasks))
   const isShow = state === "show"
@@ -40,6 +41,7 @@ const Subtask: FC<Props> = ({ data, task, update, state }) => {
     saveTask.subtasks = subtasksArray
     saveTask.updatedAt = new Date().getTime()
     await dispatch(setTask(saveTask))
+    setModal && setModal(saveTask)
   }
 
   const toggleCompleted = (e: React.ChangeEvent<HTMLInputElement>) => {
