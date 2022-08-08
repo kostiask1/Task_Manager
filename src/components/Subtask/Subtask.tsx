@@ -1,35 +1,59 @@
-import { FC, useState } from "react"
-import { Subtask as ISubtask } from "../../store/types"
+import { FC } from "react"
+import { useAppDispatch } from "../../store/store"
+import { setTask } from "../../store/taskSlice"
+import { Subtask as ISubtask, Task } from "../../store/types"
 import Button from "../UI/Button"
 import Input from "../UI/Input"
 import "./Subtask.scss"
 
 interface Props {
   data: ISubtask
-  tasks: ISubtask[]
-  update: (data: ISubtask[]) => void
+  task: Task
+  update?: (data: ISubtask[]) => void
+  state: "create" | "edit" | "show"
 }
 
-const Subtask: FC<Props> = ({ data, tasks, update }) => {
-  const [task, setTask] = useState<ISubtask>(data)
-  let tasksArray = [...tasks]
+const Subtask: FC<Props> = ({ data, task, update, state }) => {
+  task = JSON.parse(JSON.stringify(task))
+  let subtasksArray = JSON.parse(JSON.stringify(task.subtasks))
+  const isShow = state === "show"
+  // const isEdit = state === "edit"
+  // const isCreate = state === "create"
+  const dispatch = useAppDispatch()
 
   const removeSubtask = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    const copy = task
-    const index = tasksArray.findIndex((task) => task.text === copy.text)
-    tasksArray.splice(index, 1)
-    update(tasksArray)
+    const copy = data
+    const index = subtasksArray.findIndex(
+      (task: ISubtask) => task.text === copy.text
+    )
+    subtasksArray.splice(index, 1)
+    if (isShow) {
+      saveTask()
+    } else {
+      update && update(subtasksArray)
+    }
+  }
+
+  const saveTask = async () => {
+    const saveTask: Task = task
+    saveTask.subtasks = subtasksArray
+    saveTask.updatedAt = new Date().getTime()
+    await dispatch(setTask(saveTask))
   }
 
   const toggleCompleted = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-    const copy = task
-    const index = tasksArray.findIndex((task) => task.text === copy.text)
-    tasksArray[index].completed = !tasksArray[index].completed
-    console.log("tasksArray:", tasksArray)
-    setTask(tasksArray[index])
-    update(tasksArray)
+    const copy = data
+    const index = subtasksArray.findIndex(
+      (task: ISubtask) => task.text === copy.text
+    )
+    subtasksArray[index].completed = !subtasksArray[index].completed
+    if (isShow) {
+      saveTask()
+    } else {
+      update && update(subtasksArray)
+    }
   }
 
   return (
@@ -37,10 +61,10 @@ const Subtask: FC<Props> = ({ data, tasks, update }) => {
       <Input
         type="checkbox"
         className="checkbox"
-        checked={task.completed}
+        checked={data.completed}
         onChange={(e) => toggleCompleted(e)}
       />
-      {task.text}
+      {data.text}
       <Button onClick={(e) => removeSubtask(e)} text="x" />
     </li>
   )

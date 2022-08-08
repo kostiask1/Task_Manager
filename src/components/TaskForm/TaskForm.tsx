@@ -184,7 +184,8 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                 <Subtask
                   key={subtask.text + index}
                   data={subtask as ISubtask}
-                  tasks={state.subtasks}
+                  task={state}
+                  state={"create"}
                   update={(data) =>
                     setState((state: Task) => ({ ...state, subtasks: data }))
                   }

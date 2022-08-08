@@ -3,6 +3,7 @@ import { setError, setSuccess } from "../../store/appSlice"
 import { useAppDispatch } from "../../store/store"
 import { deleteTask, editingTask, setTask } from "../../store/taskSlice"
 import { Task as TaskProps } from "../../store/types"
+import Subtask from "../Subtask"
 import Button from "../UI/Button"
 import "./Task.scss"
 
@@ -81,6 +82,14 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
         <div className="card-content py-2 px-4">
           <div className="content">
             <p className="description">Description: {task.description}</p>
+            <br />
+            {!!task.subtasks?.length && (
+              <ul>
+                {task.subtasks.map((t) => (
+                  <Subtask data={t} task={task} state="show" />
+                ))}
+              </ul>
+            )}
             <br />
             <time dateTime={task.end}>
               Due: {task.end || "No deadline specified"}
