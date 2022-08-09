@@ -63,27 +63,30 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     }
   }, [state])
 
-  const addTaskToUser = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const saveTask: Task = { ...state }
-    setLoadingSave(true)
-    if (!isEdit) {
-      saveTask.id = new Date().getTime()
-      saveTask.completed = false
-      saveTask.start = new Date().getTime()
-    }
-    if (saveTask.end === "dd-mm-yyyy") {
-      saveTask.end = ""
-    }
-    saveTask.updatedAt = new Date().getTime()
-    saveTask.uid = user.id
-    await dispatch(setTask(saveTask))
-    setLoadingSave(false)
-    isEdit
-      ? dispatch(setSuccess("Task updated successfully"))
-      : dispatch(setSuccess("Task created successfully"))
-    clear()
-  }
+  const addTaskToUser = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      const saveTask: Task = { ...state }
+      setLoadingSave(true)
+      if (!isEdit) {
+        saveTask.id = new Date().getTime()
+        saveTask.completed = false
+        saveTask.start = new Date().getTime()
+      }
+      if (saveTask.end === "dd-mm-yyyy") {
+        saveTask.end = ""
+      }
+      saveTask.updatedAt = new Date().getTime()
+      saveTask.uid = user.id
+      await dispatch(setTask(saveTask))
+      setLoadingSave(false)
+      isEdit
+        ? dispatch(setSuccess("Task updated successfully"))
+        : dispatch(setSuccess("Task created successfully"))
+      clear()
+    },
+    [state]
+  )
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -93,25 +96,28 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     setState((state: Task) => ({ ...state, [name]: value }))
   }
 
-  const clear = (e?: React.MouseEvent<HTMLButtonElement>) => {
+  const clear = useCallback((e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
     setState(taskInitialState)
     dispatch(editingTask(null))
-  }
+  }, [])
 
-  const reset = (e?: React.MouseEvent<HTMLButtonElement>) => {
+  const reset = useCallback((e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
     setState(task || taskInitialState)
-  }
+  }, [])
 
-  const deleteT = async (e?: React.MouseEvent<HTMLButtonElement>) => {
-    e?.preventDefault()
-    setDeleting(true)
-    await dispatch(deleteTask(state))
-    dispatch(editingTask(taskInitialState))
-    setDeleting(false)
-    dispatch(setSuccess("Task deleted successfully"))
-  }
+  const deleteT = useCallback(
+    async (e?: React.MouseEvent<HTMLButtonElement>) => {
+      e?.preventDefault()
+      setDeleting(true)
+      await dispatch(deleteTask(state))
+      dispatch(editingTask(taskInitialState))
+      setDeleting(false)
+      dispatch(setSuccess("Task deleted successfully"))
+    },
+    [state]
+  )
 
   const complete = useCallback(
     async (e: React.FormEvent | null, completed: boolean) => {
@@ -141,22 +147,22 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     [state.end]
   )
 
-  const addSubtask = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    if (subtask.trim().length) {
-      const newTask: ISubtask = { text: subtask, completed: false }
-      setSubtask("")
-      setState((state: Task) => ({
-        ...state,
-        subtasks: [...state.subtasks, newTask],
-      }))
-    }
-  }
-  const handleSubtask = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-
-    if (value.trim().length < 160) setSubtask(value)
-  }
+  const addSubtask = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault()
+      if (subtask.trim().length) {
+        const newTask: ISubtask = { text: subtask, completed: false }
+        setSubtask("")
+        setState((state: Task) => ({
+          ...state,
+          subtasks: [...state.subtasks, newTask],
+        }))
+      }
+    },
+    [subtask]
+  )
+  const handleSubtask = (e: React.ChangeEvent<HTMLInputElement>) =>
+    e.target.value.trim().length < 160 && setSubtask(e.target.value)
 
   return (
     <>

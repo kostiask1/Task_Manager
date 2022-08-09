@@ -133,10 +133,10 @@ const Calendar = () => {
     setSlot(task)
   }, [])
 
-  const onShowMore = (_: any, date: Date) => {
+  const onShowMore = useCallback((_: any, date: Date) => {
     setDate(date)
     setBCView("week")
-  }
+  }, [])
 
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate])
 

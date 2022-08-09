@@ -37,19 +37,19 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
     }
   }, [])
 
-  const deleteT = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-    task: TaskProps
-  ) => {
-    e.preventDefault()
-    setDeleting(true)
-    await dispatch(deleteTask(task))
-    setDeleting(false)
-    if (setModal) {
-      setModal(null)
-    }
-    dispatch(setSuccess("Task deleted successfully"))
-  }
+  const deleteT = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement>, task: TaskProps) => {
+      e.preventDefault()
+      setDeleting(true)
+      await dispatch(deleteTask(task))
+      setDeleting(false)
+      if (setModal) {
+        setModal(null)
+      }
+      dispatch(setSuccess("Task deleted successfully"))
+    },
+    [task]
+  )
 
   const setTaskToUpdate = useCallback((task: TaskProps) => {
     dispatch(editingTask(task))
@@ -111,7 +111,7 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
             <div className="content">
               <p className="description">Description: {task.description}</p>
               <br />
-              {task.subtasks?.length && (
+              {!!task.subtasks?.length && (
                 <>
                   <b>Subtasks</b>
                   <hr style={{ margin: "5px 0" }} />
