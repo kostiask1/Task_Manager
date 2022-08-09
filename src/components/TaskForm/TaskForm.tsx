@@ -15,6 +15,7 @@ import {
 import { Subtask as ISubtask, Task, User } from "../../store/types"
 import "./TaskForm.scss"
 import Subtask from "../Subtask/Subtask"
+import Prompt from "../Prompt/Prompt"
 
 interface TaskInterface {
   setModal?: undefined | Function
@@ -31,6 +32,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const [loadingComplete, setLoadingComplete] = useState(false)
   const [loadingSave, setLoadingSave] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [prompt, setPrompt] = useState(false)
   const [subtask, setSubtask] = useState<string>("")
 
   const isEdit = state.id !== 0
@@ -41,6 +43,25 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       setState(task)
     }
   }, [task])
+
+  useEffect(() => {
+    if (
+      !state.completed &&
+      state.subtasks?.length > 0 &&
+      state.subtasks.every((subtask) => subtask.completed)
+    ) {
+      setPrompt(true)
+    } else {
+      setPrompt(false)
+    }
+    if (
+      state.completed &&
+      state.subtasks?.length > 0 &&
+      !state.subtasks.every((subtask) => subtask.completed)
+    ) {
+      complete(null, false)
+    }
+  }, [state])
 
   const addTaskToUser = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -93,8 +114,8 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   }
 
   const complete = useCallback(
-    async (e: React.FormEvent, completed: boolean) => {
-      e.preventDefault()
+    async (e: React.FormEvent | null, completed: boolean) => {
+      e && e.preventDefault()
       if (state) {
         setLoadingComplete(true)
         const saveTask: Task = { ...state }
@@ -136,6 +157,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
 
     if (value.trim().length < 160) setSubtask(value)
   }
+
   return (
     <>
       <form
@@ -283,6 +305,12 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
           </div>
         </footer>
       </form>
+      <Prompt
+        title="All subtasks are completed, finish the task?"
+        show={prompt}
+        onCancel={() => setPrompt(false)}
+        onConfirm={() => complete(null, true)}
+      ></Prompt>
     </>
   )
 }

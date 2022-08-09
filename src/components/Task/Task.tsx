@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react"
+import { FC, useCallback, useState, useEffect } from "react"
 import { setError, setSuccess } from "../../store/appSlice"
 import { useAppDispatch } from "../../store/store"
 import { deleteTask, editingTask, setTask } from "../../store/taskSlice"
@@ -6,6 +6,7 @@ import { Task as TaskProps } from "../../store/types"
 import Subtask from "../Subtask"
 import Button from "../UI/Button"
 import "./Task.scss"
+import Prompt from "../Prompt/Prompt"
 
 interface TaskInterface {
   task: TaskProps
@@ -16,6 +17,7 @@ interface TaskInterface {
 const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
   const [loading, setLoading] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [prompt, setPrompt] = useState(false)
   const dispatch = useAppDispatch()
 
   const complete = useCallback(async (task: TaskProps, completed: boolean) => {
@@ -58,74 +60,101 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (
+      !task.completed &&
+      task.subtasks?.length > 0 &&
+      task.subtasks.every((subtask) => subtask.completed)
+    ) {
+      setPrompt(true)
+    } else {
+      setPrompt(false)
+    }
+    if (
+      task.completed &&
+      task.subtasks?.length > 0 &&
+      !task.subtasks.every((subtask) => subtask.completed)
+    ) {
+      complete(task, false)
+    }
+  }, [task])
+
   return (
-    <div className="column task fadeIn" key={task.id}>
-      <div className="card mb-5">
-        <header className="card-header is-align-items-center">
-          <div className="card-header-title">
-            {task.title}
-            <Button
-              className={`complete-task-btn ${
-                task.completed ? "is-primary" : "is-danger"
-              }`}
-              style={{ height: "100%" }}
-              onClick={() => complete(task, !task.completed)}
-              text={`${
-                loading
-                  ? "Updating..."
-                  : `Completed: ${task.completed ? "Yes" : "No"}`
-              }`}
-              disabled={loading || deleting}
-            />
+    <>
+      <Prompt
+        title="All subtasks are completed, finish the task?"
+        show={prompt}
+        onCancel={() => setPrompt(false)}
+        onConfirm={() => complete(task, true)}
+      ></Prompt>
+      <div className="column task fadeIn" key={task.id}>
+        <div className="card mb-5">
+          <header className="card-header is-align-items-center">
+            <div className="card-header-title">
+              {task.title}
+              <Button
+                className={`complete-task-btn ${
+                  task.completed ? "is-primary" : "is-danger"
+                }`}
+                style={{ height: "100%" }}
+                onClick={() => complete(task, !task.completed)}
+                text={`${
+                  loading
+                    ? "Updating..."
+                    : `Completed: ${task.completed ? "Yes" : "No"}`
+                }`}
+                disabled={loading || deleting}
+              />
+            </div>
+          </header>
+          <div className="card-content py-2 px-4">
+            <div className="content">
+              <p className="description">Description: {task.description}</p>
+              <br />
+              {task.subtasks?.length && (
+                <>
+                  <b>Subtasks</b>
+                  <hr style={{ margin: "5px 0" }} />
+                  {!!task.subtasks?.length && (
+                    <ul>
+                      {task.subtasks.map((t, index) => (
+                        <Subtask
+                          key={t.text + index}
+                          data={t}
+                          task={task}
+                          state="show"
+                          setModal={setModal}
+                        />
+                      ))}
+                    </ul>
+                  )}
+                  <hr style={{ margin: "10px 0" }} />
+                </>
+              )}
+              <time dateTime={task.end}>
+                Due: {task.end || "No deadline specified"}
+              </time>
+            </div>
           </div>
-        </header>
-        <div className="card-content py-2 px-4">
-          <div className="content">
-            <p className="description">Description: {task.description}</p>
-            <br />
-            {task.subtasks?.length && (
-              <>
-                <b>Subtasks</b>
-                <hr style={{ margin: "5px 0" }} />
-                {!!task.subtasks?.length && (
-                  <ul>
-                    {task.subtasks.map((t, index) => (
-                      <Subtask
-                        key={t.text + index}
-                        data={t}
-                        task={task}
-                        state="show"
-                        setModal={setModal}
-                      />
-                    ))}
-                  </ul>
-                )}
-                <hr style={{ margin: "10px 0" }} />
-              </>
-            )}
-            <time dateTime={task.end}>
-              Due: {task.end || "No deadline specified"}
-            </time>
-          </div>
+          <footer className="card-footer p-3">
+            <div className="buttons">
+              <Button
+                onClick={() => setTaskToUpdate(task)}
+                className="card-footer-item is-primary"
+                text="Edit"
+                disabled={loading || deleting}
+              />
+              <Button
+                className="mx-2 card-footer-item is-danger"
+                text={deleting ? "Deleting..." : "Delete"}
+                onClick={(e) => deleteT(e, task)}
+                disabled={loading || deleting}
+              />
+            </div>
+          </footer>
         </div>
-        <footer className="card-footer p-3">
-          <div className="buttons">
-            <Button
-              onClick={() => setTaskToUpdate(task)}
-              className="card-footer-item is-primary"
-              text="Edit"
-              disabled={loading || deleting}
-            />
-            <Button
-              className="mx-2 card-footer-item is-danger"
-              text={deleting ? "Deleting..." : "Delete"}
-              onClick={(e) => deleteT(e, task)}
-              disabled={loading || deleting}
-            />
-          </div>
-        </footer>
       </div>
-    </div>
+    </>
   )
 }
 
