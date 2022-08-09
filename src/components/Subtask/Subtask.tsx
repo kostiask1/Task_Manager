@@ -39,7 +39,6 @@ const Subtask: FC<Props> = ({ data, task, update, state, setModal, edit }) => {
   const saveTask = async () => {
     const saveTask: Task = task
     saveTask.subtasks = subtasksArray
-    saveTask.updatedAt = new Date().getTime()
     await dispatch(setTask(saveTask))
     setModal && setModal(saveTask)
   }

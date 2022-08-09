@@ -1,4 +1,4 @@
-import { FC, useCallback, useState, useEffect } from "react"
+import { FC, useCallback, useEffect, useState } from "react"
 import { setError, setSuccess } from "../../store/appSlice"
 import { useAppDispatch } from "../../store/store"
 import { deleteTask, editingTask, setTask } from "../../store/taskSlice"
@@ -6,7 +6,6 @@ import { Task as TaskProps } from "../../store/types"
 import Subtask from "../Subtask"
 import Button from "../UI/Button"
 import "./Task.scss"
-import Prompt from "../Prompt/Prompt"
 
 interface TaskInterface {
   task: TaskProps
@@ -17,7 +16,6 @@ interface TaskInterface {
 const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
   const [loading, setLoading] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const [prompt, setPrompt] = useState(false)
   const dispatch = useAppDispatch()
 
   const complete = useCallback(async (task: TaskProps, completed: boolean) => {
@@ -25,7 +23,6 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
       setLoading(true)
       const saveTask: TaskProps = { ...task }
       saveTask.completed = completed
-      saveTask.updatedAt = new Date().getTime()
       await dispatch(setTask(saveTask))
       setLoading(false)
       setModal && setModal(saveTask)
@@ -59,32 +56,24 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
   }, [])
 
   useEffect(() => {
-    if (
-      !task.completed &&
-      task.subtasks?.length > 0 &&
-      task.subtasks.every((subtask) => subtask.completed)
-    ) {
-      setPrompt(true)
-    } else {
-      setPrompt(false)
-    }
-    if (
-      task.completed &&
-      task.subtasks?.length > 0 &&
-      !task.subtasks.every((subtask) => subtask.completed)
-    ) {
-      complete(task, false)
+    if (task.subtasks?.length) {
+      if (
+        !task.completed &&
+        task.subtasks.every((subtask) => subtask.completed)
+      ) {
+        complete(task, true)
+      }
+      if (
+        task.completed &&
+        !task.subtasks.every((subtask) => subtask.completed)
+      ) {
+        complete(task, false)
+      }
     }
   }, [task])
 
   return (
     <>
-      <Prompt
-        title="All subtasks are completed, finish the task?"
-        show={prompt}
-        onCancel={() => setPrompt(false)}
-        onConfirm={() => complete(task, true)}
-      ></Prompt>
       <div className="column task fadeIn" key={task.id}>
         <div className="card mb-5">
           <header className="card-header is-align-items-center">

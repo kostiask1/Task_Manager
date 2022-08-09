@@ -77,7 +77,7 @@ export const setTask = (task: Task) => {
 
     const indexOfTask = tasksArray.findIndex((t: Task) => t.id === task.id)
     const existTask = indexOfTask !== -1
-
+    task.updatedAt = new Date().getTime()
     if (!existTask) {
       tasksCopy.push(task)
     } else {

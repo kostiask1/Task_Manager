@@ -1,21 +1,20 @@
-import { useEffect, useMemo, useState, useCallback, FC } from "react"
+import { FC, useCallback, useEffect, useMemo, useState } from "react"
 import InputMask from "react-input-mask"
-import Button from "../UI/Button"
-import Input from "../UI/Input"
-import Textarea from "../UI/Textarea"
 import { dateFormat, equal } from "../../helpers"
-import { setSuccess, setError } from "../../store/appSlice"
+import { setError, setSuccess } from "../../store/appSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import {
   deleteTask,
-  setTask,
   editingTask,
+  setTask,
   taskInitialState,
 } from "../../store/taskSlice"
 import { Subtask as ISubtask, Task, User } from "../../store/types"
-import "./TaskForm.scss"
 import Subtask from "../Subtask/Subtask"
-import Prompt from "../Prompt/Prompt"
+import Button from "../UI/Button"
+import Input from "../UI/Input"
+import Textarea from "../UI/Textarea"
+import "./TaskForm.scss"
 
 interface TaskInterface {
   setModal?: undefined | Function
@@ -32,28 +31,25 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const [loadingComplete, setLoadingComplete] = useState(false)
   const [loadingSave, setLoadingSave] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const [prompt, setPrompt] = useState(false)
   const [subtask, setSubtask] = useState<string>("")
 
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
 
   useEffect(() => {
-    if (
-      !state.completed &&
-      state.subtasks?.length > 0 &&
-      state.subtasks.every((subtask) => subtask.completed)
-    ) {
-      setPrompt(true)
-    } else {
-      setPrompt(false)
-    }
-    if (
-      state.completed &&
-      state.subtasks?.length > 0 &&
-      !state.subtasks.every((subtask) => subtask.completed)
-    ) {
-      complete(null, false)
+    if (state.subtasks?.length) {
+      if (
+        !state.completed &&
+        state.subtasks.every((subtask) => subtask.completed)
+      ) {
+        complete(null, true)
+      }
+      if (
+        state.completed &&
+        !state.subtasks.every((subtask) => subtask.completed)
+      ) {
+        complete(null, false)
+      }
     }
   }, [state])
 
@@ -70,7 +66,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       if (saveTask.end === "dd-mm-yyyy") {
         saveTask.end = ""
       }
-      saveTask.updatedAt = new Date().getTime()
       saveTask.uid = user.id
       await dispatch(setTask(saveTask))
       setLoadingSave(false)
@@ -120,7 +115,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
         setLoadingComplete(true)
         const saveTask: Task = { ...state }
         saveTask.completed = completed
-        saveTask.updatedAt = new Date().getTime()
         await dispatch(setTask(saveTask))
         dispatch(editingTask(saveTask))
         setLoadingComplete(false)
@@ -305,12 +299,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
           </div>
         </footer>
       </form>
-      <Prompt
-        title="All subtasks are completed, finish the task?"
-        show={prompt}
-        onCancel={() => setPrompt(false)}
-        onConfirm={() => complete(null, true)}
-      ></Prompt>
     </>
   )
 }
