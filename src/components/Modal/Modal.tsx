@@ -9,7 +9,7 @@ interface Props {
 }
 
 const Modal: FC<Props> = ({ show, hide, id, children }) => {
-  return (
+  return show ? (
     <div
       id={id}
       className={`modal ${show ? "is-active" : ""}`}
@@ -18,7 +18,7 @@ const Modal: FC<Props> = ({ show, hide, id, children }) => {
       <div className="modal-background" onClick={hide}></div>
       <div className="modal-content">{children}</div>
     </div>
-  )
+  ) : null
 }
 
 export default Modal
