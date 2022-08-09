@@ -180,7 +180,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
             />
             <br />
             <ul key={JSON.stringify(state.subtasks)}>
-              {state.subtasks.map((subtask, index) => (
+              {state.subtasks?.map((subtask, index) => (
                 <Subtask
                   key={subtask.text + index}
                   data={subtask as ISubtask}

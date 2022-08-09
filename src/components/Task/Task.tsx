@@ -85,8 +85,9 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
             <br />
             {!!task.subtasks?.length && (
               <ul>
-                {task.subtasks.map((t) => (
+                {task.subtasks.map((t, index) => (
                   <Subtask
+                    key={t.text + index}
                     data={t}
                     task={task}
                     state="show"
