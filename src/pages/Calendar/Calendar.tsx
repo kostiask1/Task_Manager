@@ -39,10 +39,6 @@ const Calendar = () => {
   const [bcView, setBCView] = useState("month")
   const [date, setDate] = useState(new Date())
 
-  useEffect(() => {
-    getData()
-  }, [])
-
   const getData = useCallback(() => {
     setLoading(!tasks.length)
     dispatch(getTasks(user.id)).then(() => {
@@ -50,6 +46,8 @@ const Calendar = () => {
       setLoading(false)
     })
   }, [])
+
+  useEffect(getData, [])
 
   const generateEvents = useCallback(
     (tasks: TaskProps[]): Event[] =>
