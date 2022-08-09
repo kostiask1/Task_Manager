@@ -12,7 +12,7 @@ const Modal: FC<Props> = ({ show, hide, id, children }) => {
   return show ? (
     <div
       id={id}
-      className={`modal ${show ? "is-active" : ""}`}
+      className={`modal fadeIn ${show ? "is-active" : ""}`}
       aria-label="modal"
     >
       <div className="modal-background" onClick={hide}></div>
