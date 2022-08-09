@@ -38,17 +38,32 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
 
   useEffect(() => {
     if (state.subtasks?.length) {
-      if (
-        !state.completed &&
-        state.subtasks.every((subtask) => subtask.completed)
-      ) {
-        complete(null, true)
-      }
-      if (
-        state.completed &&
-        !state.subtasks.every((subtask) => subtask.completed)
-      ) {
-        complete(null, false)
+      if (state.id) {
+        if (
+          !state.completed &&
+          state.subtasks.every((subtask) => subtask.completed)
+        ) {
+          complete(null, true)
+        }
+        if (
+          state.completed &&
+          !state.subtasks.every((subtask) => subtask.completed)
+        ) {
+          complete(null, false)
+        }
+      } else {
+        if (
+          !state.completed &&
+          state.subtasks.every((subtask) => subtask.completed)
+        ) {
+          state.completed = true
+        }
+        if (
+          state.completed &&
+          !state.subtasks.every((subtask) => subtask.completed)
+        ) {
+          state.completed = false
+        }
       }
     }
   }, [state])
@@ -60,7 +75,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       setLoadingSave(true)
       if (!isEdit) {
         saveTask.id = new Date().getTime()
-        saveTask.completed = false
         saveTask.start = new Date().getTime()
       }
       if (saveTask.end === "dd-mm-yyyy") {
@@ -68,6 +82,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       }
       saveTask.uid = user.id
       await dispatch(setTask(saveTask))
+      setModal && !isEdit && setModal(null)
       setLoadingSave(false)
       isEdit
         ? dispatch(setSuccess("Task updated successfully"))
