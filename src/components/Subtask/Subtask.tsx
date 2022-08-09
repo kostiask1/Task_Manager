@@ -65,12 +65,14 @@ const Subtask: FC<Props> = ({ data, task, update, state, setModal }) => {
         checked={data.completed}
         onChange={(e) => toggleCompleted(e)}
       />
-      <Button
-        className="is-danger is-small"
-        style={{ height: 16, padding: "0px 4px" }}
-        onClick={(e) => removeSubtask(e)}
-        text="x"
-      />
+      {!isShow && (
+        <Button
+          className="is-danger is-small"
+          style={{ height: 16, padding: "0px 4px" }}
+          onClick={(e) => removeSubtask(e)}
+          text="x"
+        />
+      )}
       {data.text}
     </li>
   )
