@@ -178,7 +178,10 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               name="description"
               required
             />
-            <br />
+            <label htmlFor="subtask">
+              <b>Subtasks</b>
+            </label>
+            <hr style={{ margin: "5px 0" }} />
             <ul key={JSON.stringify(state.subtasks)}>
               {state.subtasks?.map((subtask, index) => (
                 <Subtask
@@ -193,13 +196,19 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               ))}
             </ul>
             <Input
+              name="subtask"
               placeholder="Enter subtask"
               value={subtask}
               onChange={(e) => setSubtask(e.target.value)}
             />
-            <Button onClick={addSubtask} text="Add subtask" />
+            <Button
+              onClick={addSubtask}
+              className="add-subtask is-info"
+              text="Add subtask"
+              disabled={loadingSave || deleting || !subtask.trim().length}
+            />
             <br />
-            <br />
+            <hr style={{ margin: "10px 0" }} />
             <label htmlFor="end">Deadline</label>
             <InputMask
               className="input"

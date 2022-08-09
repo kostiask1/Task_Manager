@@ -3,7 +3,6 @@ import { useAppDispatch } from "../../store/store"
 import { setTask } from "../../store/taskSlice"
 import { Subtask as ISubtask, Task } from "../../store/types"
 import Button from "../UI/Button"
-import Input from "../UI/Input"
 import "./Subtask.scss"
 
 interface Props {
@@ -60,14 +59,19 @@ const Subtask: FC<Props> = ({ data, task, update, state, setModal }) => {
 
   return (
     <li>
-      <Input
+      <input
         type="checkbox"
         className="checkbox"
         checked={data.completed}
         onChange={(e) => toggleCompleted(e)}
       />
+      <Button
+        className="is-danger is-small"
+        style={{ height: 16, padding: "0px 4px" }}
+        onClick={(e) => removeSubtask(e)}
+        text="x"
+      />
       {data.text}
-      <Button onClick={(e) => removeSubtask(e)} text="x" />
     </li>
   )
 }

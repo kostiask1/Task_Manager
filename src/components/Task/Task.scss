@@ -10,4 +10,19 @@
   .complete-task-btn {
     margin-left: auto;
   }
+  .card-content {
+    height: 100%;
+  }
+  .content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .add-subtask {
+    align-self: start;
+  }
+  time {
+    margin-top: auto;
+  }
 }

@@ -83,20 +83,26 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
           <div className="content">
             <p className="description">Description: {task.description}</p>
             <br />
-            {!!task.subtasks?.length && (
-              <ul>
-                {task.subtasks.map((t, index) => (
-                  <Subtask
-                    key={t.text + index}
-                    data={t}
-                    task={task}
-                    state="show"
-                    setModal={setModal}
-                  />
-                ))}
-              </ul>
+            {task.subtasks?.length && (
+              <>
+                <b>Subtasks</b>
+                <hr style={{ margin: "5px 0" }} />
+                {!!task.subtasks?.length && (
+                  <ul>
+                    {task.subtasks.map((t, index) => (
+                      <Subtask
+                        key={t.text + index}
+                        data={t}
+                        task={task}
+                        state="show"
+                        setModal={setModal}
+                      />
+                    ))}
+                  </ul>
+                )}
+                <hr style={{ margin: "10px 0" }} />
+              </>
             )}
-            <br />
             <time dateTime={task.end}>
               Due: {task.end || "No deadline specified"}
             </time>
