@@ -57,16 +57,13 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
 
   useEffect(() => {
     if (task.subtasks?.length) {
-      if (
-        !task.completed &&
-        task.subtasks.every((subtask) => subtask.completed)
-      ) {
+      const subtasksCompleted = task.subtasks.every(
+        (subtask) => subtask.completed
+      )
+      if (!task.completed && subtasksCompleted) {
         complete(task, true)
       }
-      if (
-        task.completed &&
-        !task.subtasks.every((subtask) => subtask.completed)
-      ) {
+      if (task.completed && !subtasksCompleted) {
         complete(task, false)
       }
     }

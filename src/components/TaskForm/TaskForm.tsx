@@ -38,30 +38,21 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
 
   useEffect(() => {
     if (state.subtasks?.length) {
+      const subtasksCompleted = state.subtasks.every(
+        (subtask) => subtask.completed
+      )
       if (state.id) {
-        if (
-          !state.completed &&
-          state.subtasks.every((subtask) => subtask.completed)
-        ) {
+        if (!state.completed && subtasksCompleted) {
           complete(null, true)
         }
-        if (
-          state.completed &&
-          !state.subtasks.every((subtask) => subtask.completed)
-        ) {
+        if (state.completed && !subtasksCompleted) {
           complete(null, false)
         }
       } else {
-        if (
-          !state.completed &&
-          state.subtasks.every((subtask) => subtask.completed)
-        ) {
+        if (!state.completed && subtasksCompleted) {
           state.completed = true
         }
-        if (
-          state.completed &&
-          !state.subtasks.every((subtask) => subtask.completed)
-        ) {
+        if (state.completed && !subtasksCompleted) {
           state.completed = false
         }
       }
