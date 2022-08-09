@@ -27,6 +27,18 @@ import "./Calendar.scss"
 const Task = lazy(() => import("../../components/Task"))
 const TaskForm = lazy(() => import("../../components/TaskForm"))
 
+const genTitle = (task: TaskProps): string => {
+  const copy = { ...task }
+  if (copy.subtasks?.length) {
+    const completed = copy.subtasks.filter((subtask) => subtask.completed)
+    copy.title = copy.subtasks.length
+      ? `${copy.title} (${completed.length}/${copy.subtasks.length})`
+      : copy.title
+  }
+
+  return copy.title
+}
+
 const Calendar = () => {
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
@@ -53,6 +65,7 @@ const Calendar = () => {
     (tasks: TaskProps[]): Event[] =>
       tasks.map((task: any) => ({
         ...task,
+        title: genTitle(task),
         start: task.end ? convertToDate(task.end) : convertToDate(task.start),
         end: task.end ? convertToDate(task.end) : convertToDate(task.start),
         hasEndDate: task.end ? true : false,
@@ -61,6 +74,7 @@ const Calendar = () => {
   )
 
   const events = useMemo(() => generateEvents(tasks), [tasks])
+  console.log("events:", events)
 
   const localizer = useMemo(
     () =>
@@ -77,6 +91,7 @@ const Calendar = () => {
   )
   const onSelectEvent = useCallback((calEvent: any) => {
     const copy = { ...calEvent }
+    copy.title = copy.title.replace(/\s*\(.*?\)\s*/g, "")
     copy.start = convertDateToString(copy.start)
     copy.end = copy.hasEndDate ? convertDateToString(copy.end) : ""
     setTask(copy)
