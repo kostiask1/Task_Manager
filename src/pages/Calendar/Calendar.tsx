@@ -74,7 +74,6 @@ const Calendar = () => {
   )
 
   const events = useMemo(() => generateEvents(tasks), [tasks])
-  console.log("events:", events)
 
   const localizer = useMemo(
     () =>

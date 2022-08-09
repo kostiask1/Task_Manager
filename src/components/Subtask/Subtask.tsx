@@ -69,6 +69,7 @@ const Subtask: FC<Props> = ({ data, task, update, state, setModal, edit }) => {
       <input
         type="checkbox"
         className="checkbox"
+        id={"checkbox-" + data.text}
         checked={data.completed}
         onChange={toggleCompleted}
       />
@@ -80,7 +81,9 @@ const Subtask: FC<Props> = ({ data, task, update, state, setModal, edit }) => {
           text="x"
         />
       )}
-      {data.text}
+      <label className="subtask-text" htmlFor={"checkbox-" + data.text}>
+        {data.text}
+      </label>
       {(isEdit || isCreate) && edit && (
         <Button
           className="is-info is-small"
