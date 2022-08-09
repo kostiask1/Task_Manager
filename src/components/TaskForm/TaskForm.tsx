@@ -131,7 +131,11 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       }))
     }
   }
+  const handleSubtask = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
 
+    if (value.trim().length < 160) setSubtask(value)
+  }
   return (
     <>
       <form
@@ -189,6 +193,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                   data={subtask as ISubtask}
                   task={state}
                   state={"create"}
+                  edit={setSubtask}
                   update={(data) =>
                     setState((state: Task) => ({ ...state, subtasks: data }))
                   }
@@ -199,7 +204,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               name="subtask"
               placeholder="Enter subtask"
               value={subtask}
-              onChange={(e) => setSubtask(e.target.value)}
+              onChange={handleSubtask}
             />
             <Button
               onClick={addSubtask}

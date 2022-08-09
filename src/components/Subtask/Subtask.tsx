@@ -11,14 +11,15 @@ interface Props {
   update?: (data: ISubtask[]) => void
   state: "create" | "edit" | "show"
   setModal?: undefined | Function
+  edit?: undefined | Function
 }
 
-const Subtask: FC<Props> = ({ data, task, update, state, setModal }) => {
+const Subtask: FC<Props> = ({ data, task, update, state, setModal, edit }) => {
   task = JSON.parse(JSON.stringify(task))
   let subtasksArray = JSON.parse(JSON.stringify(task.subtasks))
   const isShow = state === "show"
-  // const isEdit = state === "edit"
-  // const isCreate = state === "create"
+  const isEdit = state === "edit"
+  const isCreate = state === "create"
   const dispatch = useAppDispatch()
 
   const removeSubtask = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -57,23 +58,38 @@ const Subtask: FC<Props> = ({ data, task, update, state, setModal }) => {
     }
   }
 
+  const setEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    if (edit) {
+      edit(data.text)
+      removeSubtask(e)
+    }
+  }
   return (
     <li>
       <input
         type="checkbox"
         className="checkbox"
         checked={data.completed}
-        onChange={(e) => toggleCompleted(e)}
+        onChange={toggleCompleted}
       />
       {!isShow && (
         <Button
           className="is-danger is-small"
           style={{ height: 16, padding: "0px 4px" }}
-          onClick={(e) => removeSubtask(e)}
+          onClick={removeSubtask}
           text="x"
         />
       )}
       {data.text}
+      {(isEdit || isCreate) && edit && (
+        <Button
+          className="is-info is-small"
+          style={{ height: 16, padding: "0px 4px" }}
+          onClick={setEdit}
+          text="edit"
+        />
+      )}
     </li>
   )
 }
