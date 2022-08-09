@@ -1,16 +1,16 @@
-import React from "react"
-import { db } from "../../firebase/base"
 import { collection, getDocs } from "firebase/firestore/lite"
+import { useEffect, useState } from "react"
+import { db } from "../../firebase/base"
 
 interface IDoc {
   value: string
 }
 
 export const useFetchItems = () => {
-  const [loading, setLoading] = React.useState(true)
-  const [data, setData] = React.useState<IDoc[]>([])
+  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState<IDoc[]>([])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const collection_items = collection(db, "items")
     getDocs(collection_items).then((response) => {
       if (response.docs.length) {

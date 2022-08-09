@@ -43,9 +43,7 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
       setDeleting(true)
       await dispatch(deleteTask(task))
       setDeleting(false)
-      if (setModal) {
-        setModal(null)
-      }
+      setModal && setModal(null)
       dispatch(setSuccess("Task deleted successfully"))
     },
     [task]

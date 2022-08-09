@@ -39,12 +39,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const stateName = isEdit ? "Edit" : "Create"
 
   useEffect(() => {
-    if (task) {
-      setState(task)
-    }
-  }, [task])
-
-  useEffect(() => {
     if (
       !state.completed &&
       state.subtasks?.length > 0 &&
@@ -102,14 +96,14 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     dispatch(editingTask(null))
   }, [])
 
-  const reset = useCallback((e?: React.MouseEvent<HTMLButtonElement>) => {
-    e?.preventDefault()
+  const reset = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
     setState(task || taskInitialState)
   }, [])
 
   const deleteT = useCallback(
-    async (e?: React.MouseEvent<HTMLButtonElement>) => {
-      e?.preventDefault()
+    async (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault()
       setDeleting(true)
       await dispatch(deleteTask(state))
       dispatch(editingTask(taskInitialState))

@@ -43,10 +43,6 @@ const Calendar = () => {
     getData()
   }, [])
 
-  useEffect(() => {
-    setSlot(null)
-  }, [tasks])
-
   const getData = useCallback(() => {
     setLoading(!tasks.length)
     dispatch(getTasks(user.id)).then(() => {
@@ -174,7 +170,7 @@ const Calendar = () => {
       </Modal>
       <Modal id="slot" show={slot} key={slot} hide={handleCloseTaskModal}>
         <Suspense fallback={<Loader loading={true} />}>
-          <TaskForm setModal={setSlot} />
+          <TaskForm key={task} setModal={setSlot} />
         </Suspense>
       </Modal>
     </div>

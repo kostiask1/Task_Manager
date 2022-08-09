@@ -24,7 +24,7 @@ function App() {
     return () => {
       unsubscribe()
     }
-  }, [dispatch])
+  }, [])
 
   if (import.meta.env.DEV) console.log("rendered App.tsx")
 
