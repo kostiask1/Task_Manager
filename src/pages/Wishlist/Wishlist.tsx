@@ -58,7 +58,6 @@ const Wishlist = () => {
       const copy: IWish[] = [...data]
       const modifier = sorting === column ? -1 : 1
       copy.sort((a, b) => {
-        console.log("a[column]:", isNumeric(a[column]))
         if (typeof a[column] === "string" && !isNumeric(a[column])) {
           return (
             (a[column] as string).localeCompare(b[column] as string) * modifier
