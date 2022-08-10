@@ -13,6 +13,10 @@ const Wish = lazy(() => import("./Wish"))
 
 type Column = keyof IWish
 
+function isNumeric(value: any) {
+  return /^-?\d+$/.test(value)
+}
+
 const Wishlist = () => {
   const dispatch = useAppDispatch()
   const wishes: IWish[] = useAppSelector(
@@ -54,9 +58,18 @@ const Wishlist = () => {
       const copy: IWish[] = [...data]
       const modifier = sorting === column ? -1 : 1
       copy.sort((a, b) => {
-        if (a[column] < b[column]) return 1 * modifier
-        if (a[column] > b[column]) return -1 * modifier
-        return 0
+        console.log("a[column]:", isNumeric(a[column]))
+        if (typeof a[column] === "string" && !isNumeric(a[column])) {
+          return (
+            (a[column] as string).localeCompare(b[column] as string) * modifier
+          )
+        } else if (isNumeric(a[column])) {
+          return (+a[column] - +b[column]) * modifier
+        } else {
+          if (a[column] < b[column]) return 1 * modifier
+          if (a[column] > b[column]) return -1 * modifier
+          return 0
+        }
       })
       setSorting(sorting === column ? "" : column)
       setData(copy)
