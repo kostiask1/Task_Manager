@@ -19,9 +19,15 @@ import {
 import { equal } from "../../../helpers"
 import { useCallbackPrompt } from "../../../hooks/useCallbackPrompt"
 import { setError, setSuccess } from "../../../store/App/slice"
-import { deleteAccount, setUser } from "../../../store/Auth/slice"
+import {
+  deleteAccount,
+  setUser,
+  deleteUserData,
+} from "../../../store/Auth/slice"
 import { User } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
+import { tasks } from "../../../store/Task/slice"
+import { wishes } from "../../../store/Wish/slice"
 import "./Profile.scss"
 
 const Profile = () => {
@@ -34,6 +40,7 @@ const Profile = () => {
   const imageNameRef = useRef<HTMLSpanElement>(null)
   const isEqual = useMemo(() => equal(user, userData), [user, userData])
   const [promptDelete, setPromptDelete] = useState<boolean>(false)
+  const [promptErase, setPromptErase] = useState<boolean>(false)
 
   const [promptNavgation, confirmNavigation, cancelNavigation]: any =
     useCallbackPrompt(!isEqual || loading)
@@ -147,6 +154,16 @@ const Profile = () => {
     setLoading(false)
   }
 
+  const eraseData = async () => {
+    setLoading(true)
+    dispatch(setSuccess("Wait a minute please"))
+    await dispatch(deleteUserData(user.id))
+    dispatch(tasks([]))
+    dispatch(wishes([]))
+    setPromptErase(false)
+    setLoading(false)
+  }
+
   return (
     <div className="columns fadeIn is-justify-content-center">
       <div className="column is-flex is-flex-direction-column is-one-fifth is-align-items-center">
@@ -171,6 +188,11 @@ const Profile = () => {
           onClick={() => setPromptDelete(true)}
           className="is-danger is-fullwidth mt-5"
           text="Delete profile"
+        />
+        <Button
+          onClick={() => setPromptErase(true)}
+          className="is-warning is-fullwidth mt-2"
+          text="Erase data"
         />
       </div>
       <form className="form column is-half" onSubmit={submitHandler}>
@@ -267,6 +289,13 @@ const Profile = () => {
         disabled={loading}
         onCancel={() => setPromptDelete(false)}
         onConfirm={deleteUser}
+      />
+      <Prompt
+        title="Erase account data?"
+        show={promptErase}
+        disabled={loading}
+        onCancel={() => setPromptErase(false)}
+        onConfirm={eraseData}
       />
     </div>
   )

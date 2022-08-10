@@ -142,13 +142,20 @@ export const getUserById = (id: string) => {
 
 export const deleteAccount = (id: string, image: string) => {
   return async (dispatch: AppDispatch) => {
+    await dispatch(deleteUserData(id))
     image && (await deleteImage(image))
     await deleteDoc(doc(db, "users", id))
-    await deleteDoc(doc(db, "tasks", id))
-    await deleteDoc(doc(db, "wishes", id))
     deleteUser(_auth.currentUser as any).then(() => {
       dispatch(setSuccess("Your account was deleted"))
       dispatch(signout())
     })
+  }
+}
+
+export const deleteUserData = (id: string) => {
+  return async (dispatch: AppDispatch) => {
+    await deleteDoc(doc(db, "tasks", id))
+    await deleteDoc(doc(db, "wishes", id))
+    dispatch(setSuccess("Your account data was erased"))
   }
 }

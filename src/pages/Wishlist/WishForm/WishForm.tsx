@@ -31,6 +31,7 @@ const WishForm = () => {
   const clear = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
     dispatch(editingWish(wishInitialState))
+    setState(wishInitialState)
   }
 
   const reset = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
