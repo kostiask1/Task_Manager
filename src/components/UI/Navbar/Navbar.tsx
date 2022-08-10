@@ -1,10 +1,11 @@
-import { useRef, useEffect } from "react"
+import React, { useRef, useEffect } from "react"
 import { useLocation, Link } from "react-router-dom"
 import { routesArray } from "../../../routes"
 import { signout } from "../../../store/authSlice"
 import { useAppSelector, RootState, useAppDispatch } from "../../../store/store"
 import Button from "../Button"
 import "./Navbar.scss"
+import { setSuccess, setError } from "../../../store/appSlice"
 
 function Navbar() {
   const location = useLocation()
@@ -30,6 +31,14 @@ function Navbar() {
   const toggleNavMenu = () => {
     burgerRef.current?.classList.toggle("is-active")
     menuRef.current?.classList.toggle("is-active")
+  }
+
+  const copyUserId = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    navigator.clipboard.writeText(user.id).then(
+      () => dispatch(setSuccess("Your ID is copied to clipboard")),
+      () => dispatch(setError("Something went wrong"))
+    )
   }
 
   return (
@@ -131,15 +140,22 @@ function Navbar() {
                     Profile settings
                   </Link>
                   <hr className="navbar-divider" />
-                  {authenticated ? (
-                    <div className="is-flex mx-2">
-                      <Button
-                        onClick={logout}
-                        className="is-danger is-small"
-                        text="Log out"
-                      />
-                    </div>
-                  ) : null}
+                  <div className="buttons-wrap">
+                    <Button
+                      onClick={copyUserId}
+                      text="Copy ID"
+                      className="is-info is-small"
+                    />
+                    {authenticated ? (
+                      <div className="is-flex mx-2">
+                        <Button
+                          onClick={logout}
+                          className="is-danger is-small"
+                          text="Log out"
+                        />
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             ) : (
