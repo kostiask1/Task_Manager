@@ -30,7 +30,8 @@ const Wishlist = () => {
 
   return (
     <div className="pb-6">
-      <WishForm key={JSON.stringify(wish)} />
+      {!uid && <WishForm key={JSON.stringify(wish)} />}
+      {uid && <h2>Tasks of user ID: {uid}</h2>}
       <hr />
       <Suspense fallback={<Loader loading={true} />}>
         <table className="table is-striped is-bordered is-hoverable is-fullwidth">
