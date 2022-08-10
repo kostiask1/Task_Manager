@@ -29,7 +29,7 @@ const Wishlist = () => {
   }, [uid])
 
   return (
-    <>
+    <div className="pb-6">
       <WishForm key={JSON.stringify(wish)} />
       <hr />
       <Suspense fallback={<Loader loading={true} />}>
@@ -63,7 +63,7 @@ const Wishlist = () => {
         </table>
         <Loader loading={loading} />
       </Suspense>
-    </>
+    </div>
   )
 }
 
