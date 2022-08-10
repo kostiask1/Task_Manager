@@ -1,15 +1,17 @@
-import { lazy, Suspense, useEffect, useState, useCallback } from "react"
+import { lazy, Suspense, useCallback, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import Button from "../../components/UI/Button"
 import Loader from "../../components/UI/Loader/Loader"
+import { setError, setSuccess } from "../../store/App/slice"
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { getWishes } from "../../store/Wish/slice"
 import { Wish as IWish } from "../../store/Wish/types"
 import WishForm from "./WishForm/WishForm"
 import "./Wishlist.scss"
-import { setSuccess, setError } from "../../store/App/slice"
-import Button from "../../components/UI/Button"
 const Wish = lazy(() => import("./Wish"))
+
+type Column = keyof IWish
 
 const Wishlist = () => {
   const dispatch = useAppDispatch()
@@ -21,13 +23,18 @@ const Wishlist = () => {
   )
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const { uid } = useParams()
-
+  const [data, setData] = useState<IWish[]>(wishes)
   const [loading, setLoading] = useState(false)
+  const [sorting, setSorting] = useState("false")
 
   useEffect(() => {
-    setLoading(!wishes.length)
+    setLoading(!data.length)
     dispatch(getWishes(uid || user.id)).then(() => setLoading(false))
   }, [uid])
+
+  useEffect(() => {
+    setData(wishes)
+  }, [wishes])
 
   const copyWishPage = useCallback(() => {
     navigator.clipboard
@@ -38,6 +45,24 @@ const Wishlist = () => {
         () => dispatch(setError("Something went wrong"))
       )
   }, [user.id])
+
+  const sortData = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      const column = e.currentTarget.innerHTML
+        .replaceAll(" ", "")
+        .toLocaleLowerCase() as Column
+      const copy: IWish[] = [...data]
+      const modifier = sorting === column ? -1 : 1
+      copy.sort((a, b) => {
+        if (a[column] < b[column]) return 1 * modifier
+        if (a[column] > b[column]) return -1 * modifier
+        return 0
+      })
+      setSorting(sorting === column ? "" : column)
+      setData(copy)
+    },
+    [data]
+  )
 
   return (
     <div className="section is-medium pt-2 pb-6">
@@ -56,25 +81,27 @@ const Wishlist = () => {
           <table className="table is-striped is-bordered is-hoverable is-fullwidth is-narrow">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Title</th>
-                <th>Price</th>
-                <th>Description</th>
-                <th>Category</th>
-                <th>URL</th>
-                <th>Completed</th>
+                <th>
+                  <Button text="Reset" onClick={() => setData(wishes)} />
+                </th>
+                <th onClick={sortData}>Title</th>
+                <th onClick={sortData}>Price</th>
+                <th onClick={sortData}>Description</th>
+                <th onClick={sortData}>Category</th>
+                <th onClick={sortData}>URL</th>
+                <th onClick={sortData}>Completed</th>
                 {(!uid || uid === user.id) && (
                   <>
-                    <th>Open</th>
-                    <th>Open To</th>
+                    <th onClick={sortData}>Open</th>
+                    <th onClick={sortData}>Open To</th>
                     <th>Action</th>
                   </>
                 )}
               </tr>
             </thead>
             <tbody>
-              {!!wishes?.length ? (
-                wishes.map((wish: IWish, index) => (
+              {!!data?.length ? (
+                data.map((wish: IWish, index) => (
                   <tr key={wish.id}>
                     <Wish
                       wish={wish}

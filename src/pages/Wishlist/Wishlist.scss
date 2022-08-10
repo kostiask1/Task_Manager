@@ -3,6 +3,9 @@ table {
   thead {
     th {
       text-align: center !important;
+      cursor: pointer;
+      background-color: #f5f5f5;
+      vertical-align: middle !important;
     }
   }
 }
