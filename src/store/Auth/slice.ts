@@ -145,6 +145,7 @@ export const deleteAccount = (id: string, image: string) => {
     image && (await deleteImage(image))
     await deleteDoc(doc(db, "users", id))
     await deleteDoc(doc(db, "tasks", id))
+    await deleteDoc(doc(db, "wishes", id))
     deleteUser(_auth.currentUser as any).then(() => {
       dispatch(setSuccess("Your account was deleted"))
       dispatch(signout())
