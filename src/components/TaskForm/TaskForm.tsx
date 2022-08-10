@@ -27,6 +27,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const task: Task | null = useAppSelector(
     (state: RootState) => state.tasks.editingTask
   )
+
   const [state, setState] = useState<Task>(task || taskInitialState)
   const [loadingSave, setLoadingSave] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -35,7 +36,9 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
 
-  const subtasksCompleted = state.subtasks.every((subtask) => subtask.completed)
+  const subtasksCompleted = state.subtasks?.every(
+    (subtask) => subtask.completed
+  )
 
   useEffect(() => {
     if (state.subtasks?.length) {
