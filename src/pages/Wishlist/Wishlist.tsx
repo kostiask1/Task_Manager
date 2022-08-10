@@ -41,15 +41,15 @@ const Wishlist = () => {
 
   return (
     <div className="section is-medium pt-2 pb-6">
-      {!uid && (
+      {(!uid || uid === user.id) && (
         <Button
           onClick={copyWishPage}
           className="is-primary mb-3"
           text="Share Your Wishlist"
         />
       )}
-      {!uid && <WishForm key={JSON.stringify(wish)} />}
-      {uid && <h2>Tasks of user ID: {uid}</h2>}
+      {(!uid || uid === user.id) && <WishForm key={JSON.stringify(wish)} />}
+      {uid && uid !== user.id && <h2>Tasks of user ID: {uid}</h2>}
       <hr />
       <Suspense fallback={<Loader loading={true} />}>
         <table className="table is-striped is-bordered is-hoverable is-fullwidth">
