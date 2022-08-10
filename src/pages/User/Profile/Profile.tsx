@@ -18,10 +18,10 @@ import {
 } from "../../../firebase/firestore"
 import { equal } from "../../../helpers"
 import { useCallbackPrompt } from "../../../hooks/useCallbackPrompt"
-import { setError, setSuccess } from "../../../store/appSlice"
-import { deleteAccount, setUser } from "../../../store/authSlice"
+import { setError, setSuccess } from "../../../store/App/appSlice"
+import { deleteAccount, setUser } from "../../../store/Auth/authSlice"
+import { User } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
-import { User } from "../../../store/types"
 import "./Profile.scss"
 
 const Profile = () => {

@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
-import { db } from "../firebase/base"
-import { convertToDate, equal } from "../helpers"
+import { db } from "../../firebase/base"
+import { convertToDate, equal } from "../../helpers"
 import { Task } from "./types"
-import { AppDispatch, RootState } from "./store"
+import { AppDispatch, RootState } from "../store"
 
 const sortDeadlines = (array: Task[]) =>
   array.sort(

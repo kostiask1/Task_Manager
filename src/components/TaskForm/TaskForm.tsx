@@ -1,15 +1,16 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react"
 import InputMask from "react-input-mask"
 import { dateFormat, equal } from "../../helpers"
-import { setSuccess } from "../../store/appSlice"
+import { setSuccess } from "../../store/App/appSlice"
+import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import {
   deleteTask,
   editingTask,
   setTask,
   taskInitialState,
-} from "../../store/taskSlice"
-import { Subtask as ISubtask, Task, User } from "../../store/types"
+} from "../../store/Task/taskSlice"
+import { Subtask as ISubtask, Task } from "../../store/Task/types"
 import Subtask from "../Subtask/Subtask"
 import Button from "../UI/Button"
 import Input from "../UI/Input"

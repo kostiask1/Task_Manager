@@ -20,9 +20,14 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import Modal from "../../components/Modal/Modal"
 import Loader from "../../components/UI/Loader/Loader"
 import { convertDateToString, convertToDate } from "../../helpers"
+import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
-import { editingTask, getTasks, taskInitialState } from "../../store/taskSlice"
-import { Task as TaskProps, User } from "../../store/types"
+import {
+  editingTask,
+  getTasks,
+  taskInitialState,
+} from "../../store/Task/taskSlice"
+import { Task as TaskProps } from "../../store/Task/types"
 import "./Calendar.scss"
 const Task = lazy(() => import("../../components/Task"))
 const TaskForm = lazy(() => import("../../components/TaskForm"))

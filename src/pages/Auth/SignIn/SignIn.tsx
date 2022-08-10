@@ -1,10 +1,10 @@
 import { FC, FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
-import { signin } from "../../../store/authSlice"
+import { signin } from "../../../store/Auth/authSlice"
 import { useAppDispatch, useAppSelector, RootState } from "../../../store/store"
-import { SignInData } from "../../../store/types"
 import { Link, Navigate } from "react-router-dom"
+import { SignInData } from "../../../store/Auth/types"
 
 const SignIn: FC = () => {
   const authenticated = useAppSelector(

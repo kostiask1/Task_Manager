@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { AppDispatch } from "../store"
 import { AppState } from "./types"
-import { AppDispatch } from "./store"
 
 const initialState: AppState = {
   loading: true,

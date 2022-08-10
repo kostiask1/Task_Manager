@@ -1,6 +1,6 @@
 import TaskForm from "../../components/TaskForm/TaskForm"
 import { RootState, useAppSelector } from "../../store/store"
-import { Task } from "../../store/types"
+import { Task } from "../../store/Task/types"
 import List from "./List/List"
 import "./Tasks.scss"
 

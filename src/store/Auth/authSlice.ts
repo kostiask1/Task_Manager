@@ -7,10 +7,10 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth"
 import { deleteDoc, doc, getDoc } from "firebase/firestore/lite"
-import { db } from "../firebase/base"
-import { deleteImage, uploadDoc } from "../firebase/firestore"
-import { loading, setError, setSuccess } from "./appSlice"
-import { AppDispatch } from "./store"
+import { db } from "../../firebase/base"
+import { deleteImage, uploadDoc } from "../../firebase/firestore"
+import { loading, setError, setSuccess } from "../App/appSlice"
+import { AppDispatch } from "../store"
 import { AuthState, SignInData, SignUpData, User } from "./types"
 
 const initialState: AuthState = {

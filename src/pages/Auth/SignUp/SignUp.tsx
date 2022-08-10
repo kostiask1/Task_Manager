@@ -1,10 +1,10 @@
 import { FC, FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
-import { signup } from "../../../store/authSlice"
+import { signup } from "../../../store/Auth/authSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
-import { SignUpData } from "../../../store/types"
 import { Link, Navigate } from "react-router-dom"
+import { SignUpData } from "../../../store/Auth/types"
 
 const signUpData = {
   firstName: "",

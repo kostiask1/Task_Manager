@@ -1,11 +1,11 @@
 import React, { useRef, useEffect } from "react"
 import { useLocation, Link } from "react-router-dom"
 import { routesArray } from "../../../routes"
-import { signout } from "../../../store/authSlice"
+import { signout } from "../../../store/Auth/authSlice"
 import { useAppSelector, RootState, useAppDispatch } from "../../../store/store"
 import Button from "../Button"
 import "./Navbar.scss"
-import { setSuccess, setError } from "../../../store/appSlice"
+import { setSuccess, setError } from "../../../store/App/appSlice"
 
 function Navbar() {
   const location = useLocation()
