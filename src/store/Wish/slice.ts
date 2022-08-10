@@ -57,7 +57,7 @@ export const getWishes = (uid: string) => {
     const docSnap = await getDoc(docRef)
     const user = docSnap.data() as { wishes: Wish[] }
 
-    const wishList: Wish[] = user.wishes || []
+    const wishList: Wish[] = user?.wishes || []
     const currendId = _auth?.currentUser?.uid || ""
     const sendWishes: Wish[] = wishList
 

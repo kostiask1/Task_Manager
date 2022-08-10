@@ -26,7 +26,10 @@ function Navbar() {
 
   const logout = () => dispatch(signout())
 
-  const isActivePage = (route: string) => location.pathname.includes(route)
+  const isActivePage = (route: string) => {
+    const path = location.pathname.slice(1, location.pathname.length)
+    return path == route
+  }
 
   const toggleNavMenu = () => {
     burgerRef.current?.classList.toggle("is-active")

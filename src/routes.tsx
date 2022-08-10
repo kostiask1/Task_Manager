@@ -11,6 +11,7 @@ const SignUp = lazy(() => import("./pages/Auth/SignUp"))
 const General = lazy(() => import("./pages/User"))
 const Password = lazy(() => import("./pages/User/Password"))
 const Profile = lazy(() => import("./pages/User/Profile"))
+const Wishes = lazy(() => import("./pages/Wishlist"))
 
 interface RouteProps {
   path: string
@@ -53,6 +54,20 @@ export const routesArray: RoutesArray[] = [
     show: true,
     path: "tasks",
     element: <Tasks />,
+  },
+  {
+    name: "Wishes",
+    private: true,
+    show: true,
+    path: "wishes",
+    element: <Wishes />,
+  },
+  {
+    name: "Wishes",
+    private: true,
+    show: false,
+    path: "wishes/:uid",
+    element: <Wishes />,
   },
   {
     name: "Profile",
