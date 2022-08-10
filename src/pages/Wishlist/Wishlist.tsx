@@ -50,7 +50,7 @@ const Wishlist = () => {
             </tr>
           </thead>
           <tbody>
-            {!!wishes?.length &&
+            {!!wishes?.length ? (
               wishes.map((wish: IWish, index) => (
                 <tr key={wish.id}>
                   <Wish
@@ -59,7 +59,12 @@ const Wishlist = () => {
                     index={index}
                   />
                 </tr>
-              ))}
+              ))
+            ) : (
+              <tr>
+                <td colSpan={10}>No wishes to be displayed...</td>
+              </tr>
+            )}
           </tbody>
         </table>
         <Loader loading={loading} />
