@@ -21,7 +21,7 @@ import Modal from "../../components/Modal/Modal"
 import Loader from "../../components/UI/Loader/Loader"
 import { convertDateToString, convertToDate } from "../../helpers"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
-import { getTasks, editingTask, taskInitialState } from "../../store/taskSlice"
+import { editingTask, getTasks, taskInitialState } from "../../store/taskSlice"
 import { Task as TaskProps, User } from "../../store/types"
 import "./Calendar.scss"
 const Task = lazy(() => import("../../components/Task"))

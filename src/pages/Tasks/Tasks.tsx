@@ -1,8 +1,8 @@
-import "./Tasks.scss"
 import TaskForm from "../../components/TaskForm/TaskForm"
-import List from "./List/List"
-import { useAppSelector, RootState } from "../../store/store"
+import { RootState, useAppSelector } from "../../store/store"
 import { Task } from "../../store/types"
+import List from "./List/List"
+import "./Tasks.scss"
 
 const Tasks = () => {
   const task: Task | null = useAppSelector(
