@@ -59,7 +59,7 @@ export const getWishes = (uid: string) => {
 
     const wishList: Wish[] = user?.wishes || []
     const currendId = _auth?.currentUser?.uid || ""
-    const sendWishes: Wish[] = wishList
+    const sendWishes: Wish[] = [...wishList]
 
     if (wishList.length) {
       const foreignWishes = wishList[0].uid !== currendId

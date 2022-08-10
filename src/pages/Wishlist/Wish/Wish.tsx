@@ -70,9 +70,9 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
           disabled={loading || deleting}
         />
       </td>
+      <td>{wish.open ? "Open" : "Closed"}</td>
       {editable && (
         <>
-          <td>{wish.open ? "Open" : "Closed"}</td>
           <td>{!!wish.openTo.length && wish.openTo.join(", ")}</td>
           <td>
             <div className="buttons">
