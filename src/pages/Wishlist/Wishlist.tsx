@@ -63,9 +63,13 @@ const Wishlist = () => {
                 <th>Category</th>
                 <th>URL</th>
                 <th>Completed</th>
-                <th>Open</th>
-                <th>Open To</th>
-                <th>Action</th>
+                {(!uid || uid === user.id) && (
+                  <>
+                    <th>Open</th>
+                    <th>Open To</th>
+                    <th>Action</th>
+                  </>
+                )}
               </tr>
             </thead>
             <tbody>

@@ -80,9 +80,9 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
           disabled={loading || deleting || !editable}
         />
       </td>
-      <td>{wish.open ? "Open" : "Closed"}</td>
       {editable && (
         <>
+          <td>{wish.open ? "Open" : "Closed"}</td>
           <td>
             <ul>
               {wish.openTo?.map((openTo: string, index: number) => (
