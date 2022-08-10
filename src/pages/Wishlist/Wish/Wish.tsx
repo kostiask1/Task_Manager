@@ -61,7 +61,7 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
         <Button
           className={`is-small ${wish.completed ? "is-primary" : "is-danger"}`}
           style={{ height: "100%" }}
-          onClick={() => complete(wish, !wish.completed)}
+          onClick={() => editable && complete(wish, !wish.completed)}
           text={`${
             loading
               ? "Updating..."
