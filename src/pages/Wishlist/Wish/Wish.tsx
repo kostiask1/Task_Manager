@@ -67,7 +67,7 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
               ? "Updating..."
               : `Completed: ${wish.completed ? "Yes" : "No"}`
           }`}
-          disabled={loading || deleting}
+          disabled={loading || deleting || !editable}
         />
       </td>
       <td>{wish.open ? "Open" : "Closed"}</td>
