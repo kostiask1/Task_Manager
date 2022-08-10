@@ -13,6 +13,7 @@ const Input: FC<InputProps> = ({
   onChange,
   label,
   className,
+  disabled,
   ...rest
 }) => {
   return (
@@ -28,6 +29,7 @@ const Input: FC<InputProps> = ({
           id={name}
           onChange={onChange}
           required={required}
+          disabled={disabled}
           autoComplete="off"
           {...rest}
         />

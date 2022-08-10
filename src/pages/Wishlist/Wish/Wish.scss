@@ -1,1 +1,27 @@
 /* your css code */
+table {
+  td:not([align]) {
+    text-align: center;
+  }
+
+  td.description {
+    text-align: left;
+    word-break: break-word;
+  }
+
+  td {
+    vertical-align: middle !important;
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    height: 0;
+    gap: 8px;
+    button {
+      margin: 0 !important;
+    }
+  }
+}

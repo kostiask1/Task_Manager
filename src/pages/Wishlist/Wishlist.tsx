@@ -15,6 +15,9 @@ const Wishlist = () => {
   const wishes: IWish[] = useAppSelector(
     (state: RootState) => state.wishes.array
   )
+  const wish: IWish | null = useAppSelector(
+    (state: RootState) => state.wishes.editingWish
+  )
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const { uid } = useParams()
 
@@ -25,14 +28,39 @@ const Wishlist = () => {
     dispatch(getWishes(uid || user.id)).then(() => setLoading(false))
   }, [uid])
 
-  console.log("wishes:", wishes)
   return (
     <>
-      <WishForm />
-
+      <WishForm key={JSON.stringify(wish)} />
+      <hr />
       <Suspense fallback={<Loader loading={true} />}>
-        {!!wishes?.length &&
-          wishes.map((wish: IWish) => <Wish key={wish.id} wish={wish} />)}
+        <table className="table is-striped is-bordered is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>URL</th>
+              <th>Completed</th>
+              <th>Open</th>
+              <th>Open To</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {!!wishes?.length &&
+              wishes.map((wish: IWish, index) => (
+                <tr key={wish.id}>
+                  <Wish
+                    wish={wish}
+                    editable={user.id == wish.uid}
+                    index={index}
+                  />
+                </tr>
+              ))}
+          </tbody>
+        </table>
         <Loader loading={loading} />
       </Suspense>
     </>

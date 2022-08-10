@@ -62,9 +62,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
         saveTask.id = new Date().getTime()
         saveTask.start = new Date().getTime()
       }
-      if (saveTask.end === "dd-mm-yyyy") {
-        saveTask.end = ""
-      }
+      if (saveTask.end === "dd-mm-yyyy") saveTask.end = ""
       saveTask.title = saveTask.title.trim()
       saveTask.description = saveTask.description.trim()
       saveTask.uid = user.id
@@ -152,7 +150,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       >
         <header className="card-header">
           <div className="card-header-title is-align-items-center">
-            {stateName} Task -
+            {stateName} <label htmlFor="title">&nbsp;Task -</label>
             <Input
               type="text"
               name="title"

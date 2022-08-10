@@ -6,8 +6,8 @@ export interface Wish {
   title: string
   url: string
   category: string
-  start: number
+  price: number
   updatedAt: number
   open: boolean
-  openTo: string[]
+  openTo: Array<string>
 }

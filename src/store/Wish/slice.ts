@@ -24,7 +24,7 @@ export const wishInitialState: Wish = {
   title: "",
   url: "",
   category: "",
-  start: 0,
+  price: 0,
   updatedAt: 0,
   open: false,
   openTo: [],
