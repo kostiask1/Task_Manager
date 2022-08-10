@@ -1,7 +1,7 @@
 import { FC, FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
-import { signin } from "../../../store/Auth/authSlice"
+import { signin } from "../../../store/Auth/slice"
 import { useAppDispatch, useAppSelector, RootState } from "../../../store/store"
 import { Link, Navigate } from "react-router-dom"
 import { SignInData } from "../../../store/Auth/types"

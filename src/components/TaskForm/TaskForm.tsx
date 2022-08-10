@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react"
 import InputMask from "react-input-mask"
 import { dateFormat, equal } from "../../helpers"
-import { setSuccess } from "../../store/App/appSlice"
+import { setSuccess } from "../../store/App/slice"
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import {
@@ -9,7 +9,7 @@ import {
   editingTask,
   setTask,
   taskInitialState,
-} from "../../store/Task/taskSlice"
+} from "../../store/Task/slice"
 import { Subtask as ISubtask, Task } from "../../store/Task/types"
 import Subtask from "../Subtask/Subtask"
 import Button from "../UI/Button"

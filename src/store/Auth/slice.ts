@@ -9,7 +9,7 @@ import {
 import { deleteDoc, doc, getDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
 import { deleteImage, uploadDoc } from "../../firebase/firestore"
-import { loading, setError, setSuccess } from "../App/appSlice"
+import { loading, setError, setSuccess } from "../App/slice"
 import { AppDispatch } from "../store"
 import { AuthState, SignInData, SignUpData, User } from "./types"
 

@@ -22,11 +22,7 @@ import Loader from "../../components/UI/Loader/Loader"
 import { convertDateToString, convertToDate } from "../../helpers"
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
-import {
-  editingTask,
-  getTasks,
-  taskInitialState,
-} from "../../store/Task/taskSlice"
+import { editingTask, getTasks, taskInitialState } from "../../store/Task/slice"
 import { Task as TaskProps } from "../../store/Task/types"
 import "./Calendar.scss"
 const Task = lazy(() => import("../../components/Task"))

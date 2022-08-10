@@ -1,6 +1,6 @@
 import { FC } from "react"
 import { useAppDispatch } from "../../store/store"
-import { setTask } from "../../store/Task/taskSlice"
+import { setTask } from "../../store/Task/slice"
 import { Subtask as ISubtask, Task } from "../../store/Task/types"
 import Button from "../UI/Button"
 import "./Subtask.scss"

@@ -4,8 +4,8 @@ import Messages from "./components/Messages/Messages"
 import Loader from "./components/UI/Loader"
 import Navbar from "./components/UI/Navbar"
 import Routing from "./routes"
-import { loading } from "./store/App/appSlice"
-import { getUserById } from "./store/Auth/authSlice"
+import { loading } from "./store/App/slice"
+import { getUserById } from "./store/Auth/slice"
 import { useAppDispatch } from "./store/store"
 
 function App() {

@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useState } from "react"
 import Loader from "../../../components/UI/Loader/Loader"
 import { User } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
-import { getTasks } from "../../../store/Task/taskSlice"
+import { getTasks } from "../../../store/Task/slice"
 import { Task as TaskProps } from "../../../store/Task/types"
 import "./List.scss"
 const Task = lazy(() => import("../../../components/Task"))

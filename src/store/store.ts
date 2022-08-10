@@ -1,9 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 import thunk from "redux-thunk"
-import authReducer from "./Auth/authSlice"
-import appReducer from "./App/appSlice"
-import tasksReducer from "./Task/taskSlice"
+import authReducer from "./Auth/slice"
+import appReducer from "./App/slice"
+import tasksReducer from "./Task/slice"
 
 const reducer = combineReducers({
   auth: authReducer,
