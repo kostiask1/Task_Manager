@@ -41,20 +41,11 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       const subtasksCompleted = state.subtasks.every(
         (subtask) => subtask.completed
       )
-      if (state.id) {
-        if (!state.completed && subtasksCompleted) {
-          complete(null, true)
-        }
-        if (state.completed && !subtasksCompleted) {
-          complete(null, false)
-        }
-      } else {
-        if (!state.completed && subtasksCompleted) {
-          state.completed = true
-        }
-        if (state.completed && !subtasksCompleted) {
-          state.completed = false
-        }
+      if (!state.completed && subtasksCompleted) {
+        state.completed = true
+      }
+      if (state.completed && !subtasksCompleted) {
+        state.completed = false
       }
     }
   }, [state])
@@ -71,9 +62,11 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       if (saveTask.end === "dd-mm-yyyy") {
         saveTask.end = ""
       }
+      saveTask.title = saveTask.title.trim()
+      saveTask.description = saveTask.description.trim()
       saveTask.uid = user.id
       await dispatch(setTask(saveTask))
-      setModal && !isEdit && setModal(null)
+      setModal && setModal(null)
       setLoadingSave(false)
       isEdit
         ? dispatch(setSuccess("Task updated successfully"))
@@ -175,7 +168,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               value={state.title}
               onChange={handleChange}
               placeholder="Task Title"
-              maxLength={40}
+              maxLength={75}
               required
             />
             {!!state.start && (
@@ -202,7 +195,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               onChange={handleChange}
               placeholder="Task Descpription"
               name="description"
-              required
+              maxLength={750}
             />
             <label htmlFor="subtask">
               <b>Subtasks</b>

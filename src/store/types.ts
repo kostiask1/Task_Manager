@@ -36,8 +36,6 @@ export interface Task {
   id: number
   uid: string
   title: string
-  parentTask?: string | null
-  childTask?: string | null
   end: string
   start: number
   updatedAt: number

@@ -68,7 +68,6 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
       }
     }
   }, [task])
-
   return (
     <>
       <div className="column task fadeIn" key={task.id}>
@@ -93,7 +92,9 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
           </header>
           <div className="card-content py-2 px-4">
             <div className="content">
-              <p className="description">Description: {task.description}</p>
+              {!!task.description && (
+                <p className="description">Description: {task.description}</p>
+              )}
               <br />
               {!!task.subtasks?.length && (
                 <>
