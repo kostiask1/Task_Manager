@@ -59,7 +59,13 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
         <p>{wish.category ?? "-"}</p>
       </td>
       <td>
-        <p>{wish.url ?? "-"}</p>
+        {wish.url ? (
+          <a href={wish.url} target="_blank">
+            Link
+          </a>
+        ) : (
+          "-"
+        )}
       </td>
       <td>
         <Button
@@ -78,7 +84,13 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
       {editable && (
         <>
           <td>
-            <p>{!!wish.openTo.length && wish.openTo.join(", ")}</p>
+            <ul>
+              {wish.openTo?.map((openTo: string, index: number) => (
+                <li key={index} className="is-size-7">
+                  {openTo}
+                </li>
+              ))}
+            </ul>
           </td>
           <td>
             <div className="buttons">

@@ -52,39 +52,41 @@ const Wishlist = () => {
       {uid && uid !== user.id && <h2>Tasks of user ID: {uid}</h2>}
       <hr />
       <Suspense fallback={<Loader loading={true} />}>
-        <table className="table is-striped is-bordered is-hoverable is-fullwidth">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Title</th>
-              <th>Price</th>
-              <th>Description</th>
-              <th>Category</th>
-              <th>URL</th>
-              <th>Completed</th>
-              <th>Open</th>
-              <th>Open To</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!!wishes?.length ? (
-              wishes.map((wish: IWish, index) => (
-                <tr key={wish.id}>
-                  <Wish
-                    wish={wish}
-                    editable={user.id == wish.uid}
-                    index={index}
-                  />
-                </tr>
-              ))
-            ) : (
+        <div className="table-container">
+          <table className="table is-striped is-bordered is-hoverable is-fullwidth is-narrow">
+            <thead>
               <tr>
-                <td colSpan={10}>No wishes to be displayed...</td>
+                <th>#</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>URL</th>
+                <th>Completed</th>
+                <th>Open</th>
+                <th>Open To</th>
+                <th>Action</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {!!wishes?.length ? (
+                wishes.map((wish: IWish, index) => (
+                  <tr key={wish.id}>
+                    <Wish
+                      wish={wish}
+                      editable={user.id == wish.uid}
+                      index={index}
+                    />
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={10}>No wishes to be displayed...</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
         <Loader loading={loading} />
       </Suspense>
     </div>

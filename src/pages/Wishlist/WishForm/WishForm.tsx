@@ -130,6 +130,7 @@ const WishForm = () => {
             label="Category"
             value={state.category}
             onChange={handleChange}
+            maxLength={30}
           />
         </div>
         <div>
