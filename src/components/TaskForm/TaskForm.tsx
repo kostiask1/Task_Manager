@@ -36,8 +36,9 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
 
-  const subtasksCompleted = state.subtasks?.every(
-    (subtask) => subtask.completed
+  const subtasksCompleted = useMemo(
+    () => state.subtasks?.every((subtask) => subtask.completed),
+    [state.subtasks]
   )
 
   useEffect(() => {
