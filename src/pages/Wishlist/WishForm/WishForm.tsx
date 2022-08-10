@@ -97,6 +97,8 @@ const WishForm = () => {
             className="ml-2 input"
             value={state.title}
             onChange={handleChange}
+            maxLength={75}
+            minLength={3}
             required
           />
         </div>
@@ -117,6 +119,7 @@ const WishForm = () => {
             name="description"
             label="Description"
             value={state.description}
+            maxLength={750}
             onChange={handleChange}
           />
         </div>
@@ -134,6 +137,7 @@ const WishForm = () => {
             label="Url"
             value={state.url}
             onChange={handleChange}
+            maxLength={300}
           />
         </div>
         <div>

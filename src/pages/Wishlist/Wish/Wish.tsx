@@ -55,8 +55,12 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
       <td>{wish.title ?? "-"}</td>
       <td>{wish.price || "-"}</td>
       <td className="description">{wish.description ?? "-"}</td>
-      <td>{wish.category ?? "-"}</td>
-      <td>{wish.url ?? "-"}</td>
+      <td>
+        <p>{wish.category ?? "-"}</p>
+      </td>
+      <td>
+        <p>{wish.url ?? "-"}</p>
+      </td>
       <td>
         <Button
           className={`is-small ${wish.completed ? "is-primary" : "is-danger"}`}
@@ -73,7 +77,9 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
       <td>{wish.open ? "Open" : "Closed"}</td>
       {editable && (
         <>
-          <td>{!!wish.openTo.length && wish.openTo.join(", ")}</td>
+          <td>
+            <p>{!!wish.openTo.length && wish.openTo.join(", ")}</p>
+          </td>
           <td>
             <div className="buttons">
               <Button

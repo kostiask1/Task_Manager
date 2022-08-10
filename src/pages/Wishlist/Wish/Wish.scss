@@ -11,6 +11,9 @@ table {
 
   td {
     vertical-align: middle !important;
+    p {
+      word-break: break-word;
+    }
   }
 
   .buttons {
