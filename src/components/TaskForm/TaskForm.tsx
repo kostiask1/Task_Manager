@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react"
 import InputMask from "react-input-mask"
 import { dateFormat, equal } from "../../helpers"
-import { setError, setSuccess } from "../../store/appSlice"
+import { setSuccess } from "../../store/appSlice"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import {
   deleteTask,
@@ -28,7 +28,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     (state: RootState) => state.tasks.editingTask
   )
   const [state, setState] = useState<Task>(task || taskInitialState)
-  const [loadingComplete, setLoadingComplete] = useState(false)
   const [loadingSave, setLoadingSave] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [subtask, setSubtask] = useState<string>("")
@@ -36,16 +35,15 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
 
+  const subtasksCompleted = state.subtasks.every((subtask) => subtask.completed)
+
   useEffect(() => {
     if (state.subtasks?.length) {
-      const subtasksCompleted = state.subtasks.every(
-        (subtask) => subtask.completed
-      )
       if (!state.completed && subtasksCompleted) {
-        state.completed = true
+        handleCompleted(null, true)
       }
       if (state.completed && !subtasksCompleted) {
-        state.completed = false
+        handleCompleted(null, false)
       }
     }
   }, [state])
@@ -107,28 +105,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     [state]
   )
 
-  const complete = useCallback(
-    async (e: React.FormEvent | null, completed: boolean) => {
-      e && e.preventDefault()
-      if (state) {
-        setLoadingComplete(true)
-        const saveTask: Task = { ...state }
-        saveTask.completed = completed
-        await dispatch(setTask(saveTask))
-        dispatch(editingTask(saveTask))
-        setLoadingComplete(false)
-        setState(saveTask)
-        setModal && setModal(saveTask)
-        if (completed) {
-          dispatch(setSuccess("Task completed"))
-        } else {
-          dispatch(setError("Task returned"))
-        }
-      }
-    },
-    [state]
-  )
-
   const formatChars: Array<RegExp | string> = useMemo(
     () => dateFormat(state.end as string),
     [state.end]
@@ -150,6 +126,17 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   )
   const handleSubtask = (e: React.ChangeEvent<HTMLInputElement>) =>
     e.target.value.trim().length < 160 && setSubtask(e.target.value)
+
+  const handleCompleted = (
+    e: React.MouseEvent<HTMLButtonElement> | null,
+    completed?: boolean
+  ) => {
+    e?.preventDefault()
+    setState((state: Task) => ({
+      ...state,
+      completed: completed ?? !state.completed,
+    }))
+  }
 
   return (
     <>
@@ -176,13 +163,9 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                 className={`complete-task-btn ${
                   state.completed ? "is-primary" : "is-danger"
                 }`}
-                onClick={(e) => complete(e, !state.completed)}
-                text={`${
-                  loadingComplete
-                    ? "Updating..."
-                    : `Completed: ${state.completed ? "Yes" : "No"}`
-                }`}
-                disabled={loadingComplete || loadingSave || deleting}
+                onClick={handleCompleted}
+                text={`Completed: ${state.completed ? "Yes" : "No"}`}
+                disabled={!!state.subtasks?.length || loadingSave || deleting}
               />
             )}
           </div>
@@ -248,22 +231,14 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               <Button
                 className="mx-2 card-footer-item is-success"
                 text={loadingSave ? "Updating..." : "Update"}
-                disabled={
-                  loadingComplete ||
-                  loadingSave ||
-                  deleting ||
-                  equal(state, task)
-                }
+                disabled={loadingSave || deleting || equal(state, task)}
               />
             ) : (
               <Button
                 className="mx-2 card-footer-item is-success"
                 text={loadingSave ? "Saving..." : "Save"}
                 disabled={
-                  loadingComplete ||
-                  loadingSave ||
-                  deleting ||
-                  equal(state, taskInitialState)
+                  loadingSave || deleting || equal(state, taskInitialState)
                 }
               />
             )}
@@ -272,7 +247,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                 className="mx-2 card-footer-item is-danger"
                 text={deleting ? "Deleting..." : "Delete"}
                 onClick={deleteT}
-                disabled={loadingComplete || loadingSave || deleting}
+                disabled={loadingSave || deleting}
               />
             )}
             {isEdit && !setModal ? (
@@ -280,7 +255,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                 onClick={clear}
                 className="mx-2 card-footer-item is-warning"
                 text="Clear"
-                disabled={loadingComplete || loadingSave || deleting}
+                disabled={loadingSave || deleting}
               />
             ) : (
               <Button
@@ -288,7 +263,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                 className="mx-2 card-footer-item is-warning"
                 text="Reset"
                 disabled={
-                  loadingComplete ||
                   loadingSave ||
                   deleting ||
                   equal(state, task || taskInitialState)
