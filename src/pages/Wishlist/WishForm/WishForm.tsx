@@ -143,6 +143,7 @@ const WishForm = () => {
             name="open"
             id="open"
             className="ml-2"
+            checked={state.open}
             value={+state.open}
             onChange={handleOpen}
           />
