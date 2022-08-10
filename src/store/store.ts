@@ -4,11 +4,13 @@ import thunk from "redux-thunk"
 import authReducer from "./Auth/slice"
 import appReducer from "./App/slice"
 import tasksReducer from "./Task/slice"
+import wishesReducer from "./Wish/slice"
 
 const reducer = combineReducers({
   auth: authReducer,
   app: appReducer,
   tasks: tasksReducer,
+  wishes: wishesReducer,
 })
 
 const store = configureStore({

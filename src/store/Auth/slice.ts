@@ -127,7 +127,6 @@ export const getUserById = (id: string) => {
       const docRef = doc(db, "users", id)
       const docSnap = await getDoc(docRef)
       const userData = docSnap.data() as User
-
       if (userData) {
         userData.emailVerified =
           _auth.currentUser?.emailVerified ?? userData.emailVerified
