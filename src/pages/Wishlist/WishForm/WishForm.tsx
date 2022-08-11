@@ -92,7 +92,7 @@ const WishForm = () => {
     <form className="card wish fadeIn" key={state.id} onSubmit={addWishToUser}>
       <header className="card-header">
         <div className="card-header-title is-align-items-center">
-          {stateName} <label htmlFor="title">&nbsp;Wish -</label>
+          <label htmlFor="title">{stateName} Wish -</label>
           <Input
             name="title"
             className="ml-2 input"
