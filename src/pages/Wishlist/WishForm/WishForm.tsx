@@ -25,6 +25,9 @@ const WishForm = () => {
   const wish: IWish | null = useAppSelector(
     (state: RootState) => state.wishes.editingWish
   )
+  const wishes: IWish[] = useAppSelector(
+    (state: RootState) => state.wishes.array
+  )
   const [state, setState] = useState<IWish>(wish || wishInitialState)
   const [loadingSave, setLoadingSave] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -120,44 +123,50 @@ const WishForm = () => {
         </div>
       </header>
       <div className="card-content">
-        <div>
-          <Input
-            type="number"
-            name="price"
-            label="Price"
-            min={0}
-            value={state.price || ""}
-            onChange={handleChange}
-          />
+        <Textarea
+          name="description"
+          label="Description"
+          value={state.description}
+          maxLength={750}
+          onChange={handleChange}
+        />
+        <div className="columns mb-0">
+          <div className="column mb-0">
+            <Input
+              name="category"
+              label="Category"
+              list="categories"
+              value={state.category}
+              onChange={handleChange}
+              maxLength={30}
+            />
+            <datalist id="categories">
+              {wishes?.map((wish: IWish) => (
+                <option value={wish.category} key={wish.id}></option>
+              ))}
+            </datalist>
+          </div>
+          <div className="column mb-0">
+            <Input
+              type="number"
+              name="price"
+              label="Price"
+              min={0}
+              value={state.price || ""}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="column mb-0">
+            <Input
+              name="url"
+              label="Url"
+              value={state.url}
+              onChange={handleChange}
+              maxLength={300}
+            />
+          </div>
         </div>
-        <div>
-          <Textarea
-            name="description"
-            label="Description"
-            value={state.description}
-            maxLength={750}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <Input
-            name="category"
-            label="Category"
-            value={state.category}
-            onChange={handleChange}
-            maxLength={30}
-          />
-        </div>
-        <div>
-          <Input
-            name="url"
-            label="Url"
-            value={state.url}
-            onChange={handleChange}
-            maxLength={300}
-          />
-        </div>
-        <div className="is-flex is-align-items-center">
+        <div className="is-flex is-align-items-center mb-5">
           <label htmlFor="open">Open</label>
           <input
             type="checkbox"

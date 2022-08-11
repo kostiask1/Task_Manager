@@ -20,6 +20,10 @@ textarea {
 label[for] {
   cursor: pointer;
 }
+input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
 @media screen and (max-width: 1024px) {
   .container {
     max-width: 95vw;
