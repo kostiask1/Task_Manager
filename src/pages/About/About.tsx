@@ -2,10 +2,16 @@ import "./About.scss"
 
 const About = () => {
   return (
-    <p>
-      This project is showcase of common PRD when applying to the job.
-      Authenticate to use task manager
-    </p>
+    <>
+      <p>
+        Web application to manage your todolist in advanced way. Create wishlist
+        share it with other users.
+      </p>
+      <hr />
+      <h3>
+        <b>Authenticate to use it!</b>
+      </h3>
+    </>
   )
 }
 
