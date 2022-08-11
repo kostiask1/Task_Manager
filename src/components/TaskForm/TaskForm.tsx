@@ -253,14 +253,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                 disabled={loadingSave || deleting}
               />
             )}
-            {isEdit && !setModal ? (
-              <Button
-                onClick={clear}
-                className="mx-2 card-footer-item is-warning"
-                text="Clear"
-                disabled={loadingSave || deleting}
-              />
-            ) : (
+            {isEdit && (
               <Button
                 onClick={reset}
                 className="mx-2 card-footer-item is-warning"
@@ -270,6 +263,14 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                   deleting ||
                   equal(state, task || taskInitialState)
                 }
+              />
+            )}
+            {!setModal && (
+              <Button
+                onClick={clear}
+                className="mx-2 card-footer-item is-warning"
+                text="Clear"
+                disabled={loadingSave || deleting}
               />
             )}
           </div>

@@ -289,14 +289,7 @@ const WishForm = () => {
               disabled={loadingSave || deleting}
             />
           )}
-          {isEdit ? (
-            <Button
-              onClick={clear}
-              className="mx-2 card-footer-item is-warning"
-              text="Clear"
-              disabled={loadingSave || deleting}
-            />
-          ) : (
+          {isEdit && (
             <Button
               onClick={reset}
               className="mx-2 card-footer-item is-warning"
@@ -308,6 +301,12 @@ const WishForm = () => {
               }
             />
           )}
+          <Button
+            onClick={clear}
+            className="mx-2 card-footer-item is-warning"
+            text="Clear"
+            disabled={loadingSave || deleting}
+          />
         </div>
       </footer>
     </form>
