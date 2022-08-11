@@ -30,6 +30,8 @@ import { tasks } from "../../../store/Task/slice"
 import { wishes } from "../../../store/Wish/slice"
 import "./Profile.scss"
 
+const maximumSize = 1.5 * 1024 * 1024 // 1.5 MB
+
 const Profile = () => {
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
@@ -164,6 +166,27 @@ const Profile = () => {
     setLoading(false)
   }
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (files) e.stopPropagation()
+    const target = e.target as HTMLInputElement
+    const file = target.files
+    const size = file?.length && file[0].size
+    if (size && size < maximumSize) {
+      setFiles(file)
+    } else {
+      dispatch(setError("File size is too big, file must be less than 1.5 MB"))
+    }
+  }
+
+  const handleFileClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    if (files) {
+      e.preventDefault()
+      e.stopPropagation()
+      e.currentTarget.value = ""
+      setProfileImg(null, user.profileImg || "")
+      setFiles(null)
+    }
+  }
   return (
     <div className="columns fadeIn is-justify-content-center">
       <div className="column is-flex is-flex-direction-column is-one-fifth is-align-items-center">
@@ -235,17 +258,26 @@ const Profile = () => {
                 className="file-input"
                 type="file"
                 name="resume"
-                onChange={(e) =>
-                  e.target.files ? setFiles(e.target.files) : null
-                }
+                onChange={handleFileUpload}
+                onClick={handleFileClick}
                 accept="image/*"
                 multiple={false}
               />
-              <span className="file-cta">
-                <span className="file-icon">
-                  <i className="fas fa-upload"></i>
+              <span
+                className={
+                  files
+                    ? "file-cta has-background-danger has-text-white"
+                    : "file-cta"
+                }
+              >
+                {!files && (
+                  <span className="file-icon">
+                    <i className="fas fa-upload"></i>
+                  </span>
+                )}
+                <span className="file-label">
+                  {files ? "Remove file" : "Choose a file…"}
                 </span>
-                <span className="file-label">Choose a file…</span>
               </span>
               <span
                 className="file-name"
