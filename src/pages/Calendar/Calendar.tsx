@@ -67,8 +67,8 @@ const Calendar = () => {
       tasks.map((task: any) => ({
         ...task,
         title: genTitle(task),
-        start: task.end ? convertToDate(task.end) : convertToDate(task.start),
-        end: task.end ? convertToDate(task.end) : convertToDate(task.start),
+        start: task.end ? convertToDate(task.end) : new Date(),
+        end: task.end ? convertToDate(task.end) : new Date(),
         hasEndDate: task.end ? true : false,
       })),
     []
