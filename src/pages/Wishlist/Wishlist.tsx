@@ -87,11 +87,11 @@ const Wishlist = () => {
     [data]
   )
 
-  const reset = () => {
+  const reset = useCallback(() => {
     removeThHighlight()
     setSorting("")
     setData(wishes)
-  }
+  }, [wishes])
 
   return (
     <div className="section is-medium pt-2 pb-6">

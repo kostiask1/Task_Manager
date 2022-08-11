@@ -3,7 +3,7 @@ import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import Textarea from "../../../components/UI/Textarea"
 import { equal } from "../../../helpers"
-import { setSuccess } from "../../../store/App/slice"
+import { setSuccess, setError } from "../../../store/App/slice"
 import { User } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import {
@@ -88,19 +88,21 @@ const WishForm = () => {
   const addUserToWhitelist = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
-      if (userW.trim().length) {
+      if (userW.trim().length == 28) {
         const newUser: IWhitelist = { id: userW, open: true }
         setUser("")
         setState((state: IWish) => ({
           ...state,
           whitelist: [...state.whitelist, newUser],
         }))
+      } else {
+        dispatch(setError("Invalid user id"))
       }
     },
     [userW]
   )
   const handleWhitelist = (e: React.ChangeEvent<HTMLInputElement>) =>
-    e.target.value.trim().length < 160 && setUser(e.target.value)
+    e.target.value.trim().length <= 28 && setUser(e.target.value.trim())
   return (
     <form className="card wish fadeIn" key={state.id} onSubmit={addWishToUser}>
       <header className="card-header">
@@ -156,7 +158,7 @@ const WishForm = () => {
           />
         </div>
         <div>
-          <label htmlFor="open">Open</label>
+          <label htmlFor="open">Open (Any user can view this wish)</label>
           <input
             type="checkbox"
             name="open"
@@ -168,7 +170,13 @@ const WishForm = () => {
           />
         </div>
         <label htmlFor="user">
-          <b>Whitelist of users (IDs)</b>
+          {state.open ? (
+            <del>
+              <b>Whitelist (IDs of users that can view this wish)</b>
+            </del>
+          ) : (
+            <b>Whitelist (IDs of users that can view this wish)</b>
+          )}
         </label>
         <hr style={{ margin: "5px 0" }} />
         <ul key={JSON.stringify(state.whitelist)}>
@@ -192,7 +200,6 @@ const WishForm = () => {
           value={userW}
           onChange={handleWhitelist}
           disabled={state.open}
-          maxLength={60}
         />
         <Button
           onClick={addUserToWhitelist}
