@@ -243,7 +243,7 @@ const WishForm = () => {
         <Input
           name="user"
           className="input mt-4"
-          placeholder="Enter user id to grant him/her access to view this wish"
+          placeholder="Enter user id (Expecting 28 characters)"
           value={userW}
           onChange={handleWhitelist}
           disabled={state.open}
@@ -260,7 +260,7 @@ const WishForm = () => {
           className={`add-user ${state.open ? "" : "is-info"}`}
           text="Add user"
           disabled={
-            loadingSave || deleting || !userW.trim().length || state.open
+            loadingSave || deleting || userW.trim().length !== 28 || state.open
           }
         />
       </div>
