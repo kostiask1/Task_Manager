@@ -2,6 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Button from "../../components/UI/Button"
 import Loader from "../../components/UI/Loader/Loader"
+import { equal } from "../../helpers"
 import { setError, setSuccess } from "../../store/App/slice"
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
@@ -50,9 +51,18 @@ const Wishlist = () => {
       )
   }, [user.id])
 
+  const removeThHighlight = useCallback(() => {
+    document.querySelectorAll("th").forEach((th) => {
+      th.style.backgroundColor = ""
+    })
+  }, [])
+
   const sortData = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
-      const innerText = e.currentTarget.innerHTML
+      const target = e.currentTarget as HTMLTableCellElement
+      const innerText = target.innerHTML
+      removeThHighlight()
+      target.style.backgroundColor = "lightblue"
       const column = (
         innerText.charAt(0).toLowerCase() + innerText.slice(1)
       ).replaceAll(" ", "") as Column
@@ -77,6 +87,12 @@ const Wishlist = () => {
     [data]
   )
 
+  const reset = () => {
+    removeThHighlight()
+    setSorting("")
+    setData(wishes)
+  }
+
   return (
     <div className="section is-medium pt-2 pb-6">
       {(!uid || uid === user.id) && (
@@ -95,7 +111,14 @@ const Wishlist = () => {
             <thead>
               <tr>
                 <th>
-                  <Button text="Reset" onClick={() => setData(wishes)} />
+                  <Button
+                    text="Reset"
+                    onClick={reset}
+                    className={
+                      !equal(wishes, data) || sorting ? "is-danger" : ""
+                    }
+                    disabled={equal(wishes, data) && !sorting}
+                  />
                 </th>
                 <th onClick={sortData}>Title</th>
                 <th onClick={sortData}>Price</th>
