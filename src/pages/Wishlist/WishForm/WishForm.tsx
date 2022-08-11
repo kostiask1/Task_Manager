@@ -44,7 +44,10 @@ const WishForm = () => {
       if (wish.whitelist?.length) {
         for (let j = 0; j < wish.whitelist.length; j++) {
           const user = wish.whitelist[j]
-          if (!users_ids.includes(user.id)) {
+          if (
+            !users_ids.includes(user.id) &&
+            state.whitelist.findIndex((u) => u.id === user.id) === -1
+          ) {
             users_ids.push(user.id)
           }
         }
@@ -56,7 +59,7 @@ const WishForm = () => {
       }
     }
     return [categories, users_ids]
-  }, [wishes])
+  }, [wishes, state.whitelist])
 
   const clear = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
@@ -113,15 +116,20 @@ const WishForm = () => {
   const addUserToWhitelist = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
-      if (userW.trim().length == 28) {
-        const newUser: IWhitelist = { id: userW, open: true }
+      if (state.whitelist.findIndex((user) => user.id === userW) > -1) {
+        dispatch(setError("User already in whitelist"))
         setUser("")
-        setState((state: IWish) => ({
-          ...state,
-          whitelist: [...state.whitelist, newUser],
-        }))
       } else {
-        dispatch(setError("Invalid user id"))
+        if (userW.trim().length == 28) {
+          const newUser: IWhitelist = { id: userW, open: true }
+          setUser("")
+          setState((state: IWish) => ({
+            ...state,
+            whitelist: [...state.whitelist, newUser],
+          }))
+        } else {
+          dispatch(setError("Invalid user id"))
+        }
       }
     },
     [userW]
