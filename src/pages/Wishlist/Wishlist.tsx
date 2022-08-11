@@ -29,11 +29,12 @@ const Wishlist = () => {
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const { uid } = useParams()
   const [data, setData] = useState<IWish[]>(wishes)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [sorting, setSorting] = useState("")
 
   useEffect(() => {
-    setLoading(!data.length)
+    setLoading(true)
+    setData([])
     dispatch(getWishes(uid || user.id)).then(() => setLoading(false))
   }, [uid])
 
@@ -115,7 +116,9 @@ const Wishlist = () => {
                     text="Reset"
                     onClick={reset}
                     className={
-                      !equal(wishes, data) || sorting ? "is-danger" : ""
+                      !loading && (!equal(wishes, data) || sorting)
+                        ? "is-danger"
+                        : ""
                     }
                     disabled={equal(wishes, data) && !sorting}
                   />
