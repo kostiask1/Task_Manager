@@ -36,17 +36,26 @@ const WishForm = () => {
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
 
-  const users_in_whitelist = useMemo(() => {
-    const users_id: any[] = []
+  const [categories, users_in_whitelist] = useMemo(() => {
+    const categories: string[] = []
+    const users_ids: string[] = []
     for (let i = 0; i < wishes.length; i++) {
       const wish = wishes[i]
       if (wish.whitelist?.length) {
-        users_id.push(...wish.whitelist.map((w: IWhitelist) => w.id))
+        for (let j = 0; j < wish.whitelist.length; j++) {
+          const user = wish.whitelist[j]
+          if (!users_ids.includes(user.id)) {
+            users_ids.push(user.id)
+          }
+        }
+      }
+      if (wish.category) {
+        if (!categories.includes(wish.category)) {
+          categories.push(wish.category)
+        }
       }
     }
-    return users_id.filter(function (id, pos) {
-      return users_id.indexOf(id) == pos
-    })
+    return [categories, users_ids]
   }, [wishes])
 
   const clear = (e?: React.MouseEvent<HTMLButtonElement>) => {
@@ -154,9 +163,10 @@ const WishForm = () => {
               maxLength={30}
             />
             <datalist id="categories">
-              {wishes?.map((wish: IWish) => (
-                <option value={wish.category} key={wish.id}></option>
-              ))}
+              {!!categories.length &&
+                categories.map((category) => (
+                  <option value={category} key={category}></option>
+                ))}
             </datalist>
           </div>
           <div className="column mb-0">
