@@ -1,9 +1,9 @@
-import { useCallback, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import Textarea from "../../../components/UI/Textarea"
 import { equal } from "../../../helpers"
-import { setSuccess, setError } from "../../../store/App/slice"
+import { setError, setSuccess } from "../../../store/App/slice"
 import { User } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import {
@@ -35,6 +35,19 @@ const WishForm = () => {
 
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
+
+  const users_in_whitelist = useMemo(() => {
+    const users_id: any[] = []
+    for (let i = 0; i < wishes.length; i++) {
+      const wish = wishes[i]
+      if (wish.whitelist?.length) {
+        users_id.push(...wish.whitelist.map((w: IWhitelist) => w.id))
+      }
+    }
+    return users_id.filter(function (id, pos) {
+      return users_id.indexOf(id) == pos
+    })
+  }, [wishes])
 
   const clear = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
@@ -216,7 +229,14 @@ const WishForm = () => {
           value={userW}
           onChange={handleWhitelist}
           disabled={state.open}
+          list="users_ids"
         />
+        <datalist id="users_ids">
+          {!!users_in_whitelist.length &&
+            users_in_whitelist.map((id) => (
+              <option key={id} value={id}></option>
+            ))}
+        </datalist>
         <Button
           onClick={addUserToWhitelist}
           className="add-user is-info"
