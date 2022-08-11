@@ -257,7 +257,7 @@ const WishForm = () => {
         </datalist>
         <Button
           onClick={addUserToWhitelist}
-          className="add-user is-info"
+          className={`add-user ${state.open ? "" : "is-info"}`}
           text="Add user"
           disabled={
             loadingSave || deleting || !userW.trim().length || state.open
