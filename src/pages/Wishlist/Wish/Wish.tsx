@@ -53,19 +53,17 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
   return (
     <>
       <td>{index + 1}</td>
-      <td>{wish.title ?? "-"}</td>
-      <td>{wish.price || "-"}</td>
-      <td className="description">{wish.description ?? "-"}</td>
+      <td>{wish.title}</td>
+      <td>{wish.price}</td>
+      <td className="description">{wish.description}</td>
       <td>
-        <p>{wish.category ?? "-"}</p>
+        <p>{wish.category}</p>
       </td>
       <td>
-        {wish.url ? (
+        {!!wish.url && (
           <a href={wish.url} target="_blank">
             Link
           </a>
-        ) : (
-          "-"
         )}
       </td>
       <td>
@@ -83,7 +81,7 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
       </td>
       {editable && (
         <>
-          <td>{wish.open ? "Open" : "Closed"}</td>
+          <td>{wish.open ? "Open" : "Private"}</td>
           <td>
             <ul className="whitelist-users">
               {!!wish.whitelist?.length &&

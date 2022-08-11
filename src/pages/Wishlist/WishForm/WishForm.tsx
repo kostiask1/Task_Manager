@@ -157,17 +157,24 @@ const WishForm = () => {
             maxLength={300}
           />
         </div>
-        <div>
-          <label htmlFor="open">Open (Any user can view this wish)</label>
+        <div className="is-flex is-align-items-center">
+          <label htmlFor="open">Open</label>
           <input
             type="checkbox"
             name="open"
             id="open"
-            className="ml-2"
+            className="mx-2"
             checked={state.open}
             value={+state.open}
             onChange={handleOpen}
           />
+          <label htmlFor="open">
+            (
+            {state.open
+              ? "Any user can view this wish"
+              : "WIsh will be visible to users in whitelist only"}
+            )
+          </label>
         </div>
         <label htmlFor="user">
           {state.open ? (
@@ -196,7 +203,7 @@ const WishForm = () => {
         <Input
           name="user"
           className="input mt-4"
-          placeholder="Enter user id to grant him/her access to this wish"
+          placeholder="Enter user id to grant him/her access to view this wish"
           value={userW}
           onChange={handleWhitelist}
           disabled={state.open}
