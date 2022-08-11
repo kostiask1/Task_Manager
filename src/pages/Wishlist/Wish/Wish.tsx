@@ -55,7 +55,16 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
       <td>{index + 1}</td>
       <td>{wish.title}</td>
       <td>{wish.price || ""}</td>
-      <td className="description">{wish.description}</td>
+      <td
+        className="description"
+        style={{
+          minWidth: wish.description
+            ? Math.min(wish.description.length * 4, 275)
+            : 0,
+        }}
+      >
+        {wish.description}
+      </td>
       <td>
         <p>{wish.category}</p>
       </td>
