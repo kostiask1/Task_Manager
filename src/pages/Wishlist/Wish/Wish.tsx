@@ -49,7 +49,7 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
     },
     [wish]
   )
-  console.log("wish:", wish)
+
   return (
     <>
       <td>{index + 1}</td>

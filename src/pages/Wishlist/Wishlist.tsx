@@ -30,7 +30,7 @@ const Wishlist = () => {
   const { uid } = useParams()
   const [data, setData] = useState<IWish[]>(wishes)
   const [loading, setLoading] = useState(false)
-  const [sorting, setSorting] = useState("false")
+  const [sorting, setSorting] = useState("")
 
   useEffect(() => {
     setLoading(!data.length)

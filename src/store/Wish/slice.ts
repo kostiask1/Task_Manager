@@ -70,7 +70,9 @@ export const getWishes = (uid: string) => {
           if (wish.open) {
             sendWishes.push(wish)
           } else {
-            if (wish.whitelist.findIndex((user) => user.id == currendId) > -1) {
+            if (
+              wish.whitelist?.findIndex((user) => user.id == currendId) > -1
+            ) {
               sendWishes.push(wish)
             }
           }
