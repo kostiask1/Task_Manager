@@ -54,7 +54,7 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
     <>
       <td>{index + 1}</td>
       <td>{wish.title}</td>
-      <td>{wish.price}</td>
+      <td>{wish.price || ""}</td>
       <td className="description">{wish.description}</td>
       <td>
         <p>{wish.category}</p>
