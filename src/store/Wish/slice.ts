@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { getAuth } from "firebase/auth"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
 import { equal } from "../../helpers"
 import { AppDispatch, RootState } from "../store"
 import { Wish } from "./types"
-import { getAuth } from "firebase/auth"
 
 interface WishesState {
   array: Wish[]
@@ -27,7 +27,7 @@ export const wishInitialState: Wish = {
   price: 0,
   updatedAt: 0,
   open: false,
-  openTo: [],
+  whitelist: [],
 }
 
 const wish = createSlice({
@@ -70,7 +70,7 @@ export const getWishes = (uid: string) => {
           if (wish.open) {
             sendWishes.push(wish)
           } else {
-            if (wish.openTo.includes(currendId)) {
+            if (wish.whitelist.findIndex((user) => user.id == currendId) > -1) {
               sendWishes.push(wish)
             }
           }

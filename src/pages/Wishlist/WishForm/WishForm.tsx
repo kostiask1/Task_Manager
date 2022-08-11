@@ -1,19 +1,23 @@
-import { useAppDispatch, useAppSelector, RootState } from "../../../store/store"
-import {
-  editingWish,
-  wishInitialState,
-  setWish,
-} from "../../../store/Wish/slice"
-import { Wish as IWish } from "../../../store/Wish/types"
-import "./WishForm.scss"
-import { useState, useCallback } from "react"
+import { useCallback, useState } from "react"
+import Button from "../../../components/UI/Button"
+import Input from "../../../components/UI/Input"
+import Textarea from "../../../components/UI/Textarea"
+import { equal } from "../../../helpers"
 import { setSuccess } from "../../../store/App/slice"
 import { User } from "../../../store/Auth/types"
-import Input from "../../../components/UI/Input"
-import Button from "../../../components/UI/Button"
-import { equal } from "../../../helpers"
-import { deleteWish } from "../../../store/Wish/slice"
-import Textarea from "../../../components/UI/Textarea"
+import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
+import {
+  deleteWish,
+  editingWish,
+  setWish,
+  wishInitialState,
+} from "../../../store/Wish/slice"
+import {
+  Whitelist as IWhitelist,
+  Wish as IWish,
+} from "../../../store/Wish/types"
+import Whitelist from "../Whitelist"
+import "./WishForm.scss"
 
 const WishForm = () => {
   const dispatch = useAppDispatch()
@@ -24,6 +28,7 @@ const WishForm = () => {
   const [state, setState] = useState<IWish>(wish || wishInitialState)
   const [loadingSave, setLoadingSave] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [userW, setUser] = useState<string>("")
 
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
@@ -48,14 +53,6 @@ const WishForm = () => {
   }
   const handleOpen = () =>
     setState((state: IWish) => ({ ...state, open: !state.open }))
-
-  const handleOpenTo = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) =>
-    setState((state: IWish) => ({
-      ...state,
-      openTo: event.target.value.split(","),
-    }))
 
   const addWishToUser = useCallback(
     async (e: React.FormEvent) => {
@@ -88,6 +85,22 @@ const WishForm = () => {
     [state]
   )
 
+  const addUserToWhitelist = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault()
+      if (userW.trim().length) {
+        const newUser: IWhitelist = { id: userW, open: true }
+        setUser("")
+        setState((state: IWish) => ({
+          ...state,
+          whitelist: [...state.whitelist, newUser],
+        }))
+      }
+    },
+    [userW]
+  )
+  const handleWhitelist = (e: React.ChangeEvent<HTMLInputElement>) =>
+    e.target.value.trim().length < 160 && setUser(e.target.value)
   return (
     <form className="card wish fadeIn" key={state.id} onSubmit={addWishToUser}>
       <header className="card-header">
@@ -154,15 +167,41 @@ const WishForm = () => {
             onChange={handleOpen}
           />
         </div>
-        <div>
-          <Input
-            name="openTo"
-            label="OpenTo"
-            value={state.openTo.join(",")}
-            onChange={handleOpenTo}
-            disabled={state.open}
-          />
-        </div>
+        <label htmlFor="user">
+          <b>Whitelist of users (IDs)</b>
+        </label>
+        <hr style={{ margin: "5px 0" }} />
+        <ul key={JSON.stringify(state.whitelist)}>
+          {!!state.whitelist?.length &&
+            state.whitelist.map((user, index) => (
+              <Whitelist
+                key={user.id + index}
+                data={user}
+                wish={state}
+                editable={!state.open}
+                update={(data) =>
+                  setState((state: IWish) => ({ ...state, whitelist: data }))
+                }
+              />
+            ))}
+        </ul>
+        <Input
+          name="user"
+          className="input mt-4"
+          placeholder="Enter user id to grant him/her access to this wish"
+          value={userW}
+          onChange={handleWhitelist}
+          disabled={state.open}
+          maxLength={60}
+        />
+        <Button
+          onClick={addUserToWhitelist}
+          className="add-user is-info"
+          text="Add user"
+          disabled={
+            loadingSave || deleting || !userW.trim().length || state.open
+          }
+        />
       </div>
       <footer className="card-footer p-3">
         <div className="buttons">

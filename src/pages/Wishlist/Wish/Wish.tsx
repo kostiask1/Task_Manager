@@ -1,10 +1,11 @@
-import { FC, useState, useCallback } from "react"
-import { Wish as IWish } from "../../../store/Wish/types"
-import "./Wish.scss"
-import { useAppDispatch } from "../../../store/store"
-import { editingWish, setWish, deleteWish } from "../../../store/Wish/slice"
+import { FC, useCallback, useState } from "react"
 import Button from "../../../components/UI/Button"
-import { setSuccess, setError } from "../../../store/App/slice"
+import { setError, setSuccess } from "../../../store/App/slice"
+import { useAppDispatch } from "../../../store/store"
+import { deleteWish, editingWish, setWish } from "../../../store/Wish/slice"
+import { Wish as IWish } from "../../../store/Wish/types"
+import Whitelist from "../Whitelist"
+import "./Wish.scss"
 
 interface WishInterface {
   wish: IWish
@@ -48,7 +49,7 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
     },
     [wish]
   )
-
+  console.log("wish:", wish)
   return (
     <>
       <td>{index + 1}</td>
@@ -84,12 +85,16 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
         <>
           <td>{wish.open ? "Open" : "Closed"}</td>
           <td>
-            <ul>
-              {wish.openTo?.map((openTo: string, index: number) => (
-                <li key={index} className="is-size-7">
-                  {openTo}
-                </li>
-              ))}
+            <ul className="whitelist-users">
+              {!!wish.whitelist?.length &&
+                wish.whitelist.map((user, index) => (
+                  <Whitelist
+                    key={user.id + index}
+                    data={user}
+                    wish={wish}
+                    editable={editable}
+                  />
+                ))}
             </ul>
           </td>
           <td>

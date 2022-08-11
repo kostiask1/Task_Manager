@@ -1,0 +1,16 @@
+/* your css code */
+.whitelist-users {
+  margin: 0;
+  li {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    white-space: nowrap;
+    .field {
+      margin: 0 !important;
+    }
+    .whitelist-text {
+      cursor: pointer;
+    }
+  }
+}

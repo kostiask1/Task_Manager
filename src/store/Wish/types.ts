@@ -9,5 +9,10 @@ export interface Wish {
   price: number
   updatedAt: number
   open: boolean
-  openTo: Array<string>
+  whitelist: Whitelist[]
+}
+
+export interface Whitelist {
+  id: string
+  open: boolean
 }
