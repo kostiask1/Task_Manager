@@ -52,9 +52,10 @@ const Wishlist = () => {
 
   const sortData = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
-      const column = e.currentTarget.innerHTML
-        .replaceAll(" ", "")
-        .toLocaleLowerCase() as Column
+      const innerText = e.currentTarget.innerHTML
+      const column = (
+        innerText.charAt(0).toLowerCase() + innerText.slice(1)
+      ).replaceAll(" ", "") as Column
       const copy: IWish[] = [...data]
       const modifier = sorting === column ? -1 : 1
       copy.sort((a, b) => {
@@ -100,7 +101,7 @@ const Wishlist = () => {
                 <th onClick={sortData}>Price</th>
                 <th onClick={sortData}>Description</th>
                 <th onClick={sortData}>Category</th>
-                <th onClick={sortData}>URL</th>
+                <th onClick={sortData}>Url</th>
                 <th onClick={sortData}>Completed</th>
                 {(!uid || uid === user.id) && (
                   <>
