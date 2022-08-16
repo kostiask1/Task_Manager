@@ -12,9 +12,18 @@ interface Props {
   state: "create" | "edit" | "show"
   setModal?: undefined | Function
   edit?: undefined | Function
+  editable: boolean
 }
 
-const Subtask: FC<Props> = ({ data, task, update, state, setModal, edit }) => {
+const Subtask: FC<Props> = ({
+  data,
+  task,
+  update,
+  state,
+  setModal,
+  edit,
+  editable = false,
+}) => {
   task = JSON.parse(JSON.stringify(task))
   let subtasksArray = JSON.parse(JSON.stringify(task.subtasks))
   const isShow = state === "show"
@@ -24,42 +33,48 @@ const Subtask: FC<Props> = ({ data, task, update, state, setModal, edit }) => {
 
   const removeSubtask = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    const copy = data
-    const index = subtasksArray.findIndex(
-      (task: ISubtask) => task.text === copy.text
-    )
-    subtasksArray.splice(index, 1)
-    if (isShow) {
-      saveTask()
-    } else {
-      update && update(subtasksArray)
+    if (editable) {
+      const copy = data
+      const index = subtasksArray.findIndex(
+        (task: ISubtask) => task.text === copy.text
+      )
+      subtasksArray.splice(index, 1)
+      if (isShow) {
+        saveTask()
+      } else {
+        update && update(subtasksArray)
+      }
     }
   }
 
   const saveTask = async () => {
-    const saveTask: Task = task
-    saveTask.subtasks = subtasksArray
-    await dispatch(setTask(saveTask))
-    setModal && setModal(saveTask)
+    if (editable) {
+      const saveTask: Task = task
+      saveTask.subtasks = subtasksArray
+      await dispatch(setTask(saveTask))
+      setModal && setModal(saveTask)
+    }
   }
 
   const toggleCompleted = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-    const copy = data
-    const index = subtasksArray.findIndex(
-      (task: ISubtask) => task.text === copy.text
-    )
-    subtasksArray[index].completed = !subtasksArray[index].completed
-    if (isShow) {
-      saveTask()
-    } else {
-      update && update(subtasksArray)
+    if (editable) {
+      const copy = data
+      const index = subtasksArray.findIndex(
+        (task: ISubtask) => task.text === copy.text
+      )
+      subtasksArray[index].completed = !subtasksArray[index].completed
+      if (isShow) {
+        saveTask()
+      } else {
+        update && update(subtasksArray)
+      }
     }
   }
 
   const setEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    if (edit) {
+    if (edit && editable) {
       edit(data.text)
       removeSubtask(e)
     }
@@ -72,19 +87,21 @@ const Subtask: FC<Props> = ({ data, task, update, state, setModal, edit }) => {
         id={"checkbox-" + data.text}
         checked={data.completed}
         onChange={toggleCompleted}
+        disabled={!editable}
       />
       {!isShow && (
         <Button
           className="is-danger is-small"
           style={{ height: 16, padding: "0px 4px" }}
           onClick={removeSubtask}
+          disabled={editable}
           text="x"
         />
       )}
       <label className="subtask-text" htmlFor={"checkbox-" + data.text}>
         {data.text}
       </label>
-      {(isEdit || isCreate) && edit && (
+      {(isEdit || isCreate) && edit && editable && (
         <Button
           className="is-info is-small"
           style={{ height: 16, padding: "0px 4px" }}

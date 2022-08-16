@@ -119,6 +119,7 @@ const Task: FC<TaskInterface> = ({
                           task={task}
                           state="show"
                           setModal={setModal}
+                          editable={editable}
                         />
                       ))}
                     </ul>

@@ -195,6 +195,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                   task={state}
                   state={"create"}
                   edit={setSubtask}
+                  editable={true}
                   update={(data) =>
                     setState((state: Task) => ({ ...state, subtasks: data }))
                   }
