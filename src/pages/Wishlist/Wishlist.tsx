@@ -106,7 +106,7 @@ const Wishlist = () => {
         />
       )}
       {!foreignUser && <WishForm key={JSON.stringify(wish)} />}
-      {uid && uid !== user.id && <h2>Tasks of user ID: {uid}</h2>}
+      {uid && uid !== user.id && <h2>Wishes of user ID: {uid}</h2>}
       <hr />
       <Suspense fallback={<Loader loading={true} />}>
         <div className="table-container">

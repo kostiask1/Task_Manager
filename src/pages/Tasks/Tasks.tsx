@@ -38,6 +38,7 @@ const Tasks = () => {
           text="Share Your Tasks"
         />
       )}
+      {uid && uid !== user.id && <h2>Tasks of user ID: {uid}</h2>}
       {!foreignUser && <TaskForm key={JSON.stringify(task)} />}
       <hr />
       <List />

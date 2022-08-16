@@ -72,9 +72,8 @@ export const getTasks = (uid: string) => {
       const foreignWishes = userTasks[0].uid !== currendId
 
       if (foreignWishes) {
-        if (whitelist?.findIndex((user) => user.id == currendId) == -1) {
-          userTasks.length = 0
-        }
+        const foreignUser = whitelist.find((user) => user.id === currendId)
+        if (!foreignUser || foreignUser.open === false) userTasks.length = 0
       }
       const stateTasks = getState().tasks.array
       !equal(stateTasks, userTasks) && dispatch(tasks(userTasks as Task[]))

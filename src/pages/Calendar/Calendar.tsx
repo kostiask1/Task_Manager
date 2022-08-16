@@ -176,6 +176,7 @@ const Calendar = () => {
           text="Share Your Tasks"
         />
       )}
+      {uid && uid !== user.id && <h2>Tasks of user ID: {uid}</h2>}
       <Loader loading={loading} />
       <EventCalendar
         className="fadeIn"

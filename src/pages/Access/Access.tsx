@@ -28,7 +28,7 @@ const Access = () => {
   }
   const toggleOpened = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
     e.preventDefault()
-    const copy = [...state]
+    const copy = JSON.parse(JSON.stringify(state))
     const index = copy.findIndex((user: IWhitelist) => user.id === id)
     copy[index].open = !copy[index].open
     setState(copy)

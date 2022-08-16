@@ -68,21 +68,18 @@ export const getWishes = (uid: string) => {
 
     if (wishList.length) {
       const foreignWishes = wishList[0].uid !== currendId
+      const foreignUser = whitelist?.find((user) => user.id === currendId)
 
       if (foreignWishes) {
         sendWishes.length = 0
         for (const wish of wishList) {
-          if (
-            wish.open ||
-            whitelist?.findIndex((user) => user.id == currendId) > -1
-          ) {
+          const foreignUserWish = wish.whitelist?.find(
+            (user) => user.id === currendId
+          )
+          if (wish.open || !foreignUser || foreignUser.open)
             sendWishes.push(wish)
-          } else {
-            if (
-              wish.whitelist?.findIndex((user) => user.id == currendId) > -1
-            ) {
-              sendWishes.push(wish)
-            }
+          else {
+            if (foreignUserWish?.open) sendWishes.push(wish)
           }
         }
       }
