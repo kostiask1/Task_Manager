@@ -1,3 +1,5 @@
+import { Whitelist } from "../Wish/types"
+
 export interface User {
   firstName: string
   lastName: string
@@ -7,6 +9,7 @@ export interface User {
   id: string
   admin: boolean
   emailVerified: boolean
+  whitelist: Whitelist[]
 }
 
 export interface AuthState {

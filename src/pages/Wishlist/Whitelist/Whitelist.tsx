@@ -20,7 +20,7 @@ const Whitelist: FC<Props> = ({ data, wish, update, editable }) => {
   let whitelistArray = JSON.parse(JSON.stringify(wish.whitelist))
   const dispatch = useAppDispatch()
 
-  const removeSubtask = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const removeUser = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     if (editable) {
       const copy = data
@@ -72,7 +72,7 @@ const Whitelist: FC<Props> = ({ data, wish, update, editable }) => {
           <Button
             className="is-danger is-small"
             style={{ height: 16, padding: "0px 4px" }}
-            onClick={removeSubtask}
+            onClick={removeUser}
             text="x"
           />
         </>

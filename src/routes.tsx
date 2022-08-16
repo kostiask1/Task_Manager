@@ -12,6 +12,7 @@ const General = lazy(() => import("./pages/User"))
 const Password = lazy(() => import("./pages/User/Password"))
 const Profile = lazy(() => import("./pages/User/Profile"))
 const Wishes = lazy(() => import("./pages/Wishlist"))
+const Access = lazy(() => import("./pages/Access"))
 
 interface RouteProps {
   path: string
@@ -27,6 +28,14 @@ interface RoutesArray extends RouteProps {
 }
 
 export const routesArray: RoutesArray[] = [
+  {
+    name: "About",
+    private: false,
+    show: true,
+    visible: true,
+    path: "about",
+    element: <About />,
+  },
   {
     name: "SignIn",
     private: false,
@@ -70,6 +79,13 @@ export const routesArray: RoutesArray[] = [
     element: <Wishes />,
   },
   {
+    name: "Access",
+    private: true,
+    show: true,
+    path: "access",
+    element: <Access />,
+  },
+  {
     name: "Profile",
     private: true,
     show: false,
@@ -79,14 +95,6 @@ export const routesArray: RoutesArray[] = [
       { path: "/profile", element: <Profile /> },
       { path: "/profile/password", element: <Password /> },
     ],
-  },
-  {
-    name: "About",
-    private: false,
-    show: true,
-    visible: true,
-    path: "about",
-    element: <About />,
   },
 ]
 
@@ -105,7 +113,6 @@ const Routing: FC = () => {
     loading: state.app.loading,
   }))
   const isOnline = useNetwork()
-
   if (!isOnline) {
     return <div>No internet connection</div>
   }

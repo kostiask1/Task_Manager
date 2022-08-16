@@ -23,6 +23,7 @@ const initialState: AuthState = {
     id: "",
     admin: false,
     emailVerified: false,
+    whitelist: [],
   },
   authenticated: false,
 }
@@ -63,6 +64,7 @@ export const signup = (data: SignUpData, onError: () => void) => {
               admin: false,
               profileImg: "",
               emailVerified: false,
+              whitelist: [],
             }
             uploadDoc("users", userData)
             sendEmailVerification(_auth.currentUser as any).then(() => {

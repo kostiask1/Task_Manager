@@ -4,7 +4,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
 import { equal } from "../../helpers"
 import { AppDispatch, RootState } from "../store"
-import { Wish } from "./types"
+import { Whitelist, Wish } from "./types"
 
 interface WishesState {
   array: Wish[]
@@ -57,6 +57,10 @@ export const getWishes = (uid: string) => {
     const docSnap = await getDoc(docRef)
     const user = docSnap.data() as { wishes: Wish[] }
 
+    const userRef = doc(db, "users", uid)
+    const snap = await getDoc(userRef)
+    const { whitelist } = snap.data() as { whitelist: Whitelist[] }
+
     const wishList: Wish[] = user?.wishes || []
     const currendId = _auth?.currentUser?.uid || ""
     const sendWishes: Wish[] = [...wishList]
@@ -67,7 +71,10 @@ export const getWishes = (uid: string) => {
       if (foreignWishes) {
         sendWishes.length = 0
         for (const wish of wishList) {
-          if (wish.open) {
+          if (
+            wish.open ||
+            whitelist?.findIndex((user) => user.id == currendId) > -1
+          ) {
             sendWishes.push(wish)
           } else {
             if (
