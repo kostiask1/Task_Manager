@@ -66,7 +66,7 @@ export const getTasks = (uid: string) => {
 
     const userRef = doc(db, "users", uid)
     const snap = await getDoc(userRef)
-    const { whitelist } = snap.data() as { whitelist: Whitelist[] }
+    const { whitelist } = (snap.data() || []) as { whitelist: Whitelist[] }
 
     if (userTasks?.length) {
       const foreignWishes = userTasks[0].uid !== currendId
