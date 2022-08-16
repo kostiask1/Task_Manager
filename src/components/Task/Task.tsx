@@ -11,15 +11,21 @@ interface TaskInterface {
   task: TaskProps
   setModal?: undefined | Function
   setModalUpdate?: undefined | Function
+  editable: boolean
 }
 
-const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
+const Task: FC<TaskInterface> = ({
+  task,
+  setModal,
+  setModalUpdate,
+  editable = false,
+}) => {
   const [loading, setLoading] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const dispatch = useAppDispatch()
 
   const complete = useCallback(async (task: TaskProps, completed: boolean) => {
-    if (task) {
+    if (task && editable) {
       setLoading(true)
       const saveTask: TaskProps = { ...task }
       saveTask.completed = completed
@@ -37,21 +43,25 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
   const deleteT = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>, task: TaskProps) => {
       e.preventDefault()
-      setDeleting(true)
-      await dispatch(deleteTask(task))
-      setDeleting(false)
-      setModal && setModal(null)
-      dispatch(setSuccess("Task deleted successfully"))
+      if (editable) {
+        setDeleting(true)
+        await dispatch(deleteTask(task))
+        setDeleting(false)
+        setModal && setModal(null)
+        dispatch(setSuccess("Task deleted successfully"))
+      }
     },
     [task]
   )
 
   const setTaskToUpdate = useCallback((task: TaskProps) => {
-    dispatch(editingTask(task))
-    if (setModalUpdate) {
-      setModalUpdate(task)
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" })
+    if (editable) {
+      dispatch(editingTask(task))
+      if (setModalUpdate) {
+        setModalUpdate(task)
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" })
+      }
     }
   }, [])
 
@@ -80,13 +90,13 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
                   task.completed ? "is-primary" : "is-danger"
                 }`}
                 style={{ height: "100%" }}
-                onClick={() => complete(task, !task.completed)}
+                onClick={() => editable && complete(task, !task.completed)}
                 text={`${
                   loading
                     ? "Updating..."
                     : `Completed: ${task.completed ? "Yes" : "No"}`
                 }`}
-                disabled={loading || deleting}
+                disabled={loading || deleting || !editable}
               />
             </div>
           </header>
@@ -121,22 +131,24 @@ const Task: FC<TaskInterface> = ({ task, setModal, setModalUpdate }) => {
               </time>
             </div>
           </div>
-          <footer className="card-footer p-3">
-            <div className="buttons">
-              <Button
-                onClick={() => setTaskToUpdate(task)}
-                className="card-footer-item is-primary"
-                text="Edit"
-                disabled={loading || deleting}
-              />
-              <Button
-                className="mx-2 card-footer-item is-danger"
-                text={deleting ? "Deleting..." : "Delete"}
-                onClick={(e) => deleteT(e, task)}
-                disabled={loading || deleting}
-              />
-            </div>
-          </footer>
+          {editable && (
+            <footer className="card-footer p-3">
+              <div className="buttons">
+                <Button
+                  onClick={() => setTaskToUpdate(task)}
+                  className="card-footer-item is-primary"
+                  text="Edit"
+                  disabled={loading || deleting}
+                />
+                <Button
+                  className="mx-2 card-footer-item is-danger"
+                  text={deleting ? "Deleting..." : "Delete"}
+                  onClick={(e) => deleteT(e, task)}
+                  disabled={loading || deleting}
+                />
+              </div>
+            </footer>
+          )}
         </div>
       </div>
     </>

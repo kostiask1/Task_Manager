@@ -4,6 +4,8 @@ import { db } from "../../firebase/base"
 import { convertToDate, equal } from "../../helpers"
 import { Task } from "./types"
 import { AppDispatch, RootState } from "../store"
+import { getAuth } from "firebase/auth"
+import { Whitelist } from "../Wish/types"
 
 const sortDeadlines = (array: Task[]) =>
   array.sort(
@@ -52,15 +54,30 @@ export default task.reducer
 
 export const { tasks, editingTask } = task.actions
 
+const _auth = getAuth()
+
 export const getTasks = (uid: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
+    const currendId = _auth?.currentUser?.uid || ""
+
     const docRef = doc(db, "tasks", uid)
     const docSnap = await getDoc(docRef)
-    const user = docSnap.data() as { tasks: Task[] }
+    const { tasks: userTasks } = (docSnap.data() || []) as { tasks: Task[] }
 
-    if (user && user.tasks?.length) {
+    const userRef = doc(db, "users", uid)
+    const snap = await getDoc(userRef)
+    const { whitelist } = snap.data() as { whitelist: Whitelist[] }
+
+    if (userTasks?.length) {
+      const foreignWishes = userTasks[0].uid !== currendId
+
+      if (foreignWishes) {
+        if (whitelist?.findIndex((user) => user.id == currendId) == -1) {
+          userTasks.length = 0
+        }
+      }
       const stateTasks = getState().tasks.array
-      !equal(stateTasks, user.tasks) && dispatch(tasks(user.tasks as Task[]))
+      !equal(stateTasks, userTasks) && dispatch(tasks(userTasks as Task[]))
     } else {
       dispatch(tasks([]))
     }

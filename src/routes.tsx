@@ -65,6 +65,20 @@ export const routesArray: RoutesArray[] = [
     element: <Tasks />,
   },
   {
+    name: "Calendar",
+    private: true,
+    show: false,
+    path: "calendar/:uid",
+    element: <Calendar />,
+  },
+  {
+    name: "Tasks",
+    private: true,
+    show: false,
+    path: "tasks/:uid",
+    element: <Tasks />,
+  },
+  {
     name: "Wishes",
     private: true,
     show: true,

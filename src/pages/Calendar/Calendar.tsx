@@ -25,6 +25,7 @@ import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { editingTask, getTasks, taskInitialState } from "../../store/Task/slice"
 import { Task as TaskProps } from "../../store/Task/types"
 import "./Calendar.scss"
+import { useParams } from "react-router-dom"
 const Task = lazy(() => import("../../components/Task"))
 const TaskForm = lazy(() => import("../../components/TaskForm"))
 
@@ -46,6 +47,9 @@ const Calendar = () => {
   const tasks: TaskProps[] = useAppSelector(
     (state: RootState) => state.tasks.array
   )
+  const { uid } = useParams()
+  const foreignUser = uid !== undefined && user.id !== uid
+
   const [loading, setLoading] = useState(false)
   const [task, setTask] = useState<any>(null)
   const [slot, setSlot] = useState<any>(null)
@@ -54,7 +58,7 @@ const Calendar = () => {
 
   const getData = useCallback(() => {
     setLoading(!tasks.length)
-    dispatch(getTasks(user.id)).then(() => {
+    dispatch(getTasks(uid || user.id)).then(() => {
       generateEvents(tasks)
       setLoading(false)
     })
@@ -123,13 +127,15 @@ const Calendar = () => {
   }, [])
 
   const onSelectSlot = useCallback((slotInfo: any) => {
-    dispatch(
-      editingTask({
-        ...taskInitialState,
-        end: convertDateToString(slotInfo.start),
-      })
-    )
-    setSlot(true)
+    if (!foreignUser) {
+      dispatch(
+        editingTask({
+          ...taskInitialState,
+          end: convertDateToString(slotInfo.start),
+        })
+      )
+      setSlot(true)
+    }
   }, [])
 
   const handleCloseTaskModal = useCallback(() => {
@@ -177,15 +183,18 @@ const Calendar = () => {
               task={task}
               setModalUpdate={setUpdateTask}
               setModal={setTask}
+              editable={!foreignUser}
             />
           </Suspense>
         )}
       </Modal>
-      <Modal id="slot" show={slot} key={slot} hide={handleCloseTaskModal}>
-        <Suspense fallback={<Loader loading={true} />}>
-          <TaskForm key={task} setModal={setSlot} />
-        </Suspense>
-      </Modal>
+      {!foreignUser && (
+        <Modal id="slot" show={slot} key={slot} hide={handleCloseTaskModal}>
+          <Suspense fallback={<Loader loading={true} />}>
+            <TaskForm key={task} setModal={setSlot} />
+          </Suspense>
+        </Modal>
+      )}
     </div>
   )
 }

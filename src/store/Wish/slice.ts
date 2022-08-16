@@ -53,16 +53,17 @@ const _auth = getAuth()
 
 export const getWishes = (uid: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
+    const currendId = _auth?.currentUser?.uid || ""
+
     const docRef = doc(db, "wishes", uid)
     const docSnap = await getDoc(docRef)
     const user = docSnap.data() as { wishes: Wish[] }
 
     const userRef = doc(db, "users", uid)
     const snap = await getDoc(userRef)
-    const { whitelist } = snap.data() as { whitelist: Whitelist[] }
+    const { whitelist } = (snap.data() || []) as { whitelist: Whitelist[] }
 
     const wishList: Wish[] = user?.wishes || []
-    const currendId = _auth?.currentUser?.uid || ""
     const sendWishes: Wish[] = [...wishList]
 
     if (wishList.length) {
