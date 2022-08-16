@@ -78,6 +78,13 @@ const Wishlist = () => {
           )
         } else if (isNumeric(a[column])) {
           return (+a[column] - +b[column]) * modifier
+        } else if (
+          typeof a[column] == "object" ||
+          typeof b[column] == "object"
+        ) {
+          const aсol: any = a[column] || []
+          const bсol: any = b[column] || []
+          return (aсol?.length - bсol?.length) * modifier
         } else {
           if (a[column] < b[column]) return 1 * modifier
           if (a[column] > b[column]) return -1 * modifier
@@ -110,7 +117,7 @@ const Wishlist = () => {
       <hr />
       <Suspense fallback={<Loader loading={true} />}>
         <div className="table-container">
-          <table className="table is-striped is-bordered is-hoverable is-fullwidth is-narrow">
+          <table className="table table-wishes is-striped is-bordered is-hoverable is-fullwidth is-narrow">
             <thead>
               <tr>
                 <th>
@@ -134,7 +141,7 @@ const Wishlist = () => {
                 {!foreignUser && (
                   <>
                     <th onClick={sortData}>Open</th>
-                    <th onClick={sortData}>Open To</th>
+                    <th onClick={sortData}>Whitelist</th>
                     <th>Action</th>
                   </>
                 )}

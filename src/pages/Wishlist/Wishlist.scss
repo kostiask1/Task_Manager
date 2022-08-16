@@ -12,3 +12,16 @@ table {
     font-size: 0.75rem;
   }
 }
+.table-wishes {
+  :is(th, td):first-child {
+    position: sticky;
+    left: 0;
+    z-index: 100;
+  }
+  tr:nth-child(2n) td:first-child {
+    background-color: #fafafa;
+  }
+  tr:nth-child(2n + 1) td:first-child {
+    background-color: #fff;
+  }
+}
