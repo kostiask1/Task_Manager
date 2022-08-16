@@ -17,15 +17,17 @@ import {
   Event,
 } from "react-big-calendar"
 import "react-big-calendar/lib/css/react-big-calendar.css"
+import { useParams } from "react-router-dom"
 import Modal from "../../components/Modal/Modal"
+import Button from "../../components/UI/Button"
 import Loader from "../../components/UI/Loader/Loader"
 import { convertDateToString, convertToDate } from "../../helpers"
+import { setError, setSuccess } from "../../store/App/slice"
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { editingTask, getTasks, taskInitialState } from "../../store/Task/slice"
 import { Task as TaskProps } from "../../store/Task/types"
 import "./Calendar.scss"
-import { useParams } from "react-router-dom"
 const Task = lazy(() => import("../../components/Task"))
 const TaskForm = lazy(() => import("../../components/TaskForm"))
 
@@ -155,8 +157,25 @@ const Calendar = () => {
 
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate])
 
+  const copyPage = useCallback(() => {
+    navigator.clipboard
+      .writeText(`${window.location.host}/calendar/${user.id}`)
+      .then(
+        () =>
+          dispatch(setSuccess("Link to your wishlist is copied to clipboard")),
+        () => dispatch(setError("Something went wrong"))
+      )
+  }, [user.id])
+
   return (
     <div className="pb-6 pt-3">
+      {!foreignUser && (
+        <Button
+          onClick={copyPage}
+          className="is-primary mb-3"
+          text="Share Your Tasks"
+        />
+      )}
       <Loader loading={loading} />
       <EventCalendar
         className="fadeIn"

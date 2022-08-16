@@ -32,6 +32,8 @@ const Wishlist = () => {
   const [loading, setLoading] = useState(true)
   const [sorting, setSorting] = useState("")
 
+  const foreignUser = uid !== undefined && user.id !== uid
+
   useEffect(() => {
     setLoading(true)
     setData([])
@@ -42,7 +44,7 @@ const Wishlist = () => {
     setData(wishes)
   }, [wishes])
 
-  const copyWishPage = useCallback(() => {
+  const copyPage = useCallback(() => {
     navigator.clipboard
       .writeText(`${window.location.host}/wishes/${user.id}`)
       .then(
@@ -96,14 +98,14 @@ const Wishlist = () => {
 
   return (
     <div className="section is-medium pt-2 pb-6">
-      {(!uid || uid === user.id) && (
+      {!foreignUser && (
         <Button
-          onClick={copyWishPage}
+          onClick={copyPage}
           className="is-primary mb-3"
           text="Share Your Wishlist"
         />
       )}
-      {(!uid || uid === user.id) && <WishForm key={JSON.stringify(wish)} />}
+      {!foreignUser && <WishForm key={JSON.stringify(wish)} />}
       {uid && uid !== user.id && <h2>Tasks of user ID: {uid}</h2>}
       <hr />
       <Suspense fallback={<Loader loading={true} />}>
@@ -129,7 +131,7 @@ const Wishlist = () => {
                 <th onClick={sortData}>Category</th>
                 <th onClick={sortData}>Url</th>
                 <th onClick={sortData}>Completed</th>
-                {(!uid || uid === user.id) && (
+                {!foreignUser && (
                   <>
                     <th onClick={sortData}>Open</th>
                     <th onClick={sortData}>Open To</th>
@@ -142,11 +144,7 @@ const Wishlist = () => {
               {!!data?.length ? (
                 data.map((wish: IWish, index) => (
                   <tr key={wish.id}>
-                    <Wish
-                      wish={wish}
-                      editable={user.id == wish.uid}
-                      index={index}
-                    />
+                    <Wish wish={wish} editable={!foreignUser} index={index} />
                   </tr>
                 ))
               ) : (

@@ -5,7 +5,7 @@ const About = () => {
     <>
       <p>
         Web application to manage your todolist in advanced way. Create wishlist
-        share it with other users.
+        share it with other users. Also you share your tasks with other users!
       </p>
       <hr />
       <h3>
