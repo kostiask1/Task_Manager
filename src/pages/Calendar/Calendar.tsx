@@ -62,9 +62,9 @@ const Calendar = () => {
       generateEvents(tasks)
       setLoading(false)
     })
-  }, [])
+  }, [uid])
 
-  useEffect(getData, [])
+  useEffect(getData, [uid])
 
   const generateEvents = useCallback(
     (tasks: TaskProps[]): Event[] =>

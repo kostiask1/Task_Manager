@@ -21,7 +21,7 @@ const List = () => {
   useEffect(() => {
     setLoading(!tasks.length)
     dispatch(getTasks(uid || user.id)).then(() => setLoading(false))
-  }, [])
+  }, [uid])
 
   return (
     <div className="columns tasks-list">
