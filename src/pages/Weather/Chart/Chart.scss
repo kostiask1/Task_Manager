@@ -4,6 +4,7 @@
   overflow-x: auto;
   height: 250px;
   &__cell {
+    pointer-events: none;
     display: flex;
     flex-direction: column;
     align-items: center;

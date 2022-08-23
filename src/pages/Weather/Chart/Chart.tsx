@@ -1,4 +1,5 @@
-import { FC, useMemo } from "react"
+import { FC, useMemo, useRef } from "react"
+import useDraggableScroll from "use-draggable-scroll"
 import "./Chart.scss"
 
 interface Props {
@@ -6,6 +7,8 @@ interface Props {
 }
 
 const Chart: FC<Props> = ({ data }) => {
+  const chart = useRef<HTMLDivElement>(null)
+  const { onMouseDown } = useDraggableScroll(chart, { direction: "horizontal" })
   const medium = useMemo(
     () =>
       Math.round(
@@ -17,7 +20,7 @@ const Chart: FC<Props> = ({ data }) => {
   )
 
   return (
-    <div className="chart">
+    <div className="chart" ref={chart} onMouseDown={onMouseDown}>
       {!!data.list.length &&
         data.list.map((item: any) => (
           <div

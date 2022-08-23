@@ -12,7 +12,8 @@
     "react-dom": "^18.2.0",
     "react-input-mask": "^3.0.0-alpha.2",
     "react-redux": "^8.0.2",
-    "react-router-dom": "^6.3.0"
+    "react-router-dom": "^6.3.0",
+    "use-draggable-scroll": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^16.11.45",
