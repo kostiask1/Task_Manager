@@ -95,6 +95,7 @@ const Calendar = () => {
       }),
     []
   )
+
   const onSelectEvent = useCallback((calEvent: any) => {
     const copy = { ...calEvent }
     copy.title = copy.title.replace(/\s*\(.*?\)\s*/g, "")
