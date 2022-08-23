@@ -68,17 +68,17 @@ const Calendar = () => {
 
   useEffect(getData, [uid])
 
-  const generateEvents = useCallback(
-    (tasks: TaskProps[]): Event[] =>
-      tasks.map((task: any) => ({
-        ...task,
-        title: genTitle(task),
-        start: task.end ? convertToDate(task.end) : new Date(),
-        end: task.end ? convertToDate(task.end) : new Date(),
-        hasEndDate: task.end ? true : false,
-      })),
-    []
-  )
+  const generateEvents = useCallback((tasks: TaskProps[]): Event[] => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return tasks.map((task: any) => ({
+      ...task,
+      title: genTitle(task),
+      start: task.end ? convertToDate(task.end) : today,
+      end: task.end ? convertToDate(task.end) : today,
+      hasEndDate: task.end ? true : false,
+    }))
+  }, [])
 
   const events = useMemo(() => generateEvents(tasks), [tasks])
 
