@@ -4,7 +4,7 @@ import Input from "../../../components/UI/Input"
 import { capitalizeFirstLetter } from "../../../helpers"
 import { User } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
-import { deleteCity, saveCity, setCities } from "../../../store/Weather/slice"
+import { deleteCity, saveCity, updateCity } from "../../../store/Weather/slice"
 import { ICity } from "../../../store/Weather/types"
 
 const CityForm = () => {
@@ -30,17 +30,22 @@ const CityForm = () => {
     [city]
   )
 
-  const handleDeleteCity = useCallback(
-    async (city: ICity) => dispatch(deleteCity(city)),
-    []
-  )
+  const handleDeleteCity = useCallback(async (city: ICity) => {
+    setLoading(true)
+    await dispatch(deleteCity(city))
+    setLoading(false)
+  }, [])
 
   const handleCityShow = useCallback(
-    (id: number) => {
-      const citiesClone: ICity[] = JSON.parse(JSON.stringify(cities))
-      const index = citiesClone.findIndex((city) => city.id === id)
-      citiesClone[index].show = !citiesClone[index].show
-      dispatch(setCities(citiesClone))
+    async (id: number) => {
+      setLoading(true)
+      let city = cities.find((city) => city.id === id)
+      city = JSON.parse(JSON.stringify(city))
+      if (city) {
+        city.show = !city.show
+        await dispatch(updateCity(city))
+      }
+      setLoading(false)
     },
     [cities]
   )
@@ -57,6 +62,7 @@ const CityForm = () => {
                 id={city.name}
                 checked={city.show}
                 onChange={() => handleCityShow(city.id)}
+                disabled={loading}
               />
               <label className="mx-2" htmlFor={city.name}>
                 {city.name}
@@ -66,6 +72,7 @@ const CityForm = () => {
                 style={{ height: 16, padding: "0px 4px" }}
                 onClick={() => handleDeleteCity(city)}
                 text="x"
+                disabled={loading}
               />
             </div>
           ))}

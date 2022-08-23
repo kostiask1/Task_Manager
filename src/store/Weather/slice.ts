@@ -84,3 +84,23 @@ export const saveCity = (city: string, uid: string) => {
     dispatch(setSuccess(`${city} added`))
   }
 }
+
+export const updateCity = (city: ICity) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    const cities = getState().cities.array
+    const citiesCopy = [...cities]
+
+    const indexOfCity = citiesCopy.findIndex((c: ICity) => c.id === city.id)
+    citiesCopy[indexOfCity] = city
+
+    const userRef = doc(db, "users", city.uid)
+    const snap = await getDoc(userRef)
+    const user = (snap.data() || []) as User
+
+    await setDoc(doc(db, "users", city.uid), {
+      ...user,
+      cities: citiesCopy,
+    })
+    dispatch(setCities(citiesCopy))
+  }
+}
