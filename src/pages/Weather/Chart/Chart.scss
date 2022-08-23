@@ -9,8 +9,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 5px;
-    span {
+    padding: 5px 15px;
+    span,
+    p {
       white-space: nowrap;
     }
     p {

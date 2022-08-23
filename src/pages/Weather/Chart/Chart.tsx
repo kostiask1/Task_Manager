@@ -1,6 +1,7 @@
 import { FC, useMemo, useRef } from "react"
 import useDraggableScroll from "use-draggable-scroll"
 import "./Chart.scss"
+import { convertDateToString } from "../../../helpers"
 
 interface Props {
   data: any
@@ -19,6 +20,13 @@ const Chart: FC<Props> = ({ data }) => {
     [data]
   )
 
+  const today = new Date()
+  const tomorrow = new Date()
+  tomorrow.setDate(today.getDate() + 1)
+
+  const convertCellDate = (cell_date: string): string =>
+    cell_date.slice(8, 10) + "-" + cell_date.slice(5, 7)
+
   return (
     <div className="chart" ref={chart} onMouseDown={onMouseDown}>
       {!!data.list.length &&
@@ -35,12 +43,21 @@ const Chart: FC<Props> = ({ data }) => {
               }, 90% ,50%)`,
             }}
           >
-            <span>{item.dt_txt.slice(5, item.dt_txt.length - 3)}</span>
-            <p>{Math.round(item.main.temp)} °C</p>
+            <span>
+              {convertDateToString(today).slice(0, 5) ==
+              convertCellDate(item.dt_txt)
+                ? "Today"
+                : convertDateToString(tomorrow).slice(0, 5) ==
+                  convertCellDate(item.dt_txt)
+                ? "Tomorrow"
+                : convertCellDate(item.dt_txt)}
+            </span>
+            <span>{item.dt_txt.slice(11, item.dt_txt.length - 3)}</span>
+            <p className="is-size-5">{Math.round(item.main.temp)} °C</p>
             <img
-              height="60"
+              height="70"
               src={`http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
-              style={{ aspectRatio: "1/1", width: "unset" }}
+              style={{ aspectRatio: "1/1", width: 60, maxWidth: "unset" }}
               alt={item.weather[0].main}
             />
           </div>
