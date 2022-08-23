@@ -48,7 +48,7 @@ const City: FC<Props> = ({ city }) => {
   const refetchData = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     refetch()
-    dispatch(setSuccess(`Data about "${city.name}" is refreshed`))
+    dispatch(setSuccess(`${city.name} data is updated`))
   }
 
   return (
