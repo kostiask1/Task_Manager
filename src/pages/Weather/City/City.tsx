@@ -27,17 +27,17 @@ const City: FC<Props> = ({ city }) => {
 
   if (error)
     return (
-      <>
-        Error while loading <b>{city.name}</b>, probably you entered city name
-        wrong.
+      <div className="my-2 pl-3 is-flex is-align-items-center">
+        Error while loading <b className="ml-1">{city.name}</b>, probably you
+        entered city name wrong, maybe you want to
         <Button
           onClick={handleDeleteCity}
           text="Delete"
-          className="is-danger delete-city-btn"
+          className="is-danger mx-1 delete-city-btn is-small"
           disabled={loading}
         />
-        this city
-      </>
+        this city?
+      </div>
     )
 
   if (!data) return <></>
@@ -58,7 +58,7 @@ const City: FC<Props> = ({ city }) => {
           <div className="card-header-title">
             <Button onClick={refetchData} text="Update data" />
             <Button
-              className="is-danger delete-city-btn"
+              className="is-danger is-small delete-city-btn"
               text="x"
               onClick={handleDeleteCity}
               disabled={loading}
