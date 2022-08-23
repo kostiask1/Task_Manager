@@ -13,6 +13,7 @@ const Password = lazy(() => import("./pages/User/Password"))
 const Profile = lazy(() => import("./pages/User/Profile"))
 const Wishes = lazy(() => import("./pages/Wishlist"))
 const Access = lazy(() => import("./pages/Access"))
+const Weather = lazy(() => import("./pages/Weather"))
 
 interface RouteProps {
   path: string
@@ -91,6 +92,13 @@ export const routesArray: RoutesArray[] = [
     show: false,
     path: "wishes/:uid",
     element: <Wishes />,
+  },
+  {
+    name: "Weather",
+    private: true,
+    show: true,
+    path: "weather",
+    element: <Weather />,
   },
   {
     name: "Access",

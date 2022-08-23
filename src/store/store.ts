@@ -1,9 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
-import thunk from "redux-thunk"
-import authReducer from "./Auth/slice"
 import appReducer from "./App/slice"
+import authReducer from "./Auth/slice"
 import tasksReducer from "./Task/slice"
+import citiesReducer from "./Weather/slice"
+import { weatherApi } from "./Weather/api"
 import wishesReducer from "./Wish/slice"
 
 const reducer = combineReducers({
@@ -11,11 +12,14 @@ const reducer = combineReducers({
   app: appReducer,
   tasks: tasksReducer,
   wishes: wishesReducer,
+  cities: citiesReducer,
+  weatherApi: weatherApi.reducer,
 })
 
 const store = configureStore({
   reducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(weatherApi.middleware),
   devTools: true,
 })
 

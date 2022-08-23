@@ -7,6 +7,9 @@ export function equal(x: any, y: any): boolean {
         ok(x).every((key) => equal(x[key], y[key]))
     : x === y
 }
+export const capitalizeFirstLetter = (string: string): string =>
+  string.charAt(0).toUpperCase() + string.slice(1)
+
 export const dateFormat = (date: string): Array<string | RegExp> => {
   const dayStartsWithThree = date?.charAt(0) === "3" || false
   const monthStartsWithOne = date?.charAt(3) === "1" || false

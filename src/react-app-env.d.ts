@@ -3,6 +3,7 @@
 declare namespace NodeJS {
   interface ImportMeta {
     env: {
+      VITE_WEATHER_API_KEY: string
       VITE_API_KEY: string
       VITE_AUTH_DOMAIN: string
       VITE_PROJECT_ID: string

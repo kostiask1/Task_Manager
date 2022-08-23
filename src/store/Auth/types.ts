@@ -1,4 +1,5 @@
 import { Whitelist } from "../Wish/types"
+import { ICity } from "../Weather/types"
 
 export interface User {
   firstName: string
@@ -10,6 +11,7 @@ export interface User {
   admin: boolean
   emailVerified: boolean
   whitelist: Whitelist[]
+  cities: ICity[]
 }
 
 export interface AuthState {

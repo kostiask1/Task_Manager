@@ -1,0 +1,25 @@
+/* your css code */
+.column .card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  &-content {
+    height: unset;
+  }
+}
+.columns {
+  flex-wrap: wrap;
+}
+
+.cities-list .column {
+  width: 50%;
+  flex-basis: 50%;
+}
+
+@media (max-width: 768px) {
+  .cities-list .column {
+    width: 100%;
+    flex-basis: 100%;
+  }
+}
