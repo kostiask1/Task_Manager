@@ -59,9 +59,7 @@ export const getWishes = (uid: string) => {
     const docSnap = await getDoc(docRef)
     const user = docSnap.data() as { wishes: Wish[] }
 
-    const userRef = doc(db, "users", uid)
-    const snap = await getDoc(userRef)
-    const { whitelist } = (snap.data() || []) as { whitelist: Whitelist[] }
+    const { whitelist } = getState().auth.user as { whitelist: Whitelist[] }
 
     const wishList: Wish[] = user?.wishes || []
     const sendWishes: Wish[] = [...wishList]

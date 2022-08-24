@@ -1,6 +1,6 @@
 import type { PayloadAction } from "@reduxjs/toolkit"
 import { createSlice } from "@reduxjs/toolkit"
-import { doc, getDoc, setDoc } from "firebase/firestore/lite"
+import { doc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
 import { equal } from "../../helpers"
 import { setError, setSuccess } from "../App/slice"
@@ -29,15 +29,14 @@ export const { setCities, addCity } = citiesSlice.actions
 
 export default citiesSlice.reducer
 
-export const getCities = (uid: string) => {
+export const getCities = () => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    const userRef = doc(db, "users", uid)
-    const snap = await getDoc(userRef)
-    const { cities } = (snap.data() || []) as { cities: ICity[] }
+    const user: User = getState().auth.user
 
-    if (cities?.length) {
+    if (user.cities?.length) {
       const stateCities = getState().cities.array
-      !equal(stateCities, cities) && dispatch(setCities(cities as ICity[]))
+      !equal(stateCities, user.cities) &&
+        dispatch(setCities(user.cities as ICity[]))
     } else {
       dispatch(setCities([]))
     }
@@ -47,13 +46,10 @@ export const getCities = (uid: string) => {
 export const deleteCity = (city: ICity) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const cities = getState().cities.array as ICity[]
+    const user: User = getState().auth.user
     const filtered_cities = cities.filter((c: ICity) => c.name !== city.name)
 
-    const userRef = doc(db, "users", city.uid)
-    const snap = await getDoc(userRef)
-    const user = (snap.data() || []) as User
-
-    await setDoc(doc(db, "users", city.uid), {
+    await setDoc(doc(db, "users", user.id), {
       ...user,
       cities: filtered_cities,
     })
@@ -62,20 +58,22 @@ export const deleteCity = (city: ICity) => {
   }
 }
 
-export const saveCity = (city: string, uid: string) => {
+export const saveCity = (city: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const cities = getState().cities.array as ICity[]
+    const user: User = getState().auth.user
     if (city.length < 2) return dispatch(setError("City name is too short"))
     const isExist = cities.findIndex((c: ICity) => c.name === city)
     if (isExist !== -1) return dispatch(setError("City already exist"))
 
-    const newCity = { name: city, show: true, id: new Date().getTime(), uid }
+    const newCity = {
+      name: city,
+      show: true,
+      id: new Date().getTime(),
+      uid: user.id,
+    }
 
-    const userRef = doc(db, "users", uid)
-    const snap = await getDoc(userRef)
-    const user = (snap.data() || []) as User
-
-    await setDoc(doc(db, "users", uid), {
+    await setDoc(doc(db, "users", user.id), {
       ...user,
       cities: [...cities, newCity],
     })
@@ -88,16 +86,13 @@ export const saveCity = (city: string, uid: string) => {
 export const updateCity = (city: ICity) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const cities = getState().cities.array
+    const user: User = getState().auth.user
     const citiesCopy = [...cities]
 
     const indexOfCity = citiesCopy.findIndex((c: ICity) => c.id === city.id)
     citiesCopy[indexOfCity] = city
 
-    const userRef = doc(db, "users", city.uid)
-    const snap = await getDoc(userRef)
-    const user = (snap.data() || []) as User
-
-    await setDoc(doc(db, "users", city.uid), {
+    await setDoc(doc(db, "users", user.id), {
       ...user,
       cities: citiesCopy,
     })

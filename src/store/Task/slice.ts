@@ -1,11 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
-import { convertToDate, equal, convertDateToString } from "../../helpers"
-import { Subtask, Task } from "./types"
+import { convertDateToString, convertToDate, equal } from "../../helpers"
+import { User } from "../Auth/types"
 import { AppDispatch, RootState } from "../store"
-import { getAuth } from "firebase/auth"
-import { Whitelist } from "../Wish/types"
+import { Subtask, Task } from "./types"
 
 const sortDeadlines = (array: Task[]) =>
   array.sort(
@@ -55,25 +54,19 @@ export default task.reducer
 
 export const { tasks, editingTask } = task.actions
 
-const _auth = getAuth()
-
 export const getTasks = (uid: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    const currendId = _auth?.currentUser?.uid || ""
+    const user: User = getState().auth.user
 
     const docRef = doc(db, "tasks", uid)
     const docSnap = await getDoc(docRef)
     const { tasks: userTasks } = (docSnap.data() || []) as { tasks: Task[] }
 
-    const userRef = doc(db, "users", uid)
-    const snap = await getDoc(userRef)
-    const { whitelist } = (snap.data() || []) as { whitelist: Whitelist[] }
-
     if (userTasks?.length) {
-      const foreignWishes = userTasks[0].uid !== currendId
+      const foreignWishes = userTasks[0].uid !== user.id
 
       if (foreignWishes) {
-        const foreignUser = whitelist.find((user) => user.id === currendId)
+        const foreignUser = user.whitelist.find((user) => user.id === user.id)
         if (!foreignUser || foreignUser.open === false) userTasks.length = 0
       }
       const stateTasks = getState().tasks.array

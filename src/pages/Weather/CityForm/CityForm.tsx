@@ -2,7 +2,6 @@ import { useCallback, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import { capitalizeFirstLetter } from "../../../helpers"
-import { User } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { deleteCity, saveCity, updateCity } from "../../../store/Weather/slice"
 import { ICity } from "../../../store/Weather/types"
@@ -10,7 +9,6 @@ import { ICity } from "../../../store/Weather/types"
 const CityForm = () => {
   const dispatch = useAppDispatch()
   const cities = useAppSelector((state: RootState) => state.cities.array)
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
   const [city, setCity] = useState("")
   const [loading, setLoading] = useState(false)
 
@@ -23,7 +21,7 @@ const CityForm = () => {
     async (e: React.FormEvent) => {
       e.preventDefault()
       setLoading(true)
-      await dispatch(saveCity(city, user.id))
+      await dispatch(saveCity(city))
       setLoading(false)
       setCity("")
     },

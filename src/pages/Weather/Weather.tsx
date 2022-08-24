@@ -1,5 +1,4 @@
 import { useEffect } from "react"
-import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { getCities } from "../../store/Weather/slice"
 import { ICity } from "../../store/Weather/types"
@@ -10,10 +9,9 @@ import "./Weather.scss"
 const Weather = () => {
   const dispatch = useAppDispatch()
   const cities = useAppSelector((state: RootState) => state.cities.array)
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
 
   useEffect(() => {
-    dispatch(getCities(user.id))
+    dispatch(getCities())
   }, [])
 
   return (
