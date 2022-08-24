@@ -71,7 +71,7 @@ const City: FC<Props> = ({ city }) => {
           </span>
           <img
             height="60"
-            src={`http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`}
+            src={`https://openweathermap.org/img/wn/${weather[0].icon}@2x.png`}
             style={{ aspectRatio: "1/1", width: "unset" }}
             alt={weather[0].main}
           />

@@ -56,7 +56,7 @@ const Chart: FC<Props> = ({ data }) => {
             <p className="is-size-5">{Math.round(item.main.temp)} °C</p>
             <img
               height="70"
-              src={`http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
+              src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
               style={{ aspectRatio: "1/1", width: 60, maxWidth: "unset" }}
               alt={item.weather[0].main}
             />
