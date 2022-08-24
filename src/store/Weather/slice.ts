@@ -4,6 +4,7 @@ import { doc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
 import { equal } from "../../helpers"
 import { setError, setSuccess } from "../App/slice"
+import { setUser } from "../Auth/slice"
 import { User } from "../Auth/types"
 import { AppDispatch, RootState } from "../store"
 import { CitiesState, ICity } from "./types"
@@ -49,10 +50,9 @@ export const deleteCity = (city: ICity) => {
     const user: User = getState().auth.user
     const filtered_cities = cities.filter((c: ICity) => c.name !== city.name)
 
-    await setDoc(doc(db, "users", user.id), {
-      ...user,
-      cities: filtered_cities,
-    })
+    const updatedUser = { ...user, cities: filtered_cities }
+    await setDoc(doc(db, "users", user.id), updatedUser)
+    await dispatch(setUser(updatedUser))
     await dispatch(setCities(filtered_cities))
     dispatch(setSuccess(`${city.name} deleted`))
   }
@@ -73,11 +73,9 @@ export const saveCity = (city: string) => {
       uid: user.id,
     }
 
-    await setDoc(doc(db, "users", user.id), {
-      ...user,
-      cities: [...cities, newCity],
-    })
-
+    const updatedUser = { ...user, cities: [...cities, newCity] }
+    await setDoc(doc(db, "users", user.id), updatedUser)
+    await dispatch(setUser(updatedUser))
     await dispatch(addCity(newCity))
     dispatch(setSuccess(`${city} added`))
   }
@@ -92,10 +90,9 @@ export const updateCity = (city: ICity) => {
     const indexOfCity = citiesCopy.findIndex((c: ICity) => c.id === city.id)
     citiesCopy[indexOfCity] = city
 
-    await setDoc(doc(db, "users", user.id), {
-      ...user,
-      cities: citiesCopy,
-    })
+    const updatedUser = { ...user, cities: citiesCopy }
+    await setDoc(doc(db, "users", user.id), updatedUser)
+    await dispatch(setUser(updatedUser))
     dispatch(setCities(citiesCopy))
   }
 }
