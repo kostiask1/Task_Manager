@@ -13,4 +13,5 @@ export interface Task {
   start: number
   updatedAt: number
   subtasks: Subtask[] | []
+  daily: boolean
 }

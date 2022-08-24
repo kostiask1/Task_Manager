@@ -78,6 +78,7 @@ const Task: FC<TaskInterface> = ({
       }
     }
   }, [task])
+
   return (
     <>
       <div className="column task fadeIn" key={task.id}>
@@ -127,9 +128,13 @@ const Task: FC<TaskInterface> = ({
                   <hr style={{ margin: "10px 0" }} />
                 </>
               )}
-              <time dateTime={task.end}>
-                Due: {task.end || "No deadline specified"}
-              </time>
+              {task.daily ? (
+                <time>Daily task {task.completed && "- checked"}</time>
+              ) : (
+                <time dateTime={task.end}>
+                  Due: {task.end || "No deadline specified"}
+                </time>
+              )}
             </div>
           </div>
           {editable && (

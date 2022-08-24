@@ -85,6 +85,13 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     setState((state: Task) => ({ ...state, [name]: value }))
   }
 
+  const toggleDaily = () =>
+    setState((state: Task) => ({
+      ...state,
+      daily: !state.daily,
+      end: !state.daily ? "" : state.end,
+    }))
+
   const clear = useCallback((e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
     setState(taskInitialState)
@@ -216,7 +223,11 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
             />
             <br />
             <hr style={{ margin: "10px 0" }} />
-            <label htmlFor="end">Deadline</label>
+            {state.daily ? (
+              <del>Deadline</del>
+            ) : (
+              <label htmlFor="end">Deadline</label>
+            )}
             <InputMask
               className="input"
               mask={formatChars}
@@ -225,9 +236,21 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               name="end"
               id="end"
               value={state.end}
-              onChange={handleChange}
+              onChange={(event) => state.daily && handleChange(event)}
+              disabled={state.daily}
             />
           </div>
+          <input
+            type="checkbox"
+            className="checkbox"
+            id={"checkbox-" + state.id}
+            checked={state.daily}
+            onChange={toggleDaily}
+            disabled={loadingSave || deleting}
+          />
+          <label className="subtask-text ml-2" htmlFor={"checkbox-" + state.id}>
+            Daily task
+          </label>
         </div>
         <footer className="card-footer p-3">
           <div className="buttons">
