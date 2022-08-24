@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
-import { convertToDate, equal } from "../../helpers"
-import { Task } from "./types"
+import { convertToDate, equal, convertDateToString } from "../../helpers"
+import { Subtask, Task } from "./types"
 import { AppDispatch, RootState } from "../store"
 import { getAuth } from "firebase/auth"
 import { Whitelist } from "../Wish/types"
@@ -33,6 +33,7 @@ export const taskInitialState: Task = {
   start: 0,
   updatedAt: 0,
   subtasks: [],
+  daily: false,
 }
 
 const task = createSlice({
@@ -76,6 +77,22 @@ export const getTasks = (uid: string) => {
         if (!foreignUser || foreignUser.open === false) userTasks.length = 0
       }
       const stateTasks = getState().tasks.array
+      for (let i = 0; i < userTasks.length; i++) {
+        const task = userTasks[i]
+        if (
+          task.daily &&
+          convertDateToString(new Date(task.updatedAt)) !==
+            convertDateToString(new Date())
+        ) {
+          task.completed = false
+          task.subtasks = task.subtasks.length
+            ? task.subtasks.map((subtask: Subtask) => ({
+                ...subtask,
+                completed: false,
+              }))
+            : []
+        }
+      }
       !equal(stateTasks, userTasks) && dispatch(tasks(userTasks as Task[]))
     } else {
       dispatch(tasks([]))
@@ -90,6 +107,7 @@ export const setTask = (task: Task) => {
     const tasksWithoutEndDates: Task[] = []
     const tasksWithEndDates: Task[] = []
     const completedTasks: Task[] = []
+    const dailyTasks: Task[] = []
 
     const indexOfTask = tasksArray.findIndex((t: Task) => t.id === task.id)
     const existTask = indexOfTask !== -1
@@ -105,21 +123,26 @@ export const setTask = (task: Task) => {
       const item = tasksCopy[i]
       if (item.completed) {
         completedTasks.push(item)
+        continue
+      }
+      if (item.daily) {
+        dailyTasks.push(item)
+        continue
+      }
+      if (item.end) {
+        tasksWithEndDates.push(item)
       } else {
-        if (item.end) {
-          tasksWithEndDates.push(item)
-        } else {
-          tasksWithoutEndDates.push(item)
-        }
+        tasksWithoutEndDates.push(item)
       }
     }
 
-    tasksWithoutEndDates.sort((a: Task, b: Task) => a.updatedAt - b.updatedAt)
-
+    tasksWithoutEndDates.sort((a: Task, b: Task) => b.updatedAt - a.updatedAt)
+    dailyTasks.sort((a: Task, b: Task) => b.updatedAt - a.updatedAt)
     sortDeadlines(tasksWithEndDates)
     sortDeadlines(completedTasks)
 
     const newArray = [
+      ...dailyTasks,
       ...tasksWithEndDates,
       ...tasksWithoutEndDates,
       ...completedTasks,
