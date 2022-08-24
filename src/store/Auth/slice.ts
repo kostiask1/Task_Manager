@@ -11,6 +11,9 @@ import { db } from "../../firebase/base"
 import { deleteImage, uploadDoc } from "../../firebase/firestore"
 import { loading, setError, setSuccess } from "../App/slice"
 import { AppDispatch } from "../store"
+import { tasks } from "../Task/slice"
+import { setCities } from "../Weather/slice"
+import { wishes } from "../Wish/slice"
 import { AuthState, SignInData, SignUpData, User } from "./types"
 
 const initialState: AuthState = {
@@ -118,6 +121,9 @@ export const signout = () => {
     try {
       await _auth.signOut()
       dispatch(signOut())
+      dispatch(tasks([]))
+      dispatch(setCities([]))
+      dispatch(wishes([]))
     } catch (err) {
       dispatch(setError("Error dispatching signout"))
     }
