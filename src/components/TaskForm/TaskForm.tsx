@@ -61,11 +61,11 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       if (!isEdit) {
         saveTask.id = new Date().getTime()
         saveTask.start = new Date().getTime()
+        saveTask.uid = user.id
       }
       if (saveTask.end === "dd-mm-yyyy") saveTask.end = ""
       saveTask.title = saveTask.title.trim()
       saveTask.description = saveTask.description.trim()
-      saveTask.uid = user.id
       await dispatch(setTask(saveTask))
       setModal && setModal(null)
       setLoadingSave(false)

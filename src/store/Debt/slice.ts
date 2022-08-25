@@ -5,6 +5,7 @@ import { equal } from "../../helpers"
 import { User } from "../Auth/types"
 import { AppDispatch, RootState } from "../store"
 import { Debt } from "./types"
+import { setSuccess } from "../App/slice"
 
 interface DebtsState {
   array: Debt[]
@@ -24,7 +25,7 @@ export const debtInitialState: Debt = {
   end: "",
   start: 0,
   updatedAt: 0,
-  currency: "UAH",
+  currency: "$",
   array: [],
 }
 
@@ -55,12 +56,51 @@ export const getDebts = () => {
     const docSnap = await getDoc(docRef)
     const { debts: userDebts } = (docSnap.data() || []) as { debts: Debt[] }
 
-    if (debts.length) {
+    if (userDebts.length) {
       const stateDebts = getState().debts.array
       !equal(stateDebts, userDebts) && dispatch(debts(userDebts as Debt[]))
     } else {
       dispatch(debts([]))
     }
+  }
+}
+
+export const setDebt = (debt: Debt) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    const debtsArray = getState().debts.array
+    const debtsCopy = [...debtsArray]
+    const unPaidDebts: Debt[] = []
+    const paidDebts: Debt[] = []
+
+    const indexOfDebt = debtsArray.findIndex((t: Debt) => t.id === debt.id)
+    const existDebt = indexOfDebt !== -1
+    debt.updatedAt = new Date().getTime()
+
+    if (!existDebt) {
+      debtsCopy.push(debt)
+    } else {
+      debtsCopy[indexOfDebt] = debt
+    }
+
+    for (let i = 0; i < debtsCopy.length; i++) {
+      const item = debtsCopy[i]
+      if (item.paid) {
+        paidDebts.push(item)
+      } else {
+        unPaidDebts.push(item)
+      }
+    }
+
+    unPaidDebts.sort((a: Debt, b: Debt) => a.updatedAt - b.updatedAt)
+
+    const newArray: Debt[] = [...unPaidDebts, ...paidDebts]
+
+    await setDoc(doc(db, "debts", debt.uid), {
+      debts: newArray as Debt[],
+    })
+
+    dispatch(debts(newArray))
+    dispatch(setSuccess("Debt saved!"))
   }
 }
 
@@ -74,5 +114,6 @@ export const deleteDebt = (debt: Debt) => {
     })
 
     dispatch(debts(tempArray))
+    dispatch(setSuccess("Debt deleted!"))
   }
 }
