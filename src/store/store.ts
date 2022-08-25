@@ -4,6 +4,7 @@ import appReducer from "./App/slice"
 import authReducer from "./Auth/slice"
 import tasksReducer from "./Task/slice"
 import citiesReducer from "./Weather/slice"
+import debtReducer from "./Debt/slice"
 import { weatherApi } from "./Weather/api"
 import wishesReducer from "./Wish/slice"
 
@@ -13,6 +14,7 @@ const reducer = combineReducers({
   tasks: tasksReducer,
   wishes: wishesReducer,
   cities: citiesReducer,
+  debts: debtReducer,
   weatherApi: weatherApi.reducer,
 })
 

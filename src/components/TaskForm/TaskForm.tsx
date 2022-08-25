@@ -236,7 +236,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               name="end"
               id="end"
               value={state.end}
-              onChange={(event) => state.daily && handleChange(event)}
+              onChange={(event) => !state.daily && handleChange(event)}
               disabled={state.daily}
             />
           </div>
