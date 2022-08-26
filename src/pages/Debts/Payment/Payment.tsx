@@ -58,8 +58,10 @@ const Payment: FC<PaymentProps> = ({ payment, data, editing, update }) => {
       </span>
       <Button
         className="is-danger is-small"
+        type="button"
         style={{ height: 16, padding: "0px 4px" }}
         onClick={removePayment}
+        onKeyDown={() => alert(1)}
         text="x"
       />
     </>

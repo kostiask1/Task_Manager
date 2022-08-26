@@ -13,6 +13,7 @@ import {
 import { Debt, Payment as IPayment } from "../../../store/Debt/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import Payment from "../Payment"
+import { setError } from "../../../store/App/slice"
 
 const initPayment: IPayment = {
   text: "",
@@ -54,6 +55,7 @@ const DebtForm = () => {
     }
     if (saveDebt.end === "dd-mm-yyyy") saveDebt.end = ""
     saveDebt.title = saveDebt.title.trim()
+    saveDebt.currency = saveDebt.currency.trim() || "$"
     await dispatch(setDebt(saveDebt))
     dispatch(editingDebt(debtInitialState))
     setSaving(false)
@@ -86,18 +88,35 @@ const DebtForm = () => {
 
   const addPayment = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
-    const newPayment: IPayment = {
-      text: payment.text,
-      paid: false,
-      value: payment.value,
-      id: new Date().getTime(),
+    if (payment.text.trim().length && payment.value != 0) {
+      const newPayment: IPayment = {
+        text: payment.text.trim(),
+        paid: false,
+        value: +payment.value,
+        id: new Date().getTime(),
+      }
+      setState((state: Debt) => ({
+        ...state,
+        array: [...state.array, newPayment],
+      }))
+      setPayment(initPayment)
+    } else {
+      dispatch(setError("Enter description and value fields first!"))
     }
-    setState((state: Debt) => ({
-      ...state,
-      array: [...state.array, newPayment],
-    }))
-    setPayment(initPayment)
   }
+
+  const paid = (state.array as IPayment[]).reduce(
+    (acc: number, curr: IPayment) => acc + (curr.paid ? curr.value : 0),
+    0
+  )
+  const left = (state.array as IPayment[]).reduce(
+    (acc: number, curr: IPayment) => acc + (!curr.paid ? curr.value : 0),
+    0
+  )
+  const total = (state.array as IPayment[]).reduce(
+    (acc: number, curr: IPayment) => acc + curr.value,
+    0
+  )
 
   return (
     <form className="card debt fadeIn" key={state.id} onSubmit={addDebtToUser}>
@@ -127,12 +146,30 @@ const DebtForm = () => {
       </header>
       <div className="card-content">
         <div className="content">
-          <Input
-            name="currency"
-            label="Currency"
-            value={state.currency}
-            onChange={handleChange}
-          />
+          <div className="columns">
+            <div className="column">
+              <Input
+                name="currency"
+                label="Currency"
+                value={state.currency}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="column">
+              <label htmlFor="end">Pay due</label>
+              <InputMask
+                className="input"
+                mask={formatChars}
+                maskPlaceholder="dd-mm-yyyy"
+                alwaysShowMask={true}
+                name="end"
+                id="end"
+                value={state.end}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
           <hr />
           <h3>Payments</h3>
           <ul>
@@ -151,65 +188,79 @@ const DebtForm = () => {
                 </li>
               ))}
           </ul>
-          <>
-            <Input
-              type="text"
-              step={1}
-              value={payment.text}
-              label="Description"
-              name="payment"
-              onChange={(e) =>
-                setPayment((state: IPayment) => ({
-                  ...state,
-                  text: e.target.value,
-                }))
-              }
-            />
-            <Input
-              type="number"
-              step={1}
-              value={payment.value}
-              label="Value"
-              name="payment"
-              onChange={(e) =>
-                setPayment((state: IPayment) => ({
-                  ...state,
-                  value: +e.target.value,
-                }))
-              }
-            />
-            <Button
-              className="button is-small is-primary"
-              onClick={addPayment}
-              text="Add payment"
-            />
-          </>
-          <hr />
-          <label htmlFor="end">Pay due</label>
-          <InputMask
-            className="input"
-            mask={formatChars}
-            maskPlaceholder="dd-mm-yyyy"
-            alwaysShowMask={true}
-            name="end"
-            id="end"
-            value={state.end}
-            onChange={handleChange}
-          />
+          <div className="columns is-align-items-flex-end">
+            <div className="column">
+              <Input
+                type="text"
+                step={1}
+                value={payment.text}
+                label="Description"
+                name="payment"
+                onChange={(e) =>
+                  setPayment((state: IPayment) => ({
+                    ...state,
+                    text: e.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div className="column">
+              <Input
+                type="number"
+                step={1}
+                value={payment.value || ""}
+                label="Value"
+                name="payment"
+                onChange={(e) =>
+                  setPayment((state: IPayment) => ({
+                    ...state,
+                    value: +e.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div className="column">
+              <Button
+                className="button  is-primary"
+                onClick={addPayment}
+                type="submit"
+                text="Add payment"
+              />
+            </div>
+          </div>
         </div>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Paid</th>
+              <th>Left</th>
+              <th>Total</th>
+              <th>Currency</th>
+            </tr>
+          </thead>
+          <tr>
+            <td> {paid}</td>
+            <td>{left}</td>
+            <td>{total}</td>
+            <td>{state.currency}</td>
+          </tr>
+        </table>
       </div>
+
       <footer className="card-footer p-3">
         <div className="buttons">
           {isEdit ? (
             <Button
               className="mx-2 card-footer-item is-success"
               text={saving ? "Updating..." : "Update"}
+              type="submit"
               disabled={saving || deleting || equal(state, debt)}
             />
           ) : (
             <Button
               className="mx-2 card-footer-item is-success"
               text={saving ? "Saving..." : "Save"}
+              type="submit"
               disabled={saving || deleting || equal(state, debtInitialState)}
             />
           )}

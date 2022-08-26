@@ -68,7 +68,10 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
         <ul>
           {!!debt.array.length &&
             debt.array.map((payment: IPayment) => (
-              <li key={JSON.stringify(payment)}>
+              <li
+                className="is-flex is-align-items-center"
+                key={JSON.stringify(payment)}
+              >
                 <Payment payment={payment} data={debt} editing={false} />
               </li>
             ))}
@@ -86,8 +89,15 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
         />
       </td>
       <td>
-        {paid} / {left} / {total} {debt.currency}
+        <table className="table" style={{ width: "100%" }}>
+          <tr>
+            <td>{paid}</td>
+            <td>{left}</td>
+            <td>{total}</td>
+          </tr>
+        </table>
       </td>
+      <td>{debt.currency}</td>
       <td>
         <div className="buttons">
           <Button

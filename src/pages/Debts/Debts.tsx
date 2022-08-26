@@ -54,10 +54,11 @@ const Debts = () => {
                 />
               </th>
               <th onClick={sort}>Title</th>
-              <th onClick={sort}>Due Date</th>
-              <th onClick={sort}>Debts</th>
+              <th onClick={(e) => sort(e, "end")}>Due Date</th>
+              <th onClick={(e) => sort(e, "array")}>Debts</th>
               <th onClick={sort}>Paid</th>
-              <th onClick={sort}>Paid / Left / Total</th>
+              <th onClick={(e) => sort(e, "array")}>Paid / Left / Total</th>
+              <th onClick={sort}>Currency</th>
               <th>Action</th>
             </tr>
           </thead>

@@ -73,12 +73,15 @@ export const tableActions = ({
   setSorting,
   initData,
 }: ITableActions) => {
-  const sort = (e: React.MouseEvent<HTMLElement>) => {
+  const sort = (e: React.MouseEvent<HTMLElement>, col?: string) => {
     const target = e.currentTarget as HTMLTableCellElement
     const innerText = target.innerHTML
-    const column = (
-      innerText.charAt(0).toLowerCase() + innerText.slice(1)
-    ).replaceAll(" ", "")
+    const column =
+      col ||
+      (innerText.charAt(0).toLowerCase() + innerText.slice(1)).replaceAll(
+        " ",
+        ""
+      )
 
     removeThHighlight()
 
