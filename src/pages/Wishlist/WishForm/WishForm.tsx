@@ -36,6 +36,11 @@ const WishForm = () => {
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
 
+  const handleCompleted = (event: React.MouseEvent) => {
+    event.preventDefault()
+    setState((state: IWish) => ({ ...state, completed: !state.completed }))
+  }
+
   const [categories, users_in_whitelist] = useMemo(() => {
     const categories: string[] = []
     const users_ids: string[] = []
@@ -150,6 +155,15 @@ const WishForm = () => {
             minLength={3}
             required
           />
+          {!!state.id && (
+            <Button
+              className={`complete-task-btn ${
+                state.completed ? "is-primary" : "is-danger"
+              }`}
+              onClick={handleCompleted}
+              text={`completed: ${state.completed ? "Yes" : "No"}`}
+            />
+          )}
         </div>
       </header>
       <div className="card-content">

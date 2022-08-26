@@ -168,3 +168,12 @@ table {
     }
   }
 }
+
+.card-header-title {
+  .field {
+    margin-bottom: 0;
+  }
+  .button:last-child {
+    margin-left: auto;
+  }
+}

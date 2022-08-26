@@ -51,6 +51,7 @@ const DebtForm = () => {
 
   const handlePaid = (event: React.MouseEvent) => {
     event.preventDefault()
+    setState((state: Debt) => ({ ...state, paid: !state.paid }))
   }
 
   const formatChars: Array<RegExp | string> = useMemo(
