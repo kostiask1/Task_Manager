@@ -118,18 +118,19 @@ const DebtForm = () => {
     }
   }
 
-  const paid = (state.array as IPayment[]).reduce(
-    (acc: number, curr: IPayment) => acc + (curr.paid ? curr.value : 0),
-    0
-  )
-  const left = (state.array as IPayment[]).reduce(
-    (acc: number, curr: IPayment) => acc + (!curr.paid ? curr.value : 0),
-    0
-  )
-  const total = (state.array as IPayment[]).reduce(
-    (acc: number, curr: IPayment) => acc + curr.value,
-    0
-  )
+  const [paid, left, total]: number[] = useMemo(() => {
+    let paid = 0
+    let total = 0
+    if (state.array.length) {
+      for (let i = 0; i < state.array.length; i++) {
+        const payment = state.array[i]
+        if (payment.paid) paid += payment.value
+        total += payment.value
+      }
+    }
+    const left = total - paid
+    return [paid, left, total]
+  }, [state.array])
 
   const [currencies, payments_descriptions] = useMemo(() => {
     const temp_currencies: any[] = []

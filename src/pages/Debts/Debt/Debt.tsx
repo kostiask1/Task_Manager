@@ -1,5 +1,5 @@
 import { Debt as IDebt, Payment as IPayment } from "../../../store/Debt/types"
-import { FC, useCallback, useState } from "react"
+import { FC, useCallback, useState, useMemo } from "react"
 import Button from "../../../components/UI/Button"
 import { editingDebt, setDebt, deleteDebt } from "../../../store/Debt/slice"
 import { useAppDispatch } from "../../../store/store"
@@ -51,18 +51,21 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
     },
     [debt]
   )
-  const paid = (debt.array as IPayment[]).reduce(
-    (acc: number, curr: IPayment) => acc + (curr.paid ? curr.value : 0),
-    0
-  )
-  const left = (debt.array as IPayment[]).reduce(
-    (acc: number, curr: IPayment) => acc + (!curr.paid ? curr.value : 0),
-    0
-  )
-  const total = (debt.array as IPayment[]).reduce(
-    (acc: number, curr: IPayment) => acc + curr.value,
-    0
-  )
+
+  const [paid, left, total]: number[] = useMemo(() => {
+    let paid = 0
+    let total = 0
+    if (debt.array.length) {
+      for (let i = 0; i < debt.array.length; i++) {
+        const payment = debt.array[i]
+        if (payment.paid) paid += payment.value
+        total += payment.value
+      }
+    }
+    const left = total - paid
+    return [paid, left, total]
+  }, [debt.array])
+
   return (
     <>
       <td>{index + 1}</td>
@@ -93,7 +96,7 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
         />
       </td>
       <td>
-        <table className="table" style={{ width: "100%" }}>
+        <table className="table">
           <tbody>
             <tr>
               <td>{paid}</td>

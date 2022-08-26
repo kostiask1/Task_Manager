@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import Button from "../../components/UI/Button"
 import { equal, tableActions } from "../../helpers"
 import { getDebts } from "../../store/Debt/slice"
@@ -33,6 +33,23 @@ const Debts = () => {
     setData(debts)
   }, [debts])
 
+  const [paid, left, total]: number[] = useMemo(() => {
+    let paid = 0
+    let total = 0
+    if (debts.length) {
+      for (let i = 0; i < debts.length; i++) {
+        const debt = debts[i]
+        for (let j = 0; j < debt.array.length; j++) {
+          const payment = debt.array[j]
+          if (payment.paid) paid += payment.value
+          total += payment.value
+        }
+      }
+    }
+    const left = total - paid
+    return [paid, left, total]
+  }, [debts])
+
   return (
     <div className="pb-6">
       <DebtForm key={JSON.stringify(debt)} />
@@ -58,16 +75,16 @@ const Debts = () => {
               <th onClick={(e) => sort(e, "array")}>Debts</th>
               <th onClick={sort}>Paid</th>
               <th onClick={(e) => sort(e, "array")}>
-                <table style={{width:"100%"}}>
+                <table>
                   <thead>
                     <tr>
                       <td>Paid</td>
                       <td>Left</td>
                       <td>Total</td>
                     </tr>
-                    </thead>
-                  </table>
-                </th>
+                  </thead>
+                </table>
+              </th>
               <th onClick={sort}>Currency</th>
               <th>Action</th>
             </tr>
@@ -85,6 +102,28 @@ const Debts = () => {
               </tr>
             )}
           </tbody>
+          <tfoot>
+            <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td>{paid}</td>
+                      <td>{left}</td>
+                      <td>{total}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </th>
+              <th></th>
+              <th></th>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>

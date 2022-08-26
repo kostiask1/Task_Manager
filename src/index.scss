@@ -125,6 +125,7 @@ img {
 
 /* your css code */
 table {
+  width: 100%;
   :is(th, td):first-child {
     position: sticky;
     left: 0;

@@ -63,7 +63,18 @@ const WishForm = () => {
         }
       }
     }
-    return [categories, users_ids]
+
+    const categories_Options: any = categories.map((category, index) => (
+      <option value={category} key={category + index}></option>
+    ))
+
+    const users_ids_Options: any = users_ids.map(
+      (id: string, index: number) => (
+        <option key={id + index} value={id}></option>
+      )
+    )
+
+    return [categories_Options, users_ids_Options]
   }, [wishes, state.whitelist])
 
   const clear = (e?: React.MouseEvent<HTMLButtonElement>) => {
@@ -142,20 +153,6 @@ const WishForm = () => {
   const handleWhitelist = (e: React.ChangeEvent<HTMLInputElement>) =>
     e.target.value.trim().length <= 28 && setUser(e.target.value.trim())
 
-  const categoriesList = useMemo(
-    () =>
-      categories.map((category, index) => (
-        <option value={category} key={category + index}></option>
-      )),
-    [wishes, state.whitelist]
-  )
-  const users_ids = useMemo(
-    () =>
-      users_in_whitelist.map((id, index) => (
-        <option key={id + index} value={id}></option>
-      )),
-    [wishes, state.whitelist]
-  )
   return (
     <form className="card wish fadeIn" key={state.id} onSubmit={addWishToUser}>
       <header className="card-header">
@@ -199,7 +196,7 @@ const WishForm = () => {
               onChange={handleChange}
               maxLength={30}
             />
-            <datalist id="categories">{categoriesList}</datalist>
+            <datalist id="categories">{categories}</datalist>
           </div>
           <div className="column mb-0">
             <Input
@@ -271,9 +268,9 @@ const WishForm = () => {
           value={userW}
           onChange={handleWhitelist}
           disabled={state.open}
-          list="users_ids"
+          list="users_in_whitelist"
         />
-        <datalist id="users_ids">{users_ids}</datalist>
+        <datalist id="users_in_whitelist">{users_in_whitelist}</datalist>
         <Button
           onClick={addUserToWhitelist}
           className={`add-user ${state.open ? "" : "is-info"}`}
