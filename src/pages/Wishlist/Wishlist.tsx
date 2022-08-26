@@ -9,7 +9,6 @@ import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { getWishes } from "../../store/Wish/slice"
 import { Wish as IWish } from "../../store/Wish/types"
 import WishForm from "./WishForm/WishForm"
-import "./Wishlist.scss"
 const Wish = lazy(() => import("./Wish"))
 
 const Wishlist = () => {

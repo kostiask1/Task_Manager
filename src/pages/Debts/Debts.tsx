@@ -10,6 +10,9 @@ import DebtForm from "./DebtForm/DebtForm"
 const Debts = () => {
   const dispatch = useAppDispatch()
   const debts = useAppSelector((state: RootState) => state.debts.array)
+  const debt: IDebt | null = useAppSelector(
+    (state: RootState) => state.debts.editingDebt
+  )
   const [data, setData] = useState<IDebt[]>(debts)
   const [sorting, setSorting] = useState("")
   const [loading, setLoading] = useState(true)
@@ -32,7 +35,7 @@ const Debts = () => {
 
   return (
     <>
-      <DebtForm />
+      <DebtForm key={JSON.stringify(debt)} />
       <hr />
       <div className="table-container">
         <table className="table table-debts is-striped is-bordered is-hoverable is-fullwidth is-narrow">

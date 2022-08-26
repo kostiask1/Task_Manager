@@ -19,7 +19,7 @@ const DebtForm = () => {
     (state: RootState) => state.debts.editingDebt
   )
   const user: User = useAppSelector((state: RootState) => state.auth.user)
-  const [state, setState] = useState(debtInitialState)
+  const [state, setState] = useState<Debt>(debt || debtInitialState)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const isEdit = state.id !== 0

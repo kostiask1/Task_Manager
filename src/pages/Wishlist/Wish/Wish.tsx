@@ -5,7 +5,6 @@ import { useAppDispatch } from "../../../store/store"
 import { deleteWish, editingWish, setWish } from "../../../store/Wish/slice"
 import { Wish as IWish } from "../../../store/Wish/types"
 import Whitelist from "../Whitelist"
-import "./Wish.scss"
 
 interface WishInterface {
   wish: IWish
