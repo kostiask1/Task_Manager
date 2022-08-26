@@ -120,7 +120,7 @@ const DebtForm = () => {
     (acc: number, curr: IPayment) => acc + curr.value,
     0
   )
-  console.log("debts:", debts)
+
   return (
     <form className="card debt fadeIn" key={state.id} onSubmit={addDebtToUser}>
       <header className="card-header">

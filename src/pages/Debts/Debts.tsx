@@ -57,7 +57,17 @@ const Debts = () => {
               <th onClick={(e) => sort(e, "end")}>Due Date</th>
               <th onClick={(e) => sort(e, "array")}>Debts</th>
               <th onClick={sort}>Paid</th>
-              <th onClick={(e) => sort(e, "array")}>Paid / Left / Total</th>
+              <th onClick={(e) => sort(e, "array")}>
+                <table style={{width:"100%"}}>
+                  <thead>
+                    <tr>
+                      <td>Paid</td>
+                      <td>Left</td>
+                      <td>Total</td>
+                    </tr>
+                    </thead>
+                  </table>
+                </th>
               <th onClick={sort}>Currency</th>
               <th>Action</th>
             </tr>
