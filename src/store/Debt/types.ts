@@ -1,4 +1,4 @@
-export interface Payments {
+export interface Payment {
   completed: boolean
   text: string
   value: number
@@ -13,5 +13,5 @@ export interface Debt {
   start: number
   updatedAt: number
   currency: string
-  array: Payments[] | []
+  array: Payment[] | []
 }

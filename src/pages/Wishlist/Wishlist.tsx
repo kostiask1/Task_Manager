@@ -102,7 +102,11 @@ const Wishlist = () => {
               {!!data?.length ? (
                 data.map((wish: IWish, index) => (
                   <tr key={wish.id}>
-                    <Wish wish={wish} editable={!foreignUser} index={index} />
+                    <Wish
+                      wish={wish}
+                      editable={!foreignUser}
+                      index={wishes.indexOf(wish)}
+                    />
                   </tr>
                 ))
               ) : (

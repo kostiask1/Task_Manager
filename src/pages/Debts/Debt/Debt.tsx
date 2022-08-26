@@ -1,4 +1,4 @@
-import { Debt as IDebt } from "../../../store/Debt/types"
+import { Debt as IDebt, Payment } from "../../../store/Debt/types"
 import { FC, useCallback, useState } from "react"
 import Button from "../../../components/UI/Button"
 import { editingDebt, setDebt, deleteDebt } from "../../../store/Debt/slice"
@@ -64,6 +64,13 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
           }`}
           disabled={loading || deleting}
         />
+      </td>
+      <td>
+        {!!debt.array.length &&
+          (debt.array as Payment[]).reduce(
+            (acc: number, curr: Payment) => acc + curr.value,
+            0
+          )}
       </td>
       <td>
         <div className="buttons">

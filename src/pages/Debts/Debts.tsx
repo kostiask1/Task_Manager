@@ -57,6 +57,7 @@ const Debts = () => {
               <th onClick={sort}>Due Date</th>
               <th onClick={sort}>Debts</th>
               <th onClick={sort}>Paid</th>
+              <th onClick={sort}>Total</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -64,7 +65,7 @@ const Debts = () => {
             {!!data?.length ? (
               data.map((debt: IDebt, index) => (
                 <tr key={debt.id}>
-                  <Debt debt={debt} index={index} />
+                  <Debt debt={debt} index={debts.indexOf(debt)} />
                 </tr>
               ))
             ) : (
