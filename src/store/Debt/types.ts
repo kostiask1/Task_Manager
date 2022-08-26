@@ -1,6 +1,7 @@
 export interface Payment {
-  completed: boolean
+  paid: boolean
   text: string
+  id: number
   value: number
 }
 

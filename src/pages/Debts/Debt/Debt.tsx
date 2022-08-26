@@ -1,9 +1,10 @@
-import { Debt as IDebt, Payment } from "../../../store/Debt/types"
+import { Debt as IDebt, Payment as IPayment } from "../../../store/Debt/types"
 import { FC, useCallback, useState } from "react"
 import Button from "../../../components/UI/Button"
 import { editingDebt, setDebt, deleteDebt } from "../../../store/Debt/slice"
 import { useAppDispatch } from "../../../store/store"
 import { setSuccess, setError } from "../../../store/App/slice"
+import Payment from "../Payment/Payment"
 
 interface DebtProps {
   debt: IDebt
@@ -48,12 +49,36 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
     },
     [debt]
   )
+  const paid = (debt.array as IPayment[]).reduce(
+    (acc: number, curr: IPayment) => acc + (curr.paid ? curr.value : 0),
+    0
+  )
+  console.log("paid:", paid)
+  const left = (debt.array as IPayment[]).reduce(
+    (acc: number, curr: IPayment) => acc + (!curr.paid ? curr.value : 0),
+    0
+  )
+  console.log("left:", left)
+  const total = (debt.array as IPayment[]).reduce(
+    (acc: number, curr: IPayment) => acc + curr.value,
+    0
+  )
+  console.log("total:", total)
   return (
     <>
       <td>{index + 1}</td>
       <td>{debt.title}</td>
       <td>{debt.end}</td>
-      <td></td>
+      <td>
+        <ul>
+          {!!debt.array.length &&
+            debt.array.map((payment: IPayment) => (
+              <li key={JSON.stringify(payment)}>
+                <Payment payment={payment} data={debt} editing={false} />
+              </li>
+            ))}
+        </ul>
+      </td>
       <td>
         <Button
           className={`is-small ${debt.paid ? "is-primary" : "is-danger"}`}
@@ -66,11 +91,7 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
         />
       </td>
       <td>
-        {!!debt.array.length &&
-          (debt.array as Payment[]).reduce(
-            (acc: number, curr: Payment) => acc + curr.value,
-            0
-          )}
+        {paid} / {left} / {total} {debt.currency}
       </td>
       <td>
         <div className="buttons">

@@ -10,8 +10,16 @@ import {
   editingDebt,
   setDebt,
 } from "../../../store/Debt/slice"
-import { Debt } from "../../../store/Debt/types"
+import { Debt, Payment as IPayment } from "../../../store/Debt/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
+import Payment from "../Payment"
+
+const initPayment: IPayment = {
+  text: "",
+  paid: false,
+  value: 0,
+  id: new Date().getTime(),
+}
 
 const DebtForm = () => {
   const dispatch = useAppDispatch()
@@ -22,6 +30,7 @@ const DebtForm = () => {
   const [state, setState] = useState<Debt>(debt || debtInitialState)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [payment, setPayment] = useState(initPayment)
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
 
@@ -46,6 +55,7 @@ const DebtForm = () => {
     if (saveDebt.end === "dd-mm-yyyy") saveDebt.end = ""
     saveDebt.title = saveDebt.title.trim()
     await dispatch(setDebt(saveDebt))
+    dispatch(editingDebt(debtInitialState))
     setSaving(false)
   }
 
@@ -72,6 +82,21 @@ const DebtForm = () => {
     event.preventDefault()
     setState(debtInitialState)
     dispatch(editingDebt(null))
+  }
+
+  const addPayment = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    const newPayment: IPayment = {
+      text: payment.text,
+      paid: false,
+      value: payment.value,
+      id: new Date().getTime(),
+    }
+    setState((state: Debt) => ({
+      ...state,
+      array: [...state.array, newPayment],
+    }))
+    setPayment(initPayment)
   }
 
   return (
@@ -108,6 +133,58 @@ const DebtForm = () => {
             value={state.currency}
             onChange={handleChange}
           />
+          <hr />
+          <h3>Payments</h3>
+          <ul>
+            {!!state.array.length &&
+              state.array.map((payment: IPayment) => (
+                <li
+                  className="is-flex is-align-items-center"
+                  key={JSON.stringify(payment)}
+                >
+                  <Payment
+                    data={state}
+                    payment={payment}
+                    update={setState}
+                    editing={true}
+                  />
+                </li>
+              ))}
+          </ul>
+          <>
+            <Input
+              type="text"
+              step={1}
+              value={payment.text}
+              label="Description"
+              name="payment"
+              onChange={(e) =>
+                setPayment((state: IPayment) => ({
+                  ...state,
+                  text: e.target.value,
+                }))
+              }
+            />
+            <Input
+              type="number"
+              step={1}
+              value={payment.value}
+              label="Value"
+              name="payment"
+              onChange={(e) =>
+                setPayment((state: IPayment) => ({
+                  ...state,
+                  value: +e.target.value,
+                }))
+              }
+            />
+            <Button
+              className="button is-small is-primary"
+              onClick={addPayment}
+              text="Add payment"
+            />
+          </>
+          <hr />
           <label htmlFor="end">Pay due</label>
           <InputMask
             className="input"

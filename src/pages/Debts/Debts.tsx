@@ -34,7 +34,7 @@ const Debts = () => {
   }, [debts])
 
   return (
-    <>
+    <div className="pb-6">
       <DebtForm key={JSON.stringify(debt)} />
       <hr />
       <div className="table-container">
@@ -57,13 +57,13 @@ const Debts = () => {
               <th onClick={sort}>Due Date</th>
               <th onClick={sort}>Debts</th>
               <th onClick={sort}>Paid</th>
-              <th onClick={sort}>Total</th>
+              <th onClick={sort}>Paid / Left / Total</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {!!data?.length ? (
-              data.map((debt: IDebt, index) => (
+              data.map((debt: IDebt) => (
                 <tr key={debt.id}>
                   <Debt debt={debt} index={debts.indexOf(debt)} />
                 </tr>
@@ -76,7 +76,7 @@ const Debts = () => {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   )
 }
 
