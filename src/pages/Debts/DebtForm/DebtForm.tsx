@@ -66,7 +66,17 @@ const DebtForm = () => {
 
   const handlePaid = (event: React.MouseEvent) => {
     event.preventDefault()
-    setState((state: Debt) => ({ ...state, paid: !state.paid }))
+    const saveDebt: Debt = { ...state }
+    const paid = !saveDebt.paid
+    saveDebt.paid = paid
+    if (paid) {
+      saveDebt.array =
+        saveDebt.array.map((payment) => ({
+          ...payment,
+          paid,
+        })) || []
+    }
+    setState(saveDebt)
   }
 
   const formatChars: Array<RegExp | string> = useMemo(
