@@ -90,11 +90,13 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
       </td>
       <td>
         <table className="table" style={{ width: "100%" }}>
-          <tr>
-            <td>{paid}</td>
-            <td>{left}</td>
-            <td>{total}</td>
-          </tr>
+          <tbody>
+            <tr>
+              <td>{paid}</td>
+              <td>{left}</td>
+              <td>{total}</td>
+            </tr>
+          </tbody>
         </table>
       </td>
       <td>{debt.currency}</td>

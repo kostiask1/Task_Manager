@@ -238,12 +238,14 @@ const DebtForm = () => {
               <th>Currency</th>
             </tr>
           </thead>
-          <tr>
-            <td> {paid}</td>
-            <td>{left}</td>
-            <td>{total}</td>
-            <td>{state.currency}</td>
-          </tr>
+          <tbody>
+            <tr>
+              <td> {paid}</td>
+              <td>{left}</td>
+              <td>{total}</td>
+              <td>{state.currency}</td>
+            </tr>
+          </tbody>
         </table>
       </div>
 
