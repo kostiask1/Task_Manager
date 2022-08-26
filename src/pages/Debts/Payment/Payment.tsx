@@ -32,8 +32,8 @@ const Payment: FC<PaymentProps> = ({ payment, data, editing, update }) => {
     const copy = JSON.parse(JSON.stringify(data.array))
     const index = copy.findIndex((pay: IPayment) => pay.id === payment.id)
     copy[index].paid = !copy[index].paid
-    const updatedDebt = { ...data, array: copy }
-    console.log("editing:", editing)
+    const paid = copy.every((payment: IPayment) => payment.paid)
+    const updatedDebt = { ...data, paid, array: copy }
     if (!editing) {
       await dispatch(setDebt(updatedDebt))
     } else {

@@ -21,8 +21,6 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
     window.scrollTo({ top: 0, behavior: "smooth" })
     dispatch(editingDebt(debt))
   }
-  console.log("index:", index)
-  console.log("debt:", debt)
 
   const complete = useCallback(async (debt: IDebt, paid: boolean) => {
     if (debt) {
@@ -53,17 +51,14 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
     (acc: number, curr: IPayment) => acc + (curr.paid ? curr.value : 0),
     0
   )
-  console.log("paid:", paid)
   const left = (debt.array as IPayment[]).reduce(
     (acc: number, curr: IPayment) => acc + (!curr.paid ? curr.value : 0),
     0
   )
-  console.log("left:", left)
   const total = (debt.array as IPayment[]).reduce(
     (acc: number, curr: IPayment) => acc + curr.value,
     0
   )
-  console.log("total:", total)
   return (
     <>
       <td>{index + 1}</td>
