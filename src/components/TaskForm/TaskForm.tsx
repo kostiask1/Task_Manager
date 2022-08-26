@@ -148,6 +148,19 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     }))
   }
 
+  const dates = useMemo(
+    () =>
+      Array.from(Array(8)).map((_, index) => (
+        <option
+          value={convertDateToString(
+            new Date(new Date().getTime() + 86400000 * +index)
+          )}
+          key={index}
+        ></option>
+      )),
+    []
+  )
+
   return (
     <>
       <form
@@ -242,16 +255,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               autoComplete="off"
               list="dates"
             />
-            <datalist id="dates">
-              {Array.from(Array(8)).map((_, index) => (
-                <option
-                  value={convertDateToString(
-                    new Date(new Date().getTime() + 86400000 * +index)
-                  )}
-                  key={index}
-                ></option>
-              ))}
-            </datalist>
+            <datalist id="dates">{dates}</datalist>
           </div>
           <input
             type="checkbox"

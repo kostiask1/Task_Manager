@@ -141,6 +141,21 @@ const WishForm = () => {
   )
   const handleWhitelist = (e: React.ChangeEvent<HTMLInputElement>) =>
     e.target.value.trim().length <= 28 && setUser(e.target.value.trim())
+
+  const categoriesList = useMemo(
+    () =>
+      categories.map((category, index) => (
+        <option value={category} key={category + index}></option>
+      )),
+    [wishes, state.whitelist]
+  )
+  const users_ids = useMemo(
+    () =>
+      users_in_whitelist.map((id, index) => (
+        <option key={id + index} value={id}></option>
+      )),
+    [wishes, state.whitelist]
+  )
   return (
     <form className="card wish fadeIn" key={state.id} onSubmit={addWishToUser}>
       <header className="card-header">
@@ -184,12 +199,7 @@ const WishForm = () => {
               onChange={handleChange}
               maxLength={30}
             />
-            <datalist id="categories">
-              {!!categories.length &&
-                categories.map((category) => (
-                  <option value={category} key={category}></option>
-                ))}
-            </datalist>
+            <datalist id="categories">{categoriesList}</datalist>
           </div>
           <div className="column mb-0">
             <Input
@@ -263,12 +273,7 @@ const WishForm = () => {
           disabled={state.open}
           list="users_ids"
         />
-        <datalist id="users_ids">
-          {!!users_in_whitelist.length &&
-            users_in_whitelist.map((id) => (
-              <option key={id} value={id}></option>
-            ))}
-        </datalist>
+        <datalist id="users_ids">{users_ids}</datalist>
         <Button
           onClick={addUserToWhitelist}
           className={`add-user ${state.open ? "" : "is-info"}`}

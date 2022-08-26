@@ -121,6 +121,33 @@ const DebtForm = () => {
     0
   )
 
+  const currencies = useMemo(() => {
+    const array = [...new Set(debts.map((debt: Debt) => debt.currency))]
+    return array.map((item) => <option value={item} key={item}></option>)
+  }, [debts])
+
+  const dates = useMemo(
+    () =>
+      Array.from(Array(8)).map((_, index) => (
+        <option
+          value={convertDateToString(
+            new Date(new Date().getTime() + 86400000 * +index)
+          )}
+          key={index}
+        ></option>
+      )),
+    []
+  )
+
+  const payments_descriptions = useMemo(() => {
+    const array = [
+      ...new Set(
+        ...debts.map((debt: Debt) => debt.array.map((payment) => payment.text))
+      ),
+    ]
+    return array.map((item) => <option value={item} key={item} />)
+  }, [debts])
+
   return (
     <form className="card debt fadeIn" key={state.id} onSubmit={addDebtToUser}>
       <header className="card-header">
@@ -159,12 +186,7 @@ const DebtForm = () => {
                 onChange={handleChange}
                 required
               />
-              <datalist id="currencies">
-                {!!debts.length &&
-                  debts.map((debt: Debt) => (
-                    <option value={debt.currency} key={debt.currency}></option>
-                  ))}
-              </datalist>
+              <datalist id="currencies">{currencies}</datalist>
             </div>
             <div className="column">
               <label htmlFor="end">Pay due</label>
@@ -181,16 +203,7 @@ const DebtForm = () => {
                 autoComplete="off"
                 list="dates"
               />
-              <datalist id="dates">
-                {Array.from(Array(8)).map((_, index) => (
-                  <option
-                    value={convertDateToString(
-                      new Date(new Date().getTime() + 86400000 * +index)
-                    )}
-                    key={index}
-                  ></option>
-                ))}
-              </datalist>
+              <datalist id="dates">{dates}</datalist>
             </div>
           </div>
           <hr />
@@ -213,12 +226,16 @@ const DebtForm = () => {
           </ul>
           <div className="columns is-align-items-flex-end">
             <div className="column">
+              <datalist id="payments_descriptions">
+                {payments_descriptions}
+              </datalist>
               <Input
                 type="text"
                 step={1}
                 value={payment.text}
                 label="Description"
                 name="payment"
+                list="payments_descriptions"
                 onChange={(e) =>
                   setPayment((state: IPayment) => ({
                     ...state,
