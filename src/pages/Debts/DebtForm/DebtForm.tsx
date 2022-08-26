@@ -2,7 +2,7 @@ import { useMemo, useState } from "react"
 import InputMask from "react-input-mask"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
-import { dateFormat, equal } from "../../../helpers"
+import { dateFormat, equal, convertDateToString } from "../../../helpers"
 import { User } from "../../../store/Auth/types"
 import {
   debtInitialState,
@@ -24,6 +24,9 @@ const initPayment: IPayment = {
 
 const DebtForm = () => {
   const dispatch = useAppDispatch()
+  const debts: Debt[] | [] = useAppSelector(
+    (state: RootState) => state.debts.array
+  )
   const debt: Debt | null = useAppSelector(
     (state: RootState) => state.debts.editingDebt
   )
@@ -117,7 +120,7 @@ const DebtForm = () => {
     (acc: number, curr: IPayment) => acc + curr.value,
     0
   )
-
+  console.log("debts:", debts)
   return (
     <form className="card debt fadeIn" key={state.id} onSubmit={addDebtToUser}>
       <header className="card-header">
@@ -151,23 +154,43 @@ const DebtForm = () => {
               <Input
                 name="currency"
                 label="Currency"
+                list="currencies"
                 value={state.currency}
                 onChange={handleChange}
                 required
               />
+              <datalist id="currencies">
+                {!!debts.length &&
+                  debts.map((debt: Debt) => (
+                    <option value={debt.currency} key={debt.currency}></option>
+                  ))}
+              </datalist>
             </div>
             <div className="column">
               <label htmlFor="end">Pay due</label>
               <InputMask
                 className="input"
                 mask={formatChars}
-                maskPlaceholder="dd-mm-yyyy"
+                maskPlaceholder=""
+                placeholder="dd-mm-yyyy"
                 alwaysShowMask={true}
                 name="end"
                 id="end"
                 value={state.end}
                 onChange={handleChange}
+                autoComplete="off"
+                list="dates"
               />
+              <datalist id="dates">
+                {Array.from(Array(8)).map((_, index) => (
+                  <option
+                    value={convertDateToString(
+                      new Date(new Date().getTime() + 86400000 * +index)
+                    )}
+                    key={index}
+                  ></option>
+                ))}
+              </datalist>
             </div>
           </div>
           <hr />

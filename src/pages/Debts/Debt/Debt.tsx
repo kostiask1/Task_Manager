@@ -27,6 +27,10 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
       setLoading(true)
       const saveDebt: IDebt = { ...debt }
       saveDebt.paid = paid
+      if (paid) {
+        saveDebt.array =
+          saveDebt.array.map((payment) => ({ ...payment, paid })) || []
+      }
       await dispatch(setDebt(saveDebt))
       setLoading(false)
       if (paid) {

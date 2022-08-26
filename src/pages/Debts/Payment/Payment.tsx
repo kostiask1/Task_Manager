@@ -49,13 +49,17 @@ const Payment: FC<PaymentProps> = ({ payment, data, editing, update }) => {
         onChange={toggleChecked}
         checked={payment.paid}
       />
-      <label className="mx-2" htmlFor={payment.id.toString()}>
+      <label
+        style={{ textDecoration: payment.paid ? "line-through" : "unset" }}
+        className="ml-2"
+        htmlFor={payment.id.toString()}
+      >
         {payment.text}
+        <span className="mx-2">
+          {payment.value}
+          {data.currency}
+        </span>
       </label>
-      <span className="mr-2">
-        {payment.value}
-        {data.currency}
-      </span>
       <Button
         className="is-danger is-small"
         type="button"

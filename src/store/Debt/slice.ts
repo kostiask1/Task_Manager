@@ -25,7 +25,7 @@ export const debtInitialState: Debt = {
   end: "",
   start: 0,
   updatedAt: 0,
-  currency: "$",
+  currency: "",
   array: [],
 }
 
