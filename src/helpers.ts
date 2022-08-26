@@ -48,3 +48,66 @@ export const convertDateToString = (date: Date): string => {
   const year = date.getUTCFullYear()
   return `${day}-${month}-${year}`
 }
+
+function isNumeric(value: any) {
+  return /^-?\d+$/.test(value)
+}
+
+const removeThHighlight = () => {
+  document.querySelectorAll("th").forEach((th) => {
+    th.style.backgroundColor = ""
+  })
+}
+interface ITableActions {
+  data: any[]
+  setData: Function
+  sorting: string
+  setSorting: Function
+  initData: any[]
+}
+
+export const tableActions = ({
+  data,
+  setData,
+  sorting,
+  setSorting,
+  initData,
+}: ITableActions) => {
+  const sort = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.currentTarget as HTMLTableCellElement
+    const innerText = target.innerHTML
+    removeThHighlight()
+    target.style.backgroundColor = "lightblue"
+    const column = (
+      innerText.charAt(0).toLowerCase() + innerText.slice(1)
+    ).replaceAll(" ", "")
+    const copy = [...data]
+    const modifier = sorting === column ? -1 : 1
+    copy.sort((a, b) => {
+      if (typeof a[column] === "string" && !isNumeric(a[column])) {
+        return (
+          (a[column] as string).localeCompare(b[column] as string) * modifier
+        )
+      } else if (isNumeric(a[column])) {
+        return (+a[column] - +b[column]) * modifier
+      } else if (typeof a[column] == "object" || typeof b[column] == "object") {
+        const aсol: any = a[column] || []
+        const bсol: any = b[column] || []
+        return (aсol?.length - bсol?.length) * modifier
+      } else {
+        if (a[column] < b[column]) return 1 * modifier
+        if (a[column] > b[column]) return -1 * modifier
+        return 0
+      }
+    })
+    setSorting(sorting === column ? "" : column)
+    setData(copy)
+  }
+  const reset = () => {
+    removeThHighlight()
+    setSorting("")
+    setData(initData)
+  }
+
+  return [sort, reset]
+}

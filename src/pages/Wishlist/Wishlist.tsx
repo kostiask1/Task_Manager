@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Button from "../../components/UI/Button"
 import Loader from "../../components/UI/Loader/Loader"
-import { equal } from "../../helpers"
+import { equal, tableActions } from "../../helpers"
 import { setError, setSuccess } from "../../store/App/slice"
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
@@ -11,12 +11,6 @@ import { Wish as IWish } from "../../store/Wish/types"
 import WishForm from "./WishForm/WishForm"
 import "./Wishlist.scss"
 const Wish = lazy(() => import("./Wish"))
-
-type Column = keyof IWish
-
-function isNumeric(value: any) {
-  return /^-?\d+$/.test(value)
-}
 
 const Wishlist = () => {
   const dispatch = useAppDispatch()
@@ -31,6 +25,13 @@ const Wishlist = () => {
   const [data, setData] = useState<IWish[]>(wishes)
   const [loading, setLoading] = useState(true)
   const [sorting, setSorting] = useState("")
+  const [sort, reset] = tableActions({
+    data,
+    setData,
+    sorting,
+    setSorting,
+    initData: wishes,
+  })
 
   const foreignUser = uid !== undefined && user.id !== uid
 
@@ -53,55 +54,6 @@ const Wishlist = () => {
         () => dispatch(setError("Something went wrong"))
       )
   }, [user.id])
-
-  const removeThHighlight = useCallback(() => {
-    document.querySelectorAll("th").forEach((th) => {
-      th.style.backgroundColor = ""
-    })
-  }, [])
-
-  const sortData = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
-      const target = e.currentTarget as HTMLTableCellElement
-      const innerText = target.innerHTML
-      removeThHighlight()
-      target.style.backgroundColor = "lightblue"
-      const column = (
-        innerText.charAt(0).toLowerCase() + innerText.slice(1)
-      ).replaceAll(" ", "") as Column
-      const copy: IWish[] = [...data]
-      const modifier = sorting === column ? -1 : 1
-      copy.sort((a, b) => {
-        if (typeof a[column] === "string" && !isNumeric(a[column])) {
-          return (
-            (a[column] as string).localeCompare(b[column] as string) * modifier
-          )
-        } else if (isNumeric(a[column])) {
-          return (+a[column] - +b[column]) * modifier
-        } else if (
-          typeof a[column] == "object" ||
-          typeof b[column] == "object"
-        ) {
-          const aсol: any = a[column] || []
-          const bсol: any = b[column] || []
-          return (aсol?.length - bсol?.length) * modifier
-        } else {
-          if (a[column] < b[column]) return 1 * modifier
-          if (a[column] > b[column]) return -1 * modifier
-          return 0
-        }
-      })
-      setSorting(sorting === column ? "" : column)
-      setData(copy)
-    },
-    [data]
-  )
-
-  const reset = useCallback(() => {
-    removeThHighlight()
-    setSorting("")
-    setData(wishes)
-  }, [wishes])
 
   return (
     <div className="section is-medium pt-2 pb-6">
@@ -132,16 +84,16 @@ const Wishlist = () => {
                     disabled={equal(wishes, data) && !sorting}
                   />
                 </th>
-                <th onClick={sortData}>Title</th>
-                <th onClick={sortData}>Price</th>
-                <th onClick={sortData}>Description</th>
-                <th onClick={sortData}>Category</th>
-                <th onClick={sortData}>Url</th>
-                <th onClick={sortData}>Completed</th>
+                <th onClick={sort}>Title</th>
+                <th onClick={sort}>Price</th>
+                <th onClick={sort}>Description</th>
+                <th onClick={sort}>Category</th>
+                <th onClick={sort}>Url</th>
+                <th onClick={sort}>Completed</th>
                 {!foreignUser && (
                   <>
-                    <th onClick={sortData}>Open</th>
-                    <th onClick={sortData}>Whitelist</th>
+                    <th onClick={sort}>Open</th>
+                    <th onClick={sort}>Whitelist</th>
                     <th>Action</th>
                   </>
                 )}
