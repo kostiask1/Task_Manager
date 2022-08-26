@@ -1,6 +1,6 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react"
 import InputMask from "react-input-mask"
-import { convertDateToString, dateFormat, equal } from "../../helpers"
+import { dateFormat, datesList, equal } from "../../helpers"
 import { setSuccess } from "../../store/App/slice"
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
@@ -148,19 +148,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     }))
   }
 
-  const dates = useMemo(
-    () =>
-      Array.from(Array(8)).map((_, index) => (
-        <option
-          value={convertDateToString(
-            new Date(new Date().getTime() + 86400000 * +index)
-          )}
-          key={index}
-        ></option>
-      )),
-    []
-  )
-
   return (
     <>
       <form
@@ -255,7 +242,11 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               autoComplete="off"
               list="dates"
             />
-            <datalist id="dates">{dates}</datalist>
+            <datalist id="dates">
+              {datesList.map((value) => (
+                <option value={value} key={value}></option>
+              ))}
+            </datalist>
           </div>
           <input
             type="checkbox"

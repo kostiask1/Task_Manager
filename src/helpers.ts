@@ -121,3 +121,7 @@ export const tableActions = ({
 
   return [sort, reset]
 }
+
+export const datesList = Array.from(Array(8)).map((_, index) =>
+  convertDateToString(new Date(new Date().getTime() + 86400000 * +index))
+)

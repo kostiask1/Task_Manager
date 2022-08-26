@@ -2,7 +2,8 @@ import { useMemo, useState } from "react"
 import InputMask from "react-input-mask"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
-import { dateFormat, equal, convertDateToString } from "../../../helpers"
+import { dateFormat, datesList, equal } from "../../../helpers"
+import { setError } from "../../../store/App/slice"
 import { User } from "../../../store/Auth/types"
 import {
   debtInitialState,
@@ -13,7 +14,6 @@ import {
 import { Debt, Payment as IPayment } from "../../../store/Debt/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import Payment from "../Payment"
-import { setError } from "../../../store/App/slice"
 
 const initPayment: IPayment = {
   text: "",
@@ -121,31 +121,31 @@ const DebtForm = () => {
     0
   )
 
-  const currencies = useMemo(() => {
-    const array = [...new Set(debts.map((debt: Debt) => debt.currency))]
-    return array.map((item) => <option value={item} key={item}></option>)
-  }, [debts])
-
-  const dates = useMemo(
-    () =>
-      Array.from(Array(8)).map((_, index) => (
-        <option
-          value={convertDateToString(
-            new Date(new Date().getTime() + 86400000 * +index)
-          )}
-          key={index}
-        ></option>
-      )),
-    []
-  )
-
-  const payments_descriptions = useMemo(() => {
-    const array = [
-      ...new Set(
-        ...debts.map((debt: Debt) => debt.array.map((payment) => payment.text))
-      ),
-    ]
-    return array.map((item) => <option value={item} key={item} />)
+  const [currencies, payments_descriptions] = useMemo(() => {
+    const temp_currencies: any[] = []
+    const temp_descriptions: any[] = []
+    if (debts.length) {
+      for (let i = 0; i < debts.length; i++) {
+        const debt: Debt = debts[i]
+        if (!temp_currencies.includes(debt.currency))
+          temp_currencies.push(debt.currency)
+        if (debt.array.length) {
+          for (let j = 0; j < debt.array.length; j++) {
+            const payment: IPayment = debt.array[j]
+            if (!temp_descriptions.includes(payment.text))
+              temp_descriptions.push(payment.text)
+          }
+        }
+      }
+      const currencies_list = temp_currencies.map((item) => (
+        <option value={item} key={item}></option>
+      ))
+      const payments_descriptions_list = temp_descriptions.map((item) => (
+        <option value={item} key={item} />
+      ))
+      return [currencies_list, payments_descriptions_list]
+    }
+    return [[], []]
   }, [debts])
 
   return (
@@ -203,7 +203,11 @@ const DebtForm = () => {
                 autoComplete="off"
                 list="dates"
               />
-              <datalist id="dates">{dates}</datalist>
+              <datalist id="dates">
+                {datesList.map((value) => (
+                  <option value={value} key={value}></option>
+                ))}
+              </datalist>
             </div>
           </div>
           <hr />
