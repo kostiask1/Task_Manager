@@ -95,18 +95,18 @@ export const routesArray: RoutesArray[] = [
     element: <Wishes />,
   },
   {
-    name: "Weather",
-    private: true,
-    show: true,
-    path: "weather",
-    element: <Weather />,
-  },
-  {
     name: "Debts",
     private: true,
     show: true,
     path: "debts",
     element: <Debts />,
+  },
+  {
+    name: "Weather",
+    private: true,
+    show: true,
+    path: "weather",
+    element: <Weather />,
   },
   {
     name: "Access",

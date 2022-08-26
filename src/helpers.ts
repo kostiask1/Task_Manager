@@ -76,11 +76,18 @@ export const tableActions = ({
   const sort = (e: React.MouseEvent<HTMLElement>) => {
     const target = e.currentTarget as HTMLTableCellElement
     const innerText = target.innerHTML
-    removeThHighlight()
-    target.style.backgroundColor = "lightblue"
     const column = (
       innerText.charAt(0).toLowerCase() + innerText.slice(1)
     ).replaceAll(" ", "")
+
+    removeThHighlight()
+
+    if (!sorting || sorting === "empty" || sorting !== column) {
+      target.style.backgroundColor = "lightblue"
+    } else if (sorting !== "empty") {
+      target.style.backgroundColor = "#ff7f87"
+    }
+
     const copy = [...data]
     const modifier = sorting === column ? -1 : 1
     copy.sort((a, b) => {
@@ -100,7 +107,7 @@ export const tableActions = ({
         return 0
       }
     })
-    setSorting(sorting === column ? "" : column)
+    setSorting(sorting === column ? "empty" : column)
     setData(copy)
   }
   const reset = () => {
