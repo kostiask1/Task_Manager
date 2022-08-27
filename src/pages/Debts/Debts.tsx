@@ -96,7 +96,7 @@ const Debts = () => {
               <th onClick={(e) => sort(e, "array")}>Debts</th>
               <th onClick={sort}>Paid</th>
               <th onClick={(e) => sort(e, "total")}>
-                <table>
+                <table className="table">
                   <thead>
                     <tr>
                       <td>Paid</td>
