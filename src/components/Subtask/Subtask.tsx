@@ -79,6 +79,7 @@ const Subtask: FC<Props> = ({
       removeSubtask(e)
     }
   }
+
   return (
     <li>
       <input
@@ -94,7 +95,7 @@ const Subtask: FC<Props> = ({
           className="is-danger is-small"
           style={{ height: 16, padding: "0px 4px" }}
           onClick={removeSubtask}
-          disabled={editable}
+          disabled={!editable}
           text="x"
         />
       )}
