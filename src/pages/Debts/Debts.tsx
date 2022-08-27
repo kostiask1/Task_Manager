@@ -33,21 +33,42 @@ const Debts = () => {
     setData(debts)
   }, [debts])
 
-  const [paid, left, total]: number[] = useMemo(() => {
-    let paid = 0
-    let total = 0
+  const currencies = useMemo(() => {
+    const temp_currencies: any[] = []
+    if (debts.length) {
+      for (let i = 0; i < debts.length; i++) {
+        const debt = debts[i]
+        if (!temp_currencies.includes(debt.currency))
+          temp_currencies.push(debt.currency)
+      }
+      return temp_currencies
+    }
+  }, [debts])
+
+  const debtSummary = useMemo((): any => {
+    const summary: any = {}
+    if (currencies?.length) {
+      currencies.forEach(
+        (currency: string) => (summary[currency] = { paid: 0, total: 0 })
+      )
+    }
     if (debts.length) {
       for (let i = 0; i < debts.length; i++) {
         const debt = debts[i]
         for (let j = 0; j < debt.array.length; j++) {
           const payment = debt.array[j]
-          if (payment.paid) paid += payment.value
-          total += payment.value
+          const currencyObject = summary[debt.currency]
+          if (payment.paid) currencyObject.paid += payment.value
+          currencyObject.total += payment.value
+          currencyObject.left = currencyObject.total - currencyObject.paid
         }
       }
     }
-    const left = total - paid
-    return [paid, left, total]
+    const temp = Object.entries(summary).map((entry: any) => ({
+      ...entry[1],
+      currency: entry[0],
+    }))
+    return temp
   }, [debts])
 
   return (
@@ -102,28 +123,42 @@ const Debts = () => {
               </tr>
             )}
           </tbody>
-          <tfoot>
-            <tr>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td>{paid}</td>
-                      <td>{left}</td>
-                      <td>{total}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </th>
-              <th></th>
-              <th></th>
-            </tr>
-          </tfoot>
+          {data?.length > 1 && (
+            <tfoot>
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>
+                  <table>
+                    <tbody>
+                      {debtSummary.map((sumObject: any) => (
+                        <tr key={sumObject.currency}>
+                          <td>{sumObject.paid}</td>
+                          <td>{sumObject.left}</td>
+                          <td>{sumObject.total}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </th>
+                <th>
+                  <table>
+                    <tbody>
+                      {debtSummary.map((sumObject: any) => (
+                        <tr key={sumObject.currency}>
+                          <td>{sumObject.currency}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </th>
+                <th></th>
+              </tr>
+            </tfoot>
+          )}
         </table>
       </div>
     </div>

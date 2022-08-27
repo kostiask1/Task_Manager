@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
-import { equal } from "../../helpers"
+import { equal, convertToDate } from "../../helpers"
 import { User } from "../Auth/types"
 import { AppDispatch, RootState } from "../store"
 import { Debt } from "./types"
@@ -91,7 +91,10 @@ export const setDebt = (debt: Debt) => {
       }
     }
 
-    unPaidDebts.sort((a: Debt, b: Debt) => a.updatedAt - b.updatedAt)
+    unPaidDebts.sort(
+      (a: Debt, b: Debt) =>
+        convertToDate(a.end).getTime() - convertToDate(b.end).getTime()
+    )
 
     const newArray: Debt[] = [...unPaidDebts, ...paidDebts]
 
