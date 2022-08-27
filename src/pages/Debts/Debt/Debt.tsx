@@ -54,12 +54,11 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
 
   const [paid, left, total]: number[] = useMemo(() => {
     let paid = 0
-    let total = 0
+    let total = debt.total
     if (debt.array.length) {
       for (let i = 0; i < debt.array.length; i++) {
         const payment = debt.array[i]
         if (payment.paid) paid += payment.value
-        total += payment.value
       }
     }
     const left = total - paid

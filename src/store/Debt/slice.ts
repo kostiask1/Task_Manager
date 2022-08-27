@@ -4,7 +4,7 @@ import { db } from "../../firebase/base"
 import { equal, convertToDate } from "../../helpers"
 import { User } from "../Auth/types"
 import { AppDispatch, RootState } from "../store"
-import { Debt } from "./types"
+import { Debt, Payment } from "./types"
 import { setSuccess } from "../App/slice"
 
 interface DebtsState {
@@ -27,6 +27,7 @@ export const debtInitialState: Debt = {
   updatedAt: 0,
   currency: "",
   array: [],
+  total: 0,
 }
 
 const debt = createSlice({
@@ -75,6 +76,14 @@ export const setDebt = (debt: Debt) => {
     const indexOfDebt = debtsArray.findIndex((t: Debt) => t.id === debt.id)
     const existDebt = indexOfDebt !== -1
     debt.updatedAt = new Date().getTime()
+
+    const total =
+      (debt.array as Payment[]).reduce(
+        (acc: number, payment: Payment) => (acc += payment.value),
+        0
+      ) || 0
+
+    debt.total = total
 
     if (!existDebt) {
       debtsCopy.push(debt)

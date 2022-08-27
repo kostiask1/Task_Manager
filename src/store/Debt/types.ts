@@ -15,4 +15,5 @@ export interface Debt {
   updatedAt: number
   currency: string
   array: Payment[] | []
+  total: number
 }
