@@ -74,8 +74,16 @@ const Calendar = () => {
     return tasks.map((task: any) => ({
       ...task,
       title: genTitle(task),
-      start: task.end ? convertToDate(task.end) : today,
-      end: task.end ? convertToDate(task.end) : today,
+      start: task.end
+        ? convertToDate(task.end)
+        : task.completed
+        ? new Date(task.updatedAt)
+        : today,
+      end: task.end
+        ? convertToDate(task.end)
+        : task.completed
+        ? new Date(task.updatedAt)
+        : today,
       hasEndDate: task.end ? true : false,
     }))
   }, [])
