@@ -1,6 +1,22 @@
 /* your css code */
+.calendar-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+.rbc-month-view,
+.rbc-time-view {
+  min-width: 900px;
+}
 .rbc-agenda-time-cell {
   border-left: 1px solid #ddd;
+}
+.rbc-toolbar-label {
+  margin: 10px 0;
+}
+@media (max-width: 767px) {
+  .rbc-toolbar-label {
+    width: 100%;
+  }
 }
 .rbc-time-view {
   .rbc-label {

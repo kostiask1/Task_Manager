@@ -182,24 +182,26 @@ const Calendar = () => {
       )}
       {uid && uid !== user.id && <h2>Tasks of user ID: {uid}</h2>}
       <Loader loading={loading} />
-      <EventCalendar
-        className="fadeIn"
-        localizer={localizer}
-        events={events}
-        eventPropGetter={eventPropGetter}
-        onSelectEvent={onSelectEvent}
-        selectable={true}
-        longPressThreshold={100}
-        onSelectSlot={onSelectSlot}
-        onShowMore={onShowMore}
-        //@ts-ignore
-        view={bcView}
-        date={date}
-        onNavigate={onNavigate}
-        onView={setBCView}
-        views={["month", "week", "agenda"]}
-        style={{ height: "100vh" }}
-      />
+      <div className="calendar-wrapper">
+        <EventCalendar
+          className="fadeIn"
+          localizer={localizer}
+          events={events}
+          eventPropGetter={eventPropGetter}
+          onSelectEvent={onSelectEvent}
+          selectable={true}
+          longPressThreshold={150}
+          onSelectSlot={onSelectSlot}
+          onShowMore={onShowMore}
+          //@ts-ignore
+          view={bcView}
+          date={date}
+          onNavigate={onNavigate}
+          onView={setBCView}
+          views={["month", "week", "agenda"]}
+          style={{ height: "100vh" }}
+        />
+      </div>
       <Modal id="task" show={!!task} hide={() => setTask(null)}>
         {task && (
           <Suspense fallback={<Loader loading={true} />}>
