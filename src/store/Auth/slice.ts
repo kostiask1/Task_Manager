@@ -6,11 +6,12 @@ import {
   sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth"
-import { deleteDoc, doc, getDoc } from "firebase/firestore/lite"
+import { deleteDoc, doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
-import { deleteImage, uploadDoc } from "../../firebase/firestore"
+import { deleteImage } from "../../firebase/firestore"
 import { loading, setError, setSuccess } from "../App/slice"
-import { AppDispatch } from "../store"
+import { debts } from "../Debt/slice"
+import { AppDispatch, RootState } from "../store"
 import { tasks } from "../Task/slice"
 import { setCities } from "../Weather/slice"
 import { wishes } from "../Wish/slice"
@@ -55,7 +56,13 @@ export const { setUser, signOut } = auth.actions
 
 const _auth = getAuth()
 
-// Create user
+export const updateUser = (user: User) => {
+  return async (dispatch: AppDispatch) => {
+    await setDoc(doc(db, "users", user.id), user)
+    await dispatch(setUser(user))
+  }
+}
+
 export const signup = (data: SignUpData, onError: () => void) => {
   return async (dispatch: AppDispatch) => {
     try {
@@ -71,7 +78,7 @@ export const signup = (data: SignUpData, onError: () => void) => {
               whitelist: [],
               cities: [],
             }
-            uploadDoc("users", userData)
+            dispatch(updateUser(userData))
             sendEmailVerification(_auth.currentUser as any).then(() => {
               setTimeout(
                 () =>
@@ -81,7 +88,6 @@ export const signup = (data: SignUpData, onError: () => void) => {
                 3000
               )
             })
-            dispatch(setUser(userData))
           }
         })
         .catch((err) => {
@@ -123,6 +129,7 @@ export const signout = () => {
       dispatch(signOut())
       dispatch(tasks([]))
       dispatch(setCities([]))
+      dispatch(debts([]))
       dispatch(wishes([]))
     } catch (err) {
       dispatch(setError("Error dispatching signout"))
@@ -163,9 +170,13 @@ export const deleteAccount = (id: string, image: string) => {
 }
 
 export const deleteUserData = (id: string) => {
-  return async (dispatch: AppDispatch) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    const user: User = getState().auth.user
+    const clearedUser = { ...user, whitelist: [], cities: [] }
+    await setDoc(doc(db, "users", user.id), clearedUser)
     await deleteDoc(doc(db, "tasks", id))
     await deleteDoc(doc(db, "wishes", id))
+    await deleteDoc(doc(db, "debts", id))
     dispatch(setSuccess("Your account data was erased"))
   }
 }

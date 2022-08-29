@@ -11,18 +11,14 @@ import Prompt from "../../../components/Prompt/Prompt"
 import Button from "../../../components/UI/Button"
 import Checkbox from "../../../components/UI/Checkbox/Checkbox"
 import Input from "../../../components/UI/Input"
-import {
-  deleteImage,
-  uploadDoc,
-  uploadImage,
-} from "../../../firebase/firestore"
+import { deleteImage, uploadImage } from "../../../firebase/firestore"
 import { equal } from "../../../helpers"
 import { useCallbackPrompt } from "../../../hooks/useCallbackPrompt"
 import { setError, setSuccess } from "../../../store/App/slice"
 import {
   deleteAccount,
-  setUser,
   deleteUserData,
+  updateUser,
 } from "../../../store/Auth/slice"
 import { User } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
@@ -89,8 +85,7 @@ const Profile = () => {
         displayName: updatedProfile.firstName,
         photoURL: updatedProfile.profileImg,
       })
-      await uploadDoc("users", updatedProfile)
-      dispatch(setUser(updatedProfile))
+      await dispatch(updateUser(updatedProfile))
       dispatch(setSuccess("Profile updated successfully"))
       setLoading(false)
       if (user.email !== updatedProfile.email) {

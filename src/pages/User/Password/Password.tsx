@@ -7,9 +7,8 @@ import {
 import { FormEvent, useState } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
-import { uploadDoc } from "../../../firebase/firestore"
 import { setError, setSuccess } from "../../../store/App/slice"
-import { setUser } from "../../../store/Auth/slice"
+import { updateUser } from "../../../store/Auth/slice"
 import { User } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import "./Password.scss"
@@ -50,9 +49,8 @@ const Password = () => {
           user.password
         )
         reauthenticateWithCredential(auth.currentUser, credential).then(() => {
-          uploadDoc("users", userData)
+          dispatch(updateUser(userData))
           updatePassword(auth.currentUser as any, password)
-          dispatch(setUser(userData))
           dispatch(setSuccess("Password updated successfully"))
           setPassword("")
           setOldPassword("")

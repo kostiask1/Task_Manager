@@ -1,9 +1,8 @@
-import { useCallback, useState, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Button from "../../components/UI/Button"
 import Input from "../../components/UI/Input"
-import { uploadDoc } from "../../firebase/firestore"
 import { setError, setSuccess } from "../../store/App/slice"
-import { setUser } from "../../store/Auth/slice"
+import { updateUser } from "../../store/Auth/slice"
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { Whitelist as IWhitelist } from "../../store/Wish/types"
@@ -39,8 +38,7 @@ const Access = () => {
 
   const saveWhitelist = async () => {
     const updatedProfile: User = { ...user, whitelist: state }
-    await uploadDoc("users", updatedProfile)
-    dispatch(setUser(updatedProfile))
+    await dispatch(updateUser(updatedProfile))
   }
 
   const addUserToWhitelist = useCallback(
