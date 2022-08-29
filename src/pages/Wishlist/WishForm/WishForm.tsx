@@ -104,6 +104,13 @@ const WishForm = () => {
       const saveWish: IWish = { ...state }
       setLoadingSave(true)
       if (!isEdit) saveWish.id = new Date().getTime()
+      if (
+        state.whitelist.findIndex((user) => user.id === userW) == -1 &&
+        userW.trim().length == 28
+      ) {
+        const newUser: IWhitelist = { id: userW, open: true }
+        saveWish.whitelist = [...saveWish.whitelist, newUser]
+      }
       saveWish.title = saveWish.title.trim()
       saveWish.description = saveWish.description.trim()
       saveWish.uid = user.id

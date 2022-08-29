@@ -57,6 +57,15 @@ const DebtForm = () => {
       saveDebt.uid = user.id
     }
     if (saveDebt.end === "dd-mm-yyyy") saveDebt.end = ""
+    if (payment.text.trim().length && payment.value != 0) {
+      const newPayment: IPayment = {
+        text: payment.text.trim(),
+        paid: false,
+        value: +payment.value,
+        id: new Date().getTime(),
+      }
+      saveDebt.array = [...saveDebt.array, newPayment]
+    }
     saveDebt.title = saveDebt.title.trim()
     saveDebt.currency = saveDebt.currency.trim() || "$"
     await dispatch(setDebt(saveDebt))

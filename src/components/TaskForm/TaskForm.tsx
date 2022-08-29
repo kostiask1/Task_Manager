@@ -64,6 +64,10 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
         saveTask.uid = user.id
       }
       if (saveTask.end === "dd-mm-yyyy") saveTask.end = ""
+      if (subtask.trim().length) {
+        const newTask: ISubtask = { text: subtask, completed: false }
+        saveTask.subtasks = [...saveTask.subtasks, newTask]
+      }
       saveTask.title = saveTask.title.trim()
       saveTask.description = saveTask.description.trim()
       await dispatch(setTask(saveTask))
