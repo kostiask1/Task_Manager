@@ -69,20 +69,24 @@ const Calendar = () => {
   useEffect(getData, [uid])
 
   const generateEvents = useCallback((tasks: TaskProps[]): Event[] => {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
+    const clearDate = (timestamp: number) => {
+      const date = new Date(timestamp)
+      date.setHours(0, 0, 0, 0)
+      return date
+    }
+    const today = clearDate(new Date().getTime())
     return tasks.map((task: any) => ({
       ...task,
       title: genTitle(task),
       start: task.end
         ? convertToDate(task.end)
         : task.completed
-        ? new Date(task.updatedAt)
+        ? clearDate(task.updatedAt)
         : today,
       end: task.end
         ? convertToDate(task.end)
         : task.completed
-        ? new Date(task.updatedAt)
+        ? clearDate(task.updatedAt)
         : today,
       hasEndDate: task.end ? true : false,
     }))
