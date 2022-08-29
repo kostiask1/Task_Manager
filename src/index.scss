@@ -124,6 +124,21 @@ img {
 }
 
 /* your css code */
+table {
+  width: 100%;
+  th {
+    text-align: center !important;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    vertical-align: middle !important;
+  }
+  td {
+    vertical-align: middle !important;
+  }
+  td:not([align]) {
+    text-align: center;
+  }
+}
 .table-container > table > :is(thead, tbody) {
   width: 100%;
   & > tr > :is(th, td):first-child {
@@ -137,20 +152,10 @@ img {
   tr:nth-child(2n + 1) td:first-child {
     background-color: #fff;
   }
-  th {
-    text-align: center !important;
-    cursor: pointer;
-    background-color: #f5f5f5;
-    vertical-align: middle !important;
-  }
   td .whitelist-text {
     font-size: 0.75rem;
   }
-  td:not([align]) {
-    text-align: center;
-  }
   td {
-    vertical-align: middle !important;
     p {
       word-break: break-word;
     }
