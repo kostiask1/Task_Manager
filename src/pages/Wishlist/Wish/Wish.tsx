@@ -38,6 +38,21 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
     }
   }, [])
 
+  const toggleOpen = useCallback(async (wish: IWish, open: boolean) => {
+    if (wish) {
+      setLoading(true)
+      const saveWish: IWish = { ...wish }
+      saveWish.open = open
+      await dispatch(setWish(saveWish))
+      setLoading(false)
+      if (open) {
+        dispatch(setSuccess("Wish completed"))
+      } else {
+        dispatch(setError("Wish returned"))
+      }
+    }
+  }, [])
+
   const deleteW = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
@@ -89,7 +104,17 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
       </td>
       {editable && (
         <>
-          <td>{wish.open ? "Open" : "Private"}</td>
+          <td>
+            <Button
+              className={`is-small ${wish.open ? "is-primary" : "is-danger"}`}
+              style={{ height: "100%" }}
+              onClick={() => editable && toggleOpen(wish, !wish.open)}
+              text={`${
+                loading ? "Updating..." : `Open: ${wish.open ? "Yes" : "No"}`
+              }`}
+              disabled={loading || deleting || !editable}
+            />
+          </td>
           <td>
             <ul className="whitelist-users">
               {!!wish.whitelist?.length &&

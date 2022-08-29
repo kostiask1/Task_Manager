@@ -115,7 +115,7 @@ export const setWish = (wish: Wish) => {
       }
     }
 
-    unCompletedWishes.sort((a: Wish, b: Wish) => a.updatedAt - b.updatedAt)
+    unCompletedWishes.sort((a: Wish, b: Wish) => b.updatedAt - a.updatedAt)
 
     const newArray: Wish[] = [...unCompletedWishes, ...completedWishes]
 
