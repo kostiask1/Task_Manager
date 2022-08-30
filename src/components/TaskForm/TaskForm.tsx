@@ -178,7 +178,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
         onSubmit={addTaskToUser}
       >
         <header className="card-header">
-          <div className="card-header-title is-align-items-center">
+          <div className="card-header-title">
             <label htmlFor="title">{stateName} Task -</label>
             <Input
               type="text"

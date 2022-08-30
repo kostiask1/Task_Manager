@@ -82,23 +82,25 @@ const Subtask: FC<Props> = ({
 
   return (
     <li>
-      <input
-        type="checkbox"
-        className="checkbox"
-        id={"checkbox-" + data.text}
-        checked={data.completed}
-        onChange={toggleCompleted}
-        disabled={!editable}
-      />
-      {!isShow && (
-        <Button
-          className="is-danger is-small"
-          style={{ height: 16, padding: "0px 4px" }}
-          onClick={removeSubtask}
+      <div className="btns-wrap">
+        <input
+          type="checkbox"
+          className="checkbox"
+          id={"checkbox-" + data.text}
+          checked={data.completed}
+          onChange={toggleCompleted}
           disabled={!editable}
-          text="x"
         />
-      )}
+        {!isShow && (
+          <Button
+            className="is-danger is-small"
+            style={{ height: 16, padding: "0px 4px" }}
+            onClick={removeSubtask}
+            disabled={!editable}
+            text="x"
+          />
+        )}
+      </div>
       <label className="subtask-text" htmlFor={"checkbox-" + data.text}>
         {data.text}
       </label>
