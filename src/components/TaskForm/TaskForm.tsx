@@ -152,6 +152,24 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     }))
   }
 
+  const handleSubtaskParse = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    e.clipboardData.items[0].getAsString((pasteText) => {
+      const listArray = pasteText.split("\n")
+      const tempSubtasks: ISubtask[] = []
+      listArray.forEach(
+        (text) =>
+          text.trim().length < 160 &&
+          text.trim().length &&
+          tempSubtasks.push({ text, completed: false })
+      )
+      setState((state: Task) => ({
+        ...state,
+        subtasks: [...state.subtasks, ...tempSubtasks],
+      }))
+    })
+  }
+
   return (
     <>
       <form
@@ -217,6 +235,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               name="subtask"
               placeholder="Enter subtask"
               value={subtask}
+              onPaste={handleSubtaskParse}
               onChange={handleSubtask}
             />
             <Button
