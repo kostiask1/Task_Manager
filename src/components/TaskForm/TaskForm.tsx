@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useMemo, useState } from "react"
+import { createRef, FC, useCallback, useEffect, useMemo, useState } from "react"
 import InputMask from "react-input-mask"
 import { dateFormat, datesList, equal } from "../../helpers"
 import { setSuccess } from "../../store/App/slice"
@@ -36,6 +36,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
 
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
+  const subTaskRef = createRef<HTMLInputElement>()
 
   const subtasksCompleted = useMemo(
     () => state.subtasks?.every((subtask) => subtask.completed),
@@ -134,6 +135,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
           ...state,
           subtasks: [...state.subtasks, newTask],
         }))
+        subTaskRef?.current?.focus()
       }
     },
     [subtask]
@@ -232,6 +234,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               ))}
             </ul>
             <Input
+              ref={subTaskRef}
               name="subtask"
               placeholder="Enter subtask"
               value={subtask}

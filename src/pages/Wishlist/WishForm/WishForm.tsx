@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useMemo, useState, createRef } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import Textarea from "../../../components/UI/Textarea"
@@ -35,6 +35,7 @@ const WishForm = () => {
 
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
+  const wishRef = createRef<HTMLInputElement>()
 
   const handleCompleted = (event: React.MouseEvent) => {
     event.preventDefault()
@@ -154,6 +155,7 @@ const WishForm = () => {
           dispatch(setError("Invalid user id"))
         }
       }
+      wishRef?.current?.focus()
     },
     [userW]
   )
@@ -273,6 +275,7 @@ const WishForm = () => {
           className="input mt-4"
           placeholder="Enter user id (Expecting 28 characters)"
           value={userW}
+          ref={wishRef}
           onChange={handleWhitelist}
           disabled={state.open}
           list="users_in_whitelist"
