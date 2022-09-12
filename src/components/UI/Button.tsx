@@ -1,29 +1,28 @@
-import { ButtonHTMLAttributes, FC } from "react"
+import { ButtonHTMLAttributes, forwardRef } from "react"
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string
   className?: string
 }
 
-const Button: FC<ButtonProps> = ({
-  text,
-  className,
-  onClick,
-  type,
-  disabled,
-  ...rest
-}) => {
-  return (
-    <button
-      type={type}
-      className={`button ${className ?? ""}`}
-      onClick={onClick}
-      disabled={disabled}
-      {...rest}
-    >
-      {text}
-    </button>
-  )
-}
+const Button = forwardRef(
+  (
+    { text, className, onClick, type, disabled, ...rest }: ButtonProps,
+    ref: React.ForwardedRef<HTMLButtonElement>
+  ) => {
+    return (
+      <button
+        type={type}
+        className={`button ${className ?? ""}`}
+        onClick={onClick}
+        disabled={disabled}
+        ref={ref}
+        {...rest}
+      >
+        {text}
+      </button>
+    )
+  }
+)
 
 export default Button
