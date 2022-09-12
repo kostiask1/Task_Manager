@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { createRef, useCallback, useEffect, useState } from "react"
 import Button from "../../components/UI/Button"
 import Input from "../../components/UI/Input"
 import { setError, setSuccess } from "../../store/App/slice"
@@ -13,9 +13,11 @@ const Access = () => {
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const [state, setState] = useState<IWhitelist[]>(user.whitelist || [])
   const [userW, setUserW] = useState<string>("")
+  const userRef = createRef<HTMLInputElement>()
 
   useEffect(() => {
     saveWhitelist()
+    userRef?.current?.focus()
   }, [state])
 
   const removeUser = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
@@ -95,6 +97,7 @@ const Access = () => {
         className="input mt-4"
         placeholder="Enter user id (Expecting 28 characters)"
         value={userW}
+        ref={userRef}
         onChange={handleWhitelist}
         list="users_ids"
       />

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState, createRef } from "react"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import { capitalizeFirstLetter } from "../../../helpers"
@@ -11,11 +11,16 @@ const CityForm = () => {
   const cities = useAppSelector((state: RootState) => state.cities.array)
   const [city, setCity] = useState("")
   const [loading, setLoading] = useState(false)
+  const cityRef = createRef<HTMLInputElement>()
 
   const handleCityInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     if (value.trim().length < 40) setCity(capitalizeFirstLetter(value))
   }
+
+  useEffect(() => {
+    cityRef?.current?.focus()
+  }, [cities])
 
   const addCity = useCallback(
     async (e: React.FormEvent) => {
@@ -83,6 +88,7 @@ const CityForm = () => {
           label="City Name"
           placeholder="Enter city name"
           value={city}
+          ref={cityRef}
           onChange={handleCityInput}
           autoComplete="off"
         />

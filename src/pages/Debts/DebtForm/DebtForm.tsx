@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useMemo, useState, createRef } from "react"
 import InputMask from "react-input-mask"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
@@ -37,6 +37,7 @@ const DebtForm = () => {
   const [payment, setPayment] = useState(initPayment)
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
+  const paymentRef = createRef<HTMLInputElement>()
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -125,6 +126,7 @@ const DebtForm = () => {
     } else {
       dispatch(setError("Enter description and value fields first!"))
     }
+    paymentRef?.current?.focus()
   }
 
   const [paid, left, total]: number[] = useMemo(() => {
@@ -254,6 +256,7 @@ const DebtForm = () => {
                 {payments_descriptions}
               </datalist>
               <Input
+                ref={paymentRef}
                 type="text"
                 step={1}
                 value={payment.text}
