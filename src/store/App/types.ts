@@ -4,8 +4,17 @@ const SET_SUCCESS = "SET_SUCCESS"
 
 export interface AppState {
   loading: boolean
+  messages: IMessage[]
   error: string
   success: string
+}
+
+export type IMessageTypes = "success" | "danger"
+
+export interface IMessage {
+  type: IMessageTypes
+  id: number
+  text: string
 }
 
 interface SetLoadingAction {

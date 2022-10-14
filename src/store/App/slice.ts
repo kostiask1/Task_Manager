@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { AppDispatch } from "../store"
-import { AppState } from "./types"
+import { AppDispatch, RootState } from "../store"
+import { AppState, IMessage, IMessageTypes } from "./types"
 
 const initialState: AppState = {
   loading: true,
+  messages: [],
   error: "",
   success: "",
 }
@@ -18,6 +19,9 @@ const app = createSlice({
     error: (state: AppState, action: PayloadAction<string>) => {
       state.error = action.payload
     },
+    messages: (state: AppState, action: PayloadAction<IMessage[]>) => {
+      state.messages = action.payload
+    },
     success: (state: AppState, action: PayloadAction<string>) => {
       state.success = action.payload
     },
@@ -28,30 +32,30 @@ export default app.reducer
 
 // Actions
 
-export const { loading, error, success } = app.actions
+export const { loading, error, success, messages } = app.actions
 
-let timer: boolean = false
-
-// Set error
-export const setError = (msg: string) => {
-  return (dispatch: AppDispatch) => {
-    if (timer) {
-      dispatch(error(""))
-      timer = false
-    }
-    timer = true
-    setTimeout(() => dispatch(error(msg)))
+const setMessage = (text: string, type: IMessageTypes) => {
+  return (dispatch: AppDispatch, getState: () => RootState) => {
+    const messagesArray = getState().app.messages as IMessage[]
+    dispatch(
+      messages([...messagesArray, { type, id: new Date().getTime(), text }])
+    )
   }
 }
 
+// Set error
+export const setError = (msg: string) => (dispatch: AppDispatch) =>
+  dispatch(setMessage(msg, "danger"))
+
 // Set success
-export const setSuccess = (msg: string) => {
-  return (dispatch: AppDispatch) => {
-    if (timer) {
-      dispatch(success(""))
-      timer = false
-    }
-    timer = true
-    setTimeout(() => dispatch(success(msg)))
+export const setSuccess = (msg: string) => (dispatch: AppDispatch) =>
+  dispatch(setMessage(msg, "success"))
+
+export const deleteMessage = (id: number) => {
+  return (dispatch: AppDispatch, getState: () => RootState) => {
+    const messagesArray = getState().app.messages as IMessage[]
+    const messageIndex = messagesArray.findIndex((message) => message.id === id)
+    messagesArray.splice(messageIndex, 1)
+    dispatch(messages(messagesArray))
   }
 }

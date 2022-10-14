@@ -69,15 +69,6 @@ img {
   content: "\f303";
 }
 
-.message {
-  position: fixed;
-  right: 15px;
-  top: 80px;
-  z-index: 9999;
-  opacity: 0;
-  transform: translateY(-100px);
-  animation: popIn 4s ease-in-out forwards;
-}
 
 .fadeIn {
   animation: fadeIn 0.25s ease-in-out forwards;
