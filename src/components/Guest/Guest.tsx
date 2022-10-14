@@ -49,16 +49,22 @@ const Guest = () => {
       {!foreignUser && (
         <Button
           onClick={copyPage}
-          className="is-primary mb-3"
+          className="is-primary"
           text="Share Your Data"
         />
       )}
       {uid && uid !== user.id && (
-          <h2>
-            Data of user:{" "}
-            <span style={{textDecoration: "underline", cursor: "pointer"}} onClick={copyUserId}>{gotUser.id ? `${gotUser.firstName} ${gotUser.lastName}` : uid}</span>
-          </h2>
+        <h2>
+          Data of user:{" "}
+          <span
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={copyUserId}
+          >
+            {gotUser.id ? `${gotUser.firstName} ${gotUser.lastName}` : uid}
+          </span>
+        </h2>
       )}
+      <hr className="my-3" />
     </>
   )
 }

@@ -15,7 +15,7 @@ const Weather = () => {
   }, [])
 
   return (
-    <div className="pb-6">
+    <div className="section is-medium pt-2 pb-6">
       <CityForm />
       <hr />
       <div className="columns cities-list">

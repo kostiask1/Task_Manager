@@ -72,7 +72,7 @@ const Debts = () => {
   }, [debts])
 
   return (
-    <div className="pb-6">
+    <div className="section is-medium pt-2 pb-6">
       <DebtForm key={JSON.stringify(debt)} />
       <hr />
       <div className="table-container">

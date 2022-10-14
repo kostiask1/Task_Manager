@@ -64,7 +64,7 @@ const Access = () => {
   )
 
   return (
-    <>
+    <div className="section is-medium pt-2 pb-6">
       <h1 className="is-size-5">
         Grant users access to view your wishlist and tasks
       </h1>
@@ -107,7 +107,7 @@ const Access = () => {
         text="Add user"
         disabled={userW.trim().length !== 28}
       />
-    </>
+    </div>
   )
 }
 

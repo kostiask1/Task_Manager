@@ -21,7 +21,6 @@ const Tasks = () => {
     <div className="section is-medium pt-2">
       <Guest/>
       {!foreignUser && <TaskForm key={JSON.stringify(task)} />}
-      <hr />
       <List />
     </div>
   )
