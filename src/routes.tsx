@@ -1,4 +1,4 @@
-import { FC, lazy, Suspense, ReactNode } from "react"
+import { FC, lazy, ReactNode, Suspense } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 import Loader from "./components/UI/Loader/Loader"
 import useNetwork from "./hooks/useNetwork"
@@ -58,6 +58,7 @@ export const routesArray: RoutesArray[] = [
     show: true,
     path: "calendar",
     element: <Calendar />,
+    children: [{ path: ":uid", element: <Calendar /> }],
   },
   {
     name: "Tasks",
@@ -65,20 +66,7 @@ export const routesArray: RoutesArray[] = [
     show: true,
     path: "tasks",
     element: <Tasks />,
-  },
-  {
-    name: "Calendar",
-    private: true,
-    show: false,
-    path: "calendar/:uid",
-    element: <Calendar />,
-  },
-  {
-    name: "Tasks",
-    private: true,
-    show: false,
-    path: "tasks/:uid",
-    element: <Tasks />,
+    children: [{ path: ":uid", element: <Tasks /> }],
   },
   {
     name: "Wishes",
@@ -86,13 +74,7 @@ export const routesArray: RoutesArray[] = [
     show: true,
     path: "wishes",
     element: <Wishes />,
-  },
-  {
-    name: "Wishes",
-    private: true,
-    show: false,
-    path: "wishes/:uid",
-    element: <Wishes />,
+    children: [{ path: ":uid", element: <Wishes /> }],
   },
   {
     name: "Debts",
@@ -122,8 +104,8 @@ export const routesArray: RoutesArray[] = [
     path: "profile",
     element: <General />,
     children: [
-      { path: "/profile", element: <Profile /> },
-      { path: "/profile/password", element: <Password /> },
+      { path: "", element: <Profile /> },
+      { path: "password", element: <Password /> },
     ],
   },
 ]
@@ -149,7 +131,16 @@ const Routing: FC = () => {
   return !loading ? (
     <Suspense fallback={<Loader loading={true} />}>
       <Routes>
-        <Route path="*" element={<Navigate to="/about" />} />
+        <Route
+          path="*"
+          element={
+            authenticated ? (
+              <Navigate to="/calendar" />
+            ) : (
+              <Navigate to="/about" />
+            )
+          }
+        />
         {routesArray.map(
           (route) => (!route.private || authenticated) && unWrapRoute(route)
         )}
