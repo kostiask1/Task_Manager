@@ -19,7 +19,7 @@ const Messages = () => {
       setTimeout(() => {
         dispatch(deleteMessage(id))
         deleteQueue.splice(deleteQueue.findIndex(ID => id == ID),1)
-      }, 2400)
+      }, 3400)
     }
   }, [messages.length])
 

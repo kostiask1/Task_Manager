@@ -1,58 +1,63 @@
 /* your css code */
-.navbar-item.button {
-  max-width: 100px;
-}
-.navbar-link:not(.is-arrowless)::after {
-  transition: transform 0.3s;
-}
-.navbar-item.has-dropdown.is-active .navbar-link:not(.is-arrowless)::after {
-  transform: rotate(135deg);
-}
-.buttons-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
-@media (min-width: 1020px) {
-  .button.signin {
-    margin-right: 10px;
+.navbar {
+  position: sticky;
+  top: 0;
+  &-item.button {
+    max-width: 100px;
   }
-}
-@media (max-width: 1020px) {
-  button.navbar-item {
-    color: purple;
+  &-link:not(.is-arrowless)::after {
+    transition: transform 0.3s;
   }
-  .navbar-menu {
-    .navbar-end,
-    .navbar-start {
-      gap: 10px;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
+  &-item.has-dropdown.is-active &-link:not(.is-arrowless)::after {
+    transform: rotate(135deg);
+  }
+  @media (min-width: 1020px) {
+    .button.signin {
+      margin-right: 10px;
     }
   }
-  .navbar-dropdown {
-    a {
-      font-size: 1rem;
-      color: #4a4a4a;
-      text-align: center;
-      justify-content: center;
-      margin-bottom: 1rem;
-      margin-top: 0.35rem;
+  @media (max-width: 1020px) {
+    button.navbar-item {
+      color: purple;
     }
-    .navbar-divider + .is-flex {
-      margin-top: 1rem;
-      align-items: center;
-      justify-content: center;
-      .button {
-        font-size: 1rem;
+    &-menu {
+      .navbar-end,
+      .navbar-start {
+        gap: 10px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
       }
     }
+    &-dropdown {
+      a {
+        font-size: 1rem;
+        color: #4a4a4a;
+        text-align: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        margin-top: 0.35rem;
+      }
+      .navbar-divider + .is-flex {
+        margin-top: 1rem;
+        align-items: center;
+        justify-content: center;
+        .button {
+          font-size: 1rem;
+        }
+      }
+    }
+    &-item &-link {
+      display: none;
+    }
   }
-  .navbar-item .navbar-link {
-    display: none;
+  
+  .buttons-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
   }
 }

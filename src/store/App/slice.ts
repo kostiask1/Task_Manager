@@ -4,9 +4,7 @@ import { AppState, IMessage, IMessageTypes } from "./types"
 
 const initialState: AppState = {
   loading: true,
-  messages: [],
-  error: "",
-  success: "",
+  messages: []
 }
 
 const app = createSlice({
@@ -16,14 +14,8 @@ const app = createSlice({
     loading: (state: AppState, action: PayloadAction<boolean>) => {
       state.loading = action.payload
     },
-    error: (state: AppState, action: PayloadAction<string>) => {
-      state.error = action.payload
-    },
     messages: (state: AppState, action: PayloadAction<IMessage[]>) => {
       state.messages = action.payload
-    },
-    success: (state: AppState, action: PayloadAction<string>) => {
-      state.success = action.payload
     },
   },
 })
@@ -32,7 +24,7 @@ export default app.reducer
 
 // Actions
 
-export const { loading, error, success, messages } = app.actions
+export const { loading, messages } = app.actions
 
 const setMessage = (text: string, type: IMessageTypes) => {
   return (dispatch: AppDispatch, getState: () => RootState) => {
