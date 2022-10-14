@@ -5,7 +5,7 @@ import Loader from "./components/UI/Loader"
 import Navbar from "./components/UI/Navbar"
 import Routing from "./routes"
 import { loading } from "./store/App/slice"
-import { getUserById } from "./store/Auth/slice"
+import { getCurrentUser } from './store/Auth/slice'
 import { useAppDispatch } from "./store/store"
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
     const auth = getAuth()
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        await dispatch(getUserById(user.uid))
+        await dispatch(getCurrentUser(user.uid))
       } else {
         dispatch(loading(false))
       }

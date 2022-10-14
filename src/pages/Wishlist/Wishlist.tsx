@@ -1,14 +1,14 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from "react"
+import { lazy, Suspense, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Button from "../../components/UI/Button"
 import Loader from "../../components/UI/Loader/Loader"
 import { equal, tableActions } from "../../helpers"
-import { setError, setSuccess } from "../../store/App/slice"
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { getWishes } from "../../store/Wish/slice"
 import { Wish as IWish } from "../../store/Wish/types"
 import WishForm from "./WishForm/WishForm"
+import Guest from '../../components/Guest/Guest';
 const Wish = lazy(() => import("./Wish"))
 
 const Wishlist = () => {
@@ -44,28 +44,10 @@ const Wishlist = () => {
     setData(wishes)
   }, [wishes])
 
-  const copyPage = useCallback(() => {
-    navigator.clipboard
-      .writeText(`${window.location.host}/wishes/${user.id}`)
-      .then(
-        () =>
-          dispatch(setSuccess("Link to your wishlist is copied to clipboard")),
-        () => dispatch(setError("Something went wrong"))
-      )
-  }, [user.id])
-
   return (
     <div className="section is-medium pt-2 pb-6">
-      {!foreignUser && (
-        <Button
-          onClick={copyPage}
-          className="is-primary mb-3"
-          text="Share Your Wishlist"
-        />
-      )}
+      <Guest/>
       {!foreignUser && <WishForm key={JSON.stringify(wish)} />}
-      {uid && uid !== user.id && <h2>Wishes of user ID: {uid}</h2>}
-      <hr />
       <Suspense fallback={<Loader loading={true} />}>
         <div className="table-container">
           <table className="table table-wishes is-striped is-bordered is-hoverable is-fullwidth is-narrow">

@@ -17,7 +17,7 @@ import { setCities } from "../Weather/slice"
 import { wishes } from "../Wish/slice"
 import { AuthState, SignInData, SignUpData, User } from "./types"
 
-const initialState: AuthState = {
+export const authInitialState: AuthState = {
   user: {
     firstName: "",
     lastName: "",
@@ -35,14 +35,14 @@ const initialState: AuthState = {
 
 const auth = createSlice({
   name: "auth",
-  initialState,
+  initialState: authInitialState,
   reducers: {
     setUser: (state: AuthState, action: PayloadAction<User>) => {
       state.user = action.payload
       state.authenticated = true
     },
     signOut: (state: AuthState) => {
-      state.user = initialState.user
+      state.user = authInitialState.user
       state.authenticated = false
     },
   },
@@ -138,22 +138,23 @@ export const signout = () => {
 }
 
 // Get user by id
-export const getUserById = (id: string) => {
+export const getUserById = async (id: string): Promise<User> => {
+    const docRef = doc(db, "users", id)
+    const docSnap = await getDoc(docRef)
+    const userData = docSnap.data() as User
+    return userData
+}
+
+// Get user by id
+export const getCurrentUser = (id: string) => {
   return async (dispatch: AppDispatch) => {
-    try {
-      const docRef = doc(db, "users", id)
-      const docSnap = await getDoc(docRef)
-      const userData = docSnap.data() as User
-      if (userData) {
-        userData.emailVerified =
-          _auth.currentUser?.emailVerified ?? userData.emailVerified
-        dispatch(setUser(userData))
-      }
-    } catch (err) {
-      dispatch(setError("Error dispatching setUser"))
-    } finally {
-      dispatch(loading(false))
+    const user = await getUserById(id)
+    if (user) {
+      user.emailVerified =
+        _auth.currentUser?.emailVerified ?? user.emailVerified
     }
+    dispatch(setUser(user))
+    dispatch(loading(false))
   }
 }
 

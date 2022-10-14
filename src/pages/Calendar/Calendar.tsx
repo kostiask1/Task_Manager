@@ -9,20 +9,19 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useState,
+  useState
 } from "react"
 import {
   Calendar as EventCalendar,
   dateFnsLocalizer,
-  Event,
+  Event
 } from "react-big-calendar"
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import { useParams } from "react-router-dom"
+import Guest from "../../components/Guest"
 import Modal from "../../components/Modal/Modal"
-import Button from "../../components/UI/Button"
 import Loader from "../../components/UI/Loader/Loader"
 import { convertDateToString, convertToDate } from "../../helpers"
-import { setError, setSuccess } from "../../store/App/slice"
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { editingTask, getTasks, taskInitialState } from "../../store/Task/slice"
@@ -173,26 +172,9 @@ const Calendar = () => {
 
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate])
 
-  const copyPage = useCallback(() => {
-    navigator.clipboard
-      .writeText(`${window.location.host}/calendar/${user.id}`)
-      .then(
-        () =>
-          dispatch(setSuccess("Link to your wishlist is copied to clipboard")),
-        () => dispatch(setError("Something went wrong"))
-      )
-  }, [user.id])
-
   return (
     <div className="pb-6 pt-3">
-      {!foreignUser && (
-        <Button
-          onClick={copyPage}
-          className="is-primary mb-3"
-          text="Share Your Tasks"
-        />
-      )}
-      {uid && uid !== user.id && <h2>Tasks of user ID: {uid}</h2>}
+      <Guest/>
       <Loader loading={loading} />
       <div className="calendar-wrapper">
         <EventCalendar
