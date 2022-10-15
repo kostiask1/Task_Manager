@@ -80,13 +80,13 @@ const Calendar = () => {
       start: task.end
         ? convertToDate(task.end)
         : task.completed
-        ? clearDate(task.updatedAt)
-        : today,
+          ? clearDate(task.updatedAt)
+          : today,
       end: task.end
         ? convertToDate(task.end)
         : task.completed
-        ? clearDate(task.updatedAt)
-        : today,
+          ? clearDate(task.updatedAt)
+          : today,
       hasEndDate: task.end ? true : false,
     }))
   }, [])
@@ -175,46 +175,48 @@ const Calendar = () => {
   return (
     <div className="pb-6 pt-3">
       <Loader loading={loading} />
-      <SecurityMiddleware fallback="User haven't granted you access to his tasks">
-        <div className="calendar-wrapper">
-          <EventCalendar
-            className="fadeIn"
-            localizer={localizer}
-            events={events}
-            eventPropGetter={eventPropGetter}
-            onSelectEvent={onSelectEvent}
-            selectable={true}
-            longPressThreshold={150}
-            onSelectSlot={onSelectSlot}
-            onShowMore={onShowMore}
-            //@ts-ignore
-            view={bcView}
-            date={date}
-            onNavigate={onNavigate}
-            onView={setBCView}
-            views={["month", "week", "agenda"]}
-            style={{ height: "100vh" }}
-          />
-        </div>
-        <Modal id="task" show={!!task} hide={() => setTask(null)}>
-          {task && (
-            <Suspense fallback={<Loader loading={true} />}>
-              <Task
-                task={task}
-                setModalUpdate={setUpdateTask}
-                setModal={setTask}
-                editable={!foreignUser}
-              />
-            </Suspense>
-          )}
-        </Modal>
-        {!foreignUser && (
-          <Modal id="slot" show={slot} key={slot} hide={handleCloseTaskModal}>
-            <Suspense fallback={<Loader loading={true} />}>
-              <TaskForm key={task} setModal={setSlot} />
-            </Suspense>
+      <SecurityMiddleware data="Calendar of tasks" fallback="User haven't granted you access to his tasks">
+        <>
+          <div className="calendar-wrapper">
+            <EventCalendar
+              className="fadeIn"
+              localizer={localizer}
+              events={events}
+              eventPropGetter={eventPropGetter}
+              onSelectEvent={onSelectEvent}
+              selectable={true}
+              longPressThreshold={150}
+              onSelectSlot={onSelectSlot}
+              onShowMore={onShowMore}
+              //@ts-ignore
+              view={bcView}
+              date={date}
+              onNavigate={onNavigate}
+              onView={setBCView}
+              views={["month", "week", "agenda"]}
+              style={{ height: "100vh" }}
+            />
+          </div>
+          <Modal id="task" show={!!task} hide={() => setTask(null)}>
+            {task && (
+              <Suspense fallback={<Loader loading={true} />}>
+                <Task
+                  task={task}
+                  setModalUpdate={setUpdateTask}
+                  setModal={setTask}
+                  editable={!foreignUser}
+                />
+              </Suspense>
+            )}
           </Modal>
-        )}
+          {!foreignUser && (
+            <Modal id="slot" show={slot} key={slot} hide={handleCloseTaskModal}>
+              <Suspense fallback={<Loader loading={true} />}>
+                <TaskForm key={task} setModal={setSlot} />
+              </Suspense>
+            </Modal>
+          )}
+        </>
       </SecurityMiddleware>
     </div>
   )

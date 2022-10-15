@@ -11,7 +11,7 @@ const Tasks = () => {
   const task: Task | null = useAppSelector(
     (state: RootState) => state.tasks.editingTask
   )
-  
+
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const { uid } = useParams()
 
@@ -19,10 +19,11 @@ const Tasks = () => {
 
   return (
     <div className="section is-medium pt-2">
-      <SecurityMiddleware fallback="User haven't granted you access to his tasks">
-      {!foreignUser && <TaskForm key={JSON.stringify(task)} />}
-      <hr />
-      <List />
+      <SecurityMiddleware data="Tasks" fallback="User haven't granted you access to his tasks">
+        <>
+          {!foreignUser && <TaskForm key={JSON.stringify(task)} />}
+          <hr />
+          <List /></>
       </SecurityMiddleware>
     </div>
   )

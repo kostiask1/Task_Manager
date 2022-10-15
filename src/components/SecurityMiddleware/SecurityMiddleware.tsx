@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, FC } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { setError, setSuccess } from "../../store/App/slice";
 import { authInitialState, getUserById } from "../../store/Auth/slice";
@@ -6,7 +6,13 @@ import { User } from "../../store/Auth/types";
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store";
 import Button from "../UI/Button";
 
-const SecurityMiddleware = ({ fallback, children }: any) => {
+type ISecurityProps = {
+  data?: string,
+  fallback?: string,
+  children?: React.ReactNode
+}
+
+const SecurityMiddleware: FC<ISecurityProps> = ({ fallback, data, children }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
@@ -53,7 +59,6 @@ const SecurityMiddleware = ({ fallback, children }: any) => {
       )}
       {foreignUser && isOpened && (
         <h2 className="is-inline-flex is-align-items-center">
-          Data of user:{" "}
           <div
             className="user is-inline-flex is-align-items-center"
             style={{ textDecoration: "underline", cursor: "pointer" }}
@@ -79,9 +84,10 @@ const SecurityMiddleware = ({ fallback, children }: any) => {
               {gotUser.id ? `${gotUser.firstName} ${gotUser.lastName}` : uid}
             </span>
           </div>
+          <span>: {data ?? "Data"}</span>
         </h2>
       )}
-      {!isOpened && <h1>{fallback ?? "User haven't granted you permission to his data"}</h1>}
+      {foreignUser && gotUser.id && !isOpened && <h1>{fallback ?? "User haven't granted you permission to his data"}</h1>}
       {isOpened && (
         <>
           <hr className="my-3" />

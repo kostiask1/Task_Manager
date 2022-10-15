@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, Link } from 'react-router-dom';
 import { authInitialState, getUserById } from "../../store/Auth/slice"
 import { useAppSelector, RootState } from "../../store/store"
 import { User } from "../../store/Auth/types"
@@ -41,13 +41,24 @@ const Guest = () => {
           />
         </figure>
       </div>
-      <div className="form column is-half">
+      <div className="column is-half">
         <div>{gotUser.firstName}</div>
         <div>{gotUser.lastName}</div>
-        <div>{gotUser.email}</div>
+        <div><a href={`mailto:${gotUser.email}`}>{gotUser.email}</a></div>
+        <div className="columns mt-3">
+          <div className="column">
+            <Link style={{width: "100%"}} className="button" to={`/tasks/${uid}`}>Tasks</Link>
+          </div>
+          <div className="column">
+            <Link style={{width: "100%"}} className="button" to={`/calendar/${uid}`}>Calendar</Link>
+          </div>
+          <div className="column">
+            <Link style={{width: "100%"}} className="button" to={`/wishes/${uid}`}>Wishes</Link>
+          </div>
+        </div>
       </div>
     </div>
-  ) : <h1>User haven't granted you permission to his data</h1>
+  ) : foreignUser && gotUser.id ? <h1>User haven't granted you permission to his data</h1> : null
 }
 
 export default Guest
