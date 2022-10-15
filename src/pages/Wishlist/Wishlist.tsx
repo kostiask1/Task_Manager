@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import SecurityMiddleware from '../../components/SecurityMiddleware'
 import Button from "../../components/UI/Button"
 import Loader from "../../components/UI/Loader/Loader"
 import { equal, tableActions } from "../../helpers"
@@ -8,7 +9,6 @@ import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { getWishes } from "../../store/Wish/slice"
 import { Wish as IWish } from "../../store/Wish/types"
 import WishForm from "./WishForm/WishForm"
-import Guest from '../../components/Guest/Guest';
 const Wish = lazy(() => import("./Wish"))
 
 const Wishlist = () => {
@@ -46,7 +46,7 @@ const Wishlist = () => {
 
   return (
     <div className="section is-medium pt-2 pb-6">
-      <Guest/>
+      <SecurityMiddleware fallback="User haven't granted you access to his whole wishlist"/>
       {!foreignUser && <WishForm key={JSON.stringify(wish)} />}
       <Suspense fallback={<Loader loading={true} />}>
         <div className="table-container">

@@ -19,7 +19,6 @@ const Password = () => {
   const [oldPassword, setOldPassword] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
-
   const submitHandler = (e: FormEvent) => {
     e.preventDefault()
 

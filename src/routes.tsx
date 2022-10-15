@@ -11,6 +11,7 @@ const SignUp = lazy(() => import("./pages/Auth/SignUp"))
 const General = lazy(() => import("./pages/User"))
 const Password = lazy(() => import("./pages/User/Password"))
 const Profile = lazy(() => import("./pages/User/Profile"))
+const GuestProfile = lazy(() => import("./pages/Guest"))
 const Wishes = lazy(() => import("./pages/Wishlist"))
 const Access = lazy(() => import("./pages/Access"))
 const Weather = lazy(() => import("./pages/Weather"))
@@ -96,6 +97,13 @@ export const routesArray: RoutesArray[] = [
     show: true,
     path: "access",
     element: <Access />,
+  },
+  {
+    name: "Profile",
+    private: true,
+    show: false,
+    path: "profile/:uid",
+    element: <GuestProfile />,
   },
   {
     name: "Profile",

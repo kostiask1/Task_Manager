@@ -3,8 +3,10 @@ import { getAuth } from "firebase/auth"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
 import { equal } from "../../helpers"
+import { getUserById } from "../Auth/slice"
+import { User } from '../Auth/types'
 import { AppDispatch, RootState } from "../store"
-import { Whitelist, Wish } from "./types"
+import { Wish } from "./types"
 
 interface WishesState {
   array: Wish[]
@@ -54,21 +56,20 @@ const _auth = getAuth()
 export const getWishes = (uid: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const currendId = _auth?.currentUser?.uid || ""
+    const user: User = await getUserById(uid)
 
     const docRef = doc(db, "wishes", uid)
     const docSnap = await getDoc(docRef)
-    const user = docSnap.data() as { wishes: Wish[] }
+    const { wishes: wishList} = docSnap.data() as { wishes: Wish[] }
 
-    const { whitelist } = getState().auth.user as { whitelist: Whitelist[] }
-
-    const wishList: Wish[] = user?.wishes || []
     const sendWishes: Wish[] = [...wishList]
 
-    if (wishList.length) {
-      const foreignWishes = wishList[0].uid !== currendId
-      const foreignUser = whitelist?.find((user) => user.id === currendId)
+    if (wishList?.length) {
+      const isForeignUser = wishList[0].uid !== currendId
 
-      if (foreignWishes) {
+      const foreignUser = user.whitelist?.find((user) => user.id === currendId)
+
+      if (isForeignUser) {
         sendWishes.length = 0
         for (const wish of wishList) {
           const foreignUserWish = wish.whitelist?.find(
@@ -81,6 +82,7 @@ export const getWishes = (uid: string) => {
           }
         }
       }
+      
       const stateWishes = getState().wishes.array
       !equal(stateWishes, sendWishes) && dispatch(wishes(sendWishes))
     } else {

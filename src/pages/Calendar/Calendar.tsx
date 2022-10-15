@@ -18,8 +18,8 @@ import {
 } from "react-big-calendar"
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import { useParams } from "react-router-dom"
-import Guest from "../../components/Guest"
 import Modal from "../../components/Modal/Modal"
+import SecurityMiddleware from '../../components/SecurityMiddleware/SecurityMiddleware'
 import Loader from "../../components/UI/Loader/Loader"
 import { convertDateToString, convertToDate } from "../../helpers"
 import { User } from "../../store/Auth/types"
@@ -174,47 +174,48 @@ const Calendar = () => {
 
   return (
     <div className="pb-6 pt-3">
-      <Guest/>
       <Loader loading={loading} />
-      <div className="calendar-wrapper">
-        <EventCalendar
-          className="fadeIn"
-          localizer={localizer}
-          events={events}
-          eventPropGetter={eventPropGetter}
-          onSelectEvent={onSelectEvent}
-          selectable={true}
-          longPressThreshold={150}
-          onSelectSlot={onSelectSlot}
-          onShowMore={onShowMore}
-          //@ts-ignore
-          view={bcView}
-          date={date}
-          onNavigate={onNavigate}
-          onView={setBCView}
-          views={["month", "week", "agenda"]}
-          style={{ height: "100vh" }}
-        />
-      </div>
-      <Modal id="task" show={!!task} hide={() => setTask(null)}>
-        {task && (
-          <Suspense fallback={<Loader loading={true} />}>
-            <Task
-              task={task}
-              setModalUpdate={setUpdateTask}
-              setModal={setTask}
-              editable={!foreignUser}
-            />
-          </Suspense>
-        )}
-      </Modal>
-      {!foreignUser && (
-        <Modal id="slot" show={slot} key={slot} hide={handleCloseTaskModal}>
-          <Suspense fallback={<Loader loading={true} />}>
-            <TaskForm key={task} setModal={setSlot} />
-          </Suspense>
+      <SecurityMiddleware fallback="User haven't granted you access to his tasks">
+        <div className="calendar-wrapper">
+          <EventCalendar
+            className="fadeIn"
+            localizer={localizer}
+            events={events}
+            eventPropGetter={eventPropGetter}
+            onSelectEvent={onSelectEvent}
+            selectable={true}
+            longPressThreshold={150}
+            onSelectSlot={onSelectSlot}
+            onShowMore={onShowMore}
+            //@ts-ignore
+            view={bcView}
+            date={date}
+            onNavigate={onNavigate}
+            onView={setBCView}
+            views={["month", "week", "agenda"]}
+            style={{ height: "100vh" }}
+          />
+        </div>
+        <Modal id="task" show={!!task} hide={() => setTask(null)}>
+          {task && (
+            <Suspense fallback={<Loader loading={true} />}>
+              <Task
+                task={task}
+                setModalUpdate={setUpdateTask}
+                setModal={setTask}
+                editable={!foreignUser}
+              />
+            </Suspense>
+          )}
         </Modal>
-      )}
+        {!foreignUser && (
+          <Modal id="slot" show={slot} key={slot} hide={handleCloseTaskModal}>
+            <Suspense fallback={<Loader loading={true} />}>
+              <TaskForm key={task} setModal={setSlot} />
+            </Suspense>
+          </Modal>
+        )}
+      </SecurityMiddleware>
     </div>
   )
 }

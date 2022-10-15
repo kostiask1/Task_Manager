@@ -5,6 +5,8 @@ import { convertDateToString, convertToDate, equal } from "../../helpers"
 import { User } from "../Auth/types"
 import { AppDispatch, RootState } from "../store"
 import { Subtask, Task } from "./types"
+import { getAuth } from 'firebase/auth';
+import { getUserById } from "../Auth/slice"
 
 const sortDeadlines = (array: Task[]) =>
   array.sort(
@@ -54,22 +56,27 @@ export default task.reducer
 
 export const { tasks, editingTask } = task.actions
 
+const _auth = getAuth()
+
 export const getTasks = (uid: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    const user: User = getState().auth.user
+    const currendId = _auth?.currentUser?.uid || ""
+    const user: User = await getUserById(uid)
 
     const docRef = doc(db, "tasks", uid)
     const docSnap = await getDoc(docRef)
     const { tasks: userTasks } = (docSnap.data() || []) as { tasks: Task[] }
 
     if (userTasks?.length) {
-      const foreignWishes = userTasks[0].uid !== user.id
+      const isForeignUser = userTasks[0].uid !== currendId
 
-      if (foreignWishes) {
-        const foreignUser = user.whitelist.find((user) => user.id === user.id)
+      if (isForeignUser) {
+        const foreignUser = user.whitelist.find((u) => u.id === currendId)
         if (!foreignUser || foreignUser.open === false) userTasks.length = 0
       }
+
       const stateTasks = getState().tasks.array
+      
       for (let i = 0; i < userTasks.length; i++) {
         const task = userTasks[i]
         if (
