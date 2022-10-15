@@ -92,7 +92,7 @@ const Access = () => {
   return (
     <div className="section is-medium pt-2 pb-6">
       <h1 className="is-size-5">
-        Grant users access to view your wishlist and tasks
+        Grant users access to view your data
       </h1>
       <hr className="my-2" />
       <ul key={JSON.stringify(state)}>
