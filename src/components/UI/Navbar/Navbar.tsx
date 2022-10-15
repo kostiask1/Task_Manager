@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react"
-import { useLocation, Link } from "react-router-dom"
+import { useLocation, Link, useNavigate } from "react-router-dom"
 import { routesArray } from "../../../routes"
 import { signout } from "../../../store/Auth/slice"
 import { useAppSelector, RootState, useAppDispatch } from "../../../store/store"
@@ -9,18 +9,25 @@ import { setSuccess, setError } from "../../../store/App/slice"
 
 function Navbar() {
   const location = useLocation()
+  const navigate = useNavigate();
   const { authenticated, user } = useAppSelector((state: RootState) => ({
     authenticated: state.auth.authenticated,
     user: state.auth.user,
   }))
+
   const burgerRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (user.id && window.location.pathname.includes(user.id)) {
+      const newLocation = window.location.pathname.replace(`/${user.id}`, "")
+      navigate(newLocation)
+    }
+    
     burgerRef.current?.classList.remove("is-active")
     menuRef.current?.classList.remove("is-active")
-  }, [location.pathname])
+  }, [location.pathname, user.id])
 
   const dispatch = useAppDispatch()
 

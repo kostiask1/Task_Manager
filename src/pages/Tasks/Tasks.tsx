@@ -22,7 +22,7 @@ const Tasks = () => {
       <SecurityMiddleware fallback="User haven't granted you access to his tasks">
         <>
           {!foreignUser && <TaskForm key={JSON.stringify(task)} />}
-          <hr />
+          {!foreignUser && <hr />}
           <List /></>
       </SecurityMiddleware>
     </div>

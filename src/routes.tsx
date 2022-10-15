@@ -32,14 +32,6 @@ interface RoutesArray extends RouteProps {
 
 export const routesArray: RoutesArray[] = [
   {
-    name: "About",
-    private: false,
-    show: true,
-    visible: true,
-    path: "about",
-    element: <About />,
-  },
-  {
     name: "SignIn",
     private: false,
     show: false,
@@ -115,6 +107,14 @@ export const routesArray: RoutesArray[] = [
       { path: "", element: <Profile /> },
       { path: "password", element: <Password /> },
     ],
+  },
+  {
+    name: "About",
+    private: false,
+    show: true,
+    visible: true,
+    path: "about",
+    element: <About />,
   },
 ]
 
