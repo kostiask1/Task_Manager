@@ -17,10 +17,10 @@ const Messages = () => {
           dispatch(clearMessages([]))
       }, 3400)
     }
-
+    
     return () => clearTimeout(timeout)
   }, [messages.length])
-
+  
   return (
     <>
       <div className="messages__container">
