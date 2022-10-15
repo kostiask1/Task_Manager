@@ -19,7 +19,7 @@ const Tasks = () => {
 
   return (
     <div className="section is-medium pt-2">
-      <SecurityMiddleware data="Tasks" fallback="User haven't granted you access to his tasks">
+      <SecurityMiddleware fallback="User haven't granted you access to his tasks">
         <>
           {!foreignUser && <TaskForm key={JSON.stringify(task)} />}
           <hr />

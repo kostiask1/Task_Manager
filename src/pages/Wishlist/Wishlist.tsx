@@ -47,7 +47,7 @@ const Wishlist = () => {
   const fallback = foreignUser && data.length ? "User have granted you access only to part of his wishlist" : "User haven't granted you access to his wishlist"
   return (
     <div className="section is-medium pt-2 pb-6">
-      <SecurityMiddleware data="Wishes" fallback={fallback}/>
+      <SecurityMiddleware fallback={fallback}/>
       {!foreignUser && <WishForm key={JSON.stringify(wish)} />}
       <Suspense fallback={<Loader loading={true} />}>
         <div className="table-container">

@@ -175,7 +175,7 @@ const Calendar = () => {
   return (
     <div className="pb-6 pt-3">
       <Loader loading={loading} />
-      <SecurityMiddleware data="Calendar of tasks" fallback="User haven't granted you access to his tasks">
+      <SecurityMiddleware fallback="User haven't granted you access to his tasks">
         <>
           <div className="calendar-wrapper">
             <EventCalendar

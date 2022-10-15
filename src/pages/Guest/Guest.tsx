@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react"
-import { useParams, Link } from 'react-router-dom';
-import { authInitialState, getUserById } from "../../store/Auth/slice"
-import { useAppSelector, RootState } from "../../store/store"
-import { User } from "../../store/Auth/types"
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
+import GuestLinks from "../../components/GuestLinks";
+import { authInitialState, getUserById } from "../../store/Auth/slice";
+import { User } from "../../store/Auth/types";
+import { RootState, useAppSelector } from "../../store/store";
 
 const Guest = () => {
   const user: User = useAppSelector((state: RootState) => state.auth.user)
@@ -47,17 +48,7 @@ const Guest = () => {
         <div>{gotUser.firstName}</div>
         <div>{gotUser.lastName}</div>
         <div><a href={`mailto:${gotUser.email}`}>{gotUser.email}</a></div>
-        <div className="columns mt-3">
-          <div className="column">
-            <Link style={{width: "100%"}} className="button" to={`/tasks/${uid}`}>Tasks</Link>
-          </div>
-          <div className="column">
-            <Link style={{width: "100%"}} className="button" to={`/calendar/${uid}`}>Calendar</Link>
-          </div>
-          <div className="column">
-            <Link style={{width: "100%"}} className="button" to={`/wishes/${uid}`}>Wishes</Link>
-          </div>
-        </div>
+        <GuestLinks uid={uid}/>
       </div>
     </div>
   ) : foreignUser && gotUser.id ? <h1>User haven't granted you permission to his data</h1> : null

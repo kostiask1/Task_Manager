@@ -1,18 +1,18 @@
-import { useCallback, useEffect, useState, FC } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { setError, setSuccess } from "../../store/App/slice";
 import { authInitialState, getUserById } from "../../store/Auth/slice";
 import { User } from "../../store/Auth/types";
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store";
+import GuestLinks from '../GuestLinks/GuestLinks';
 import Button from "../UI/Button";
 
 type ISecurityProps = {
-  data?: string,
   fallback?: string,
   children?: React.ReactNode
 }
 
-const SecurityMiddleware: FC<ISecurityProps> = ({ fallback, data, children }) => {
+const SecurityMiddleware: FC<ISecurityProps> = ({ fallback, children }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
@@ -47,7 +47,7 @@ const SecurityMiddleware: FC<ISecurityProps> = ({ fallback, data, children }) =>
   const goToUser = useCallback(() => {
     navigate(`/profile/${uid}`);
   }, [user.id])
-  
+
   return (
     <>
       {!foreignUser && (
@@ -58,9 +58,9 @@ const SecurityMiddleware: FC<ISecurityProps> = ({ fallback, data, children }) =>
         />
       )}
       {foreignUser && isOpened && (
-        <h2 className="is-inline-flex is-align-items-center">
+        <h2 className="is-flex is-align-items-center is-justify-content-center">
           <div
-            className="user is-inline-flex is-align-items-center"
+            className="user is-inline-flex is-align-items-center mr-3"
             style={{ textDecoration: "underline", cursor: "pointer" }}
             onClick={goToUser}
           >
@@ -84,7 +84,7 @@ const SecurityMiddleware: FC<ISecurityProps> = ({ fallback, data, children }) =>
               {gotUser.id ? `${gotUser.firstName} ${gotUser.lastName}` : uid}
             </span>
           </div>
-          <span>: {data ?? "Data"}</span>
+          <GuestLinks uid={uid} />
         </h2>
       )}
       {foreignUser && gotUser.id && !isOpened && <h1>{fallback ?? "User haven't granted you permission to his data"}</h1>}
