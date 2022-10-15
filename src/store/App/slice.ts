@@ -46,8 +46,9 @@ export const setSuccess = (msg: string) => (dispatch: AppDispatch) =>
 export const deleteMessage = (id: number) => {
   return (dispatch: AppDispatch, getState: () => RootState) => {
     const messagesArray = getState().app.messages as IMessage[]
-    const messageIndex = messagesArray.findIndex((message) => message.id === id)
-    messagesArray.splice(messageIndex, 1)
-    dispatch(messages(messagesArray))
+    const messagesTemp = [...messagesArray]
+    const messageIndex = messagesTemp.findIndex((message) => message.id === id)
+    messagesTemp.splice(messageIndex, 1)
+    dispatch(messages(messagesTemp))
   }
 }

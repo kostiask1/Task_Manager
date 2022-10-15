@@ -88,7 +88,7 @@ const Access = () => {
     },
     [userW]
   )
-
+  
   return (
     <div className="section is-medium pt-2 pb-6">
       <h1 className="is-size-5">
@@ -132,8 +132,8 @@ const Access = () => {
                       />
                     </figure>
                     <Link to={`/profile/${user.id}`}>{users[index].firstName} {users[index].lastName}</Link>
-                    &nbsp;({user.id})
-                  </> : <span>{user.id}</span>}
+                    <div className="ml-1 is-size-7 id-line">({user.id})</div>
+                  </> : <span className="id-line">{user.id}</span>}
               </label>
             </li>
           ))}
