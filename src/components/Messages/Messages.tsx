@@ -8,7 +8,6 @@ import "./Messages.scss";
 const Messages = () => {
   const dispatch = useAppDispatch()
   const messages: IMessage[] = useAppSelector((state: RootState) => state.app.messages)
-  console.log('messages:', messages)
 
   useEffect(() => {
     let timeout: NodeJS.Timeout
