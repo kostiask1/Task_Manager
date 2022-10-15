@@ -47,7 +47,7 @@ const SecurityMiddleware: FC<ISecurityProps> = ({ fallback, data, children }) =>
   const goToUser = useCallback(() => {
     navigate(`/profile/${uid}`);
   }, [user.id])
-
+  
   return (
     <>
       {!foreignUser && (

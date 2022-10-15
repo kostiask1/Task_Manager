@@ -2,22 +2,29 @@ import { createRef, useCallback, useEffect, useState } from "react"
 import Button from "../../components/UI/Button"
 import Input from "../../components/UI/Input"
 import { setError, setSuccess } from "../../store/App/slice"
-import { updateUser } from "../../store/Auth/slice"
+import { updateUser, getUserById } from '../../store/Auth/slice';
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { Whitelist as IWhitelist } from "../../store/Wish/types"
 import "./Access.scss"
+import { Link } from 'react-router-dom';
 
 const Access = () => {
   const dispatch = useAppDispatch()
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const [state, setState] = useState<IWhitelist[]>(user.whitelist || [])
   const [userW, setUserW] = useState<string>("")
+  const [users, setUsers] = useState<User[]>([])
   const userRef = createRef<HTMLInputElement>()
 
   useEffect(() => {
     saveWhitelist()
     userRef?.current?.focus()
+  }, [state])
+
+  useEffect(() => {
+    if (state.length === 0) return
+    Promise.all(state.map(user => getUserById(user.id))).then((gotUsers) => setUsers(gotUsers))
   }, [state])
 
   const removeUser = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
@@ -32,6 +39,13 @@ const Access = () => {
     const copy = JSON.parse(JSON.stringify(state))
     const index = copy.findIndex((user: IWhitelist) => user.id === id)
     copy[index].open = !copy[index].open
+    const user = users.find(u => u.id === id)
+    
+    if (copy[index].open) {
+      dispatch(setSuccess(`Data OPENED to ${user ? `${user.firstName} ${user.lastName}` : id}`))
+    } else {
+      dispatch(setError(`Data CLOSED from ${user ? `${user.firstName} ${user.lastName}` : id}`))
+    }
     setState(copy)
   }
 
@@ -46,18 +60,30 @@ const Access = () => {
   const addUserToWhitelist = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
+
+      if (user.id === userW.trim()) {
+        dispatch(setError("You can't add yourself to whitelist"))
+        setUserW("")
+        return
+      }
+
       if (state.findIndex((user) => user.id === userW) > -1) {
         dispatch(setError("User already in whitelist"))
-        setUserW("")
+        return setUserW("")
+      }
+
+      if (userW.trim().length == 28) {
+        getUserById(userW.trim()).then(user => {
+          if (user) {
+            setUserW("")
+            const newUser: IWhitelist = { id: userW, open: true }
+            setState((state: IWhitelist[]) => [...state, newUser])
+            return dispatch(setSuccess("User added to whitelist"))
+          }
+          dispatch(setError("There's no user with such ID"))
+        })
       } else {
-        if (userW.trim().length == 28) {
-          const newUser: IWhitelist = { id: userW, open: true }
-          setUserW("")
-          setState((state: IWhitelist[]) => [...state, newUser])
-          dispatch(setSuccess("User added to whitelist"))
-        } else {
-          dispatch(setError("Invalid user id"))
-        }
+        dispatch(setError("Invalid user id"))
       }
     },
     [userW]
@@ -68,11 +94,11 @@ const Access = () => {
       <h1 className="is-size-5">
         Grant users access to view your wishlist and tasks
       </h1>
-      <hr />
+      <hr className="my-2" />
       <ul key={JSON.stringify(state)}>
         {!!state?.length &&
           state.map((user, index) => (
-            <li key={user.id + index} className="is-flex is-align-items-center">
+            <li key={user.id + index} className="is-flex mb-3 is-align-items-center">
               <input
                 type="checkbox"
                 className="checkbox"
@@ -86,15 +112,35 @@ const Access = () => {
                 onClick={(e) => removeUser(e, user.id)}
                 text="x"
               />
-              <label className="whitelist-text" htmlFor={"checkbox-" + user.id}>
-                {user.id}
+              <label className="whitelist-text is-flex is-align-items-center" htmlFor={"checkbox-" + user.id}>
+                {users[index] ?
+                  <>
+                    <figure className="image mx-2 is-48x48 is-inline-block">
+                      <img
+                        className="is-rounded"
+                        src={
+                          users[index].profileImg ||
+                          "https://bulma.io/images/placeholders/128x128.png"
+                        }
+                        style={{ maxHeight: "48px" }}
+                        onError={({ currentTarget }) => {
+                          currentTarget.onerror = null
+                          currentTarget.src =
+                            "https://bulma.io/images/placeholders/128x128.png"
+                        }}
+                        alt="Profile img"
+                      />
+                    </figure>
+                    <Link to={`/profile/${user.id}`}>{users[index].firstName} {users[index].lastName}</Link>
+                    &nbsp;({user.id})
+                  </> : <span>{user.id}</span>}
               </label>
             </li>
           ))}
       </ul>
       <Input
         name="user"
-        className="input mt-4"
+        className="input mt-2"
         placeholder="Enter user id (Expecting 28 characters)"
         value={userW}
         ref={userRef}

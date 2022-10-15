@@ -3,17 +3,19 @@ import { useParams, Link } from 'react-router-dom';
 import { authInitialState, getUserById } from "../../store/Auth/slice"
 import { useAppSelector, RootState } from "../../store/store"
 import { User } from "../../store/Auth/types"
+import { useNavigate } from 'react-router';
 
 const Guest = () => {
   const user: User = useAppSelector((state: RootState) => state.auth.user)
   const [gotUser, setGotUser] = useState<User>(authInitialState.user)
+  const navigate = useNavigate()
 
   const { uid } = useParams()
 
   const foreignUser = uid !== undefined && user.id !== uid
 
   useEffect(() => {
-    if (!foreignUser) return
+    if (!foreignUser) return navigate("/profile")
     ;(async () => {
       getUserById(uid).then((user) => setGotUser(user))
     })()
