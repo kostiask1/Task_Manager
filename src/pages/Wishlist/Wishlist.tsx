@@ -49,6 +49,7 @@ const Wishlist = () => {
     <div className="section is-medium pt-2 pb-6">
       <SecurityMiddleware fallback={fallback}/>
       {!foreignUser && <WishForm key={JSON.stringify(wish)} />}
+      {!foreignUser && <hr />}
       <Suspense fallback={<Loader loading={true} />}>
         <div className="table-container">
           <table className="table table-wishes is-striped is-bordered is-hoverable is-fullwidth is-narrow">
