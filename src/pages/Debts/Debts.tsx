@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
 import Table, { ITableProps } from "../../components/UI/Table"
-import { tableActions } from "../../helpers"
 import { getDebts } from "../../store/Debt/slice"
 import { Debt as IDebt } from "../../store/Debt/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
@@ -13,25 +12,12 @@ const Debts = () => {
   const debt: IDebt | null = useAppSelector(
     (state: RootState) => state.debts.editingDebt
   )
-  const [data, setData] = useState<IDebt[]>(debts)
-  const [sorting, setSorting] = useState("")
   const [loading, setLoading] = useState(true)
-  const [sort, reset] = tableActions({
-    data,
-    setData,
-    sorting,
-    setSorting,
-    initData: debts,
-  })
 
   useEffect(() => {
     setLoading(true)
     dispatch(getDebts()).then(() => setLoading(false))
   }, [])
-
-  useEffect(() => {
-    setData(debts)
-  }, [debts])
 
   const currencies = useMemo(() => {
     const temp_currencies: any[] = []
@@ -107,9 +93,9 @@ const Debts = () => {
     },
   ]
 
-  const body = data.map((debt: IDebt) => (
-    <Debt key={debt.id} debt={debt} index={debts.indexOf(debt)} />
-  ))
+const renderBody = (debt: IDebt) => (
+    <Debt debt={debt} index={debts.indexOf(debt)} />
+  )
 
   const footer = [
     "",
@@ -156,15 +142,11 @@ const Debts = () => {
     ""
   ]
 
-  const tableProps: ITableProps = {
-    data,
+  const tableProps: ITableProps<IDebt> = {
     columns,
-    body,
+    renderBody,
     footer,
     loading,
-    sorting,
-    sort,
-    reset,
     initData: debts
   }
 
@@ -173,7 +155,8 @@ const Debts = () => {
       <DebtForm key={JSON.stringify(debt)} />
       <hr />
       <Table
-        {...tableProps}
+          key={debts.length}
+          {...tableProps}
       />
     </div>
   )

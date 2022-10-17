@@ -1,5 +1,6 @@
-import { equal } from '../../helpers';
+import { equal, tableActions } from '../../helpers';
 import Button from './Button';
+import { useState } from 'react';
 
 type IHeader = {
   title: string | number;
@@ -19,19 +20,25 @@ type IFooter = {
 
 export interface ITableProps<T = unknown> {
   columns: IHeader[],
-  data: T[],
   initData: T[],
-  body: React.ReactElement[],
+  renderBody: (data: T) => React.ReactNode,
   footer?: (IFooter | string)[],
   loading: boolean,
-  sorting: string,
-  sort: (e: React.MouseEvent<HTMLElement>, key?: string) => void,
-  reset: (e: React.MouseEvent<HTMLElement>, key?: string) => void,
   fallback?: string
 }
 
-const Table: <T>(p: ITableProps<T>) => React.ReactElement = ({ columns, data, initData, body, footer, loading, sorting, sort, reset, fallback }) => {
-  return <div className="table-container">
+const Table: <T>(p: ITableProps<T>) => React.ReactElement = ({ columns, initData, renderBody, footer, loading, fallback }) => {
+  const [data, setData] = useState(initData)
+  const [sorting, setSorting] = useState("")
+  const [sort, reset] = tableActions({
+    data,
+    setData,
+    sorting,
+    setSorting,
+    initData: initData,
+  })
+
+  return <div className="table-container" key={JSON.stringify(data)}>
     <table className="table table-debts is-striped is-bordered is-hoverable is-fullwidth is-narrow">
       <thead>
         <tr>
@@ -51,13 +58,7 @@ const Table: <T>(p: ITableProps<T>) => React.ReactElement = ({ columns, data, in
         </tr>
       </thead>
       <tbody>
-        {!!body?.length ? (
-          body.map((element: any, index: number) => (
-            <tr key={(element.id || 0) + index}>
-              {element}
-            </tr>
-          ))
-        ) : (
+        {!!data?.length ? data.map((item, index) => <tr key={index}>{renderBody(item)}</tr>) : (
           <tr>
             <td colSpan={10}>{fallback || "No data to be displayed..."}</td>
           </tr>
