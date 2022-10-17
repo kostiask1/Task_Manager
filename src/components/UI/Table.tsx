@@ -38,7 +38,7 @@ const Table: <T>(p: ITableProps<T>) => React.ReactElement = ({ columns, initData
     initData: initData,
   })
 
-  return <div className="table-container" key={JSON.stringify(data)}>
+  return <div className="table-container">
     <table className="table table-debts is-striped is-bordered is-hoverable is-fullwidth is-narrow">
       <thead>
         <tr>
