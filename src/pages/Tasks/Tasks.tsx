@@ -5,7 +5,6 @@ import { User } from "../../store/Auth/types"
 import { RootState, useAppSelector } from "../../store/store"
 import { Task } from "../../store/Task/types"
 import List from "./List/List"
-import "./Tasks.scss"
 
 const Tasks = () => {
   const task: Task | null = useAppSelector(

@@ -14,8 +14,10 @@ export function useLocalStorage(
     },
     [key]
   )
+  
   useEffect(() => {
     setLocalStorage(value)
   }, [setLocalStorage, value])
+
   return [value, setValue]
 }

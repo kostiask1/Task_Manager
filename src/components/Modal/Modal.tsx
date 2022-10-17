@@ -8,17 +8,15 @@ interface Props {
   hide: () => void
 }
 
-const Modal: FC<Props> = ({ show, hide, id, children }) => {
-  return show ? (
-    <div
-      id={id}
-      className={`modal fadeIn ${show ? "is-active" : ""}`}
-      aria-label="modal"
-    >
-      <div className="modal-background" onClick={hide}></div>
-      <div className="modal-content">{children}</div>
-    </div>
-  ) : null
-}
+const Modal: FC<Props> = ({ show, hide, id, children }) => show ? (
+  <div
+    id={id}
+    className={`modal fadeIn ${show ? "is-active" : ""}`}
+    aria-label="modal"
+  >
+    <div className="modal-background" onClick={hide}></div>
+    <div className="modal-content">{children}</div>
+  </div>
+) : null
 
 export default Modal

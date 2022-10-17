@@ -7,6 +7,7 @@ export function equal(x: any, y: any): boolean {
         ok(x).every((key) => equal(x[key], y[key]))
     : x === y
 }
+
 export const capitalizeFirstLetter = (string: string): string =>
   string.charAt(0).toUpperCase() + string.slice(1)
 
@@ -35,9 +36,8 @@ export const convertToDate = (date: string | number): Date => {
     const year = date.slice(6, 10)
     const dateString = `${year}/${month}/${day}`
     return new Date(dateString)
-  } else {
-    return new Date(date)
   }
+  return new Date(date)
 }
 
 export const convertDateToString = (date: Date): string => {
@@ -58,6 +58,7 @@ const removeThHighlight = () => {
     th.style.backgroundColor = ""
   })
 }
+
 interface ITableActions {
   data: any[]
   setData: Function

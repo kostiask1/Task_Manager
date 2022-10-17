@@ -6,7 +6,6 @@ import { updateUser, getUserById } from '../../store/Auth/slice';
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { Whitelist as IWhitelist } from "../../store/Wish/types"
-import "./Access.scss"
 import { Link } from 'react-router-dom';
 
 const Access = () => {

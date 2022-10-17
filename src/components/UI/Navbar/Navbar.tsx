@@ -8,6 +8,7 @@ import "./Navbar.scss"
 import { setSuccess, setError } from "../../../store/App/slice"
 
 function Navbar() {
+  const dispatch = useAppDispatch()
   const location = useLocation()
   const navigate = useNavigate();
   const { authenticated, user } = useAppSelector((state: RootState) => ({
@@ -29,7 +30,6 @@ function Navbar() {
     menuRef.current?.classList.remove("is-active")
   }, [location.pathname, user.id])
 
-  const dispatch = useAppDispatch()
 
   const logout = () => dispatch(signout())
 

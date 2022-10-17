@@ -11,7 +11,6 @@ import { setError, setSuccess } from "../../../store/App/slice"
 import { updateUser } from "../../../store/Auth/slice"
 import { User } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
-import "./Password.scss"
 
 const Password = () => {
   const dispatch = useAppDispatch()

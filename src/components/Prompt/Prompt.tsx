@@ -17,32 +17,30 @@ const Prompt: FC<Props> = ({
   onCancel: cancel,
   onConfirm: confirm,
   disabled = false,
-}) => {
-  return (
-    <Modal id={new Date().getTime() + ""} show={show} hide={cancel}>
-      <div className="box is-flex is-align-items-center is-flex-direction-column">
-        <h2 className="is-size-4">{title}</h2>
-        <div className="columns mt-5">
-          <div className="column">
-            <Button
-              className="is-primary"
-              onClick={confirm}
-              text="Confirm"
-              disabled={disabled}
-            />
-          </div>
-          <div className="column">
-            <Button
-              className="is-danger"
-              onClick={cancel}
-              text="Cancel"
-              disabled={disabled}
-            />
-          </div>
+}) => (
+  <Modal id={new Date().getTime() + ""} show={show} hide={cancel}>
+    <div className="box is-flex is-align-items-center is-flex-direction-column">
+      <h2 className="is-size-4">{title}</h2>
+      <div className="columns mt-5">
+        <div className="column">
+          <Button
+            className="is-primary"
+            onClick={confirm}
+            text="Confirm"
+            disabled={disabled}
+          />
+        </div>
+        <div className="column">
+          <Button
+            className="is-danger"
+            onClick={cancel}
+            text="Cancel"
+            disabled={disabled}
+          />
         </div>
       </div>
-    </Modal>
-  )
-}
+    </div>
+  </Modal>
+)
 
 export default Prompt

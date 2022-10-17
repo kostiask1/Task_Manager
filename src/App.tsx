@@ -21,12 +21,8 @@ function App() {
       }
     })
 
-    return () => {
-      unsubscribe()
-    }
+    return () => unsubscribe()
   }, [])
-
-  if (import.meta.env.DEV) console.log("rendered App.tsx")
 
   return (
     <>

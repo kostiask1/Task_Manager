@@ -9,20 +9,18 @@ const Button = forwardRef(
   (
     { text, className, onClick, type, disabled, ...rest }: ButtonProps,
     ref: React.ForwardedRef<HTMLButtonElement>
-  ) => {
-    return (
-      <button
-        type={type}
-        className={`button ${className ?? ""}`}
-        onClick={onClick}
-        disabled={disabled}
-        ref={ref}
-        {...rest}
-      >
-        {text}
-      </button>
-    )
-  }
+  ) => (
+    <button
+      type={type}
+      className={`button ${className ?? ""}`}
+      onClick={onClick}
+      disabled={disabled}
+      ref={ref}
+      {...rest}
+    >
+      {text}
+    </button>
+  )
 )
 
 export default Button

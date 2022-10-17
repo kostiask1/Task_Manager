@@ -118,14 +118,12 @@ export const routesArray: RoutesArray[] = [
   },
 ]
 
-const unWrapRoute = (route: RouteProps) => {
-  return (
-    <Route key={route.path} path={route.path} element={route.element}>
-      {route.children?.length &&
-        route.children.map((child: RouteProps) => unWrapRoute(child))}
-    </Route>
-  )
-}
+const unWrapRoute = (route: RouteProps) => (
+  <Route key={route.path} path={route.path} element={route.element}>
+    {route.children?.length &&
+      route.children.map((child: RouteProps) => unWrapRoute(child))}
+  </Route>
+)
 
 const Routing: FC = () => {
   const { authenticated, loading } = useAppSelector((state: RootState) => ({

@@ -13,25 +13,24 @@ const Textarea: FC<TextareaProps> = ({
   onChange,
   label,
   ...rest
-}) => {
-  return (
-    <div className="field">
-      <div className="control">
-        {!!label && <label htmlFor={name}>{label}</label>}
-        <textarea
-          className="textarea has-fixed-size"
-          placeholder={placeholder}
-          name={name}
-          id={name}
-          onChange={onChange}
-          required={required}
-          autoComplete="off"
-          value={value}
-          {...rest}
-        ></textarea>
-      </div>
+}) => (
+  <div className="field">
+    <div className="control">
+      {!!label && <label htmlFor={name}>{label}</label>}
+      <textarea
+        className="textarea has-fixed-size"
+        placeholder={placeholder}
+        name={name}
+        id={name}
+        onChange={onChange}
+        required={required}
+        autoComplete="off"
+        value={value}
+        {...rest}
+      ></textarea>
     </div>
-  )
-}
+  </div>
+)
+
 
 export default Textarea
