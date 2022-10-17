@@ -2,19 +2,19 @@ import { equal } from '../../helpers';
 import Button from './Button';
 
 type IHeader = {
-  data: string,
-  element?: React.ReactElement,
-  sorting?: boolean
+  title: string | number;
+  data?: string;
+  sorting?: boolean;
 } | {
-  title: string | number,
-  element?: React.ReactElement,
-  sorting?: boolean
+  element: React.ReactElement;
+  data: string;
+  sorting?: boolean;
 }
 
 type IFooter = {
-  value: string | number
+  value: string | number;
 } | {
-  element: React.ReactElement
+  element: React.ReactElement;
 }
 
 export interface ITableProps<T = unknown> {
@@ -22,14 +22,15 @@ export interface ITableProps<T = unknown> {
   data: T[],
   initData: T[],
   body: React.ReactElement[],
-  footer: (IFooter | string)[],
+  footer?: (IFooter | string)[],
   loading: boolean,
   sorting: string,
   sort: (e: React.MouseEvent<HTMLElement>, key?: string) => void,
-  reset: (e: React.MouseEvent<HTMLElement>, key?: string) => void
+  reset: (e: React.MouseEvent<HTMLElement>, key?: string) => void,
+  fallback?: string
 }
 
-const Table: <T>(p: ITableProps<T>) => React.ReactElement = ({ columns, data, initData, body, footer, loading, sorting, sort, reset }) => {
+const Table: <T>(p: ITableProps<T>) => React.ReactElement = ({ columns, data, initData, body, footer, loading, sorting, sort, reset, fallback }) => {
   return <div className="table-container">
     <table className="table table-debts is-striped is-bordered is-hoverable is-fullwidth is-narrow">
       <thead>
@@ -58,11 +59,11 @@ const Table: <T>(p: ITableProps<T>) => React.ReactElement = ({ columns, data, in
           ))
         ) : (
           <tr>
-            <td colSpan={10}>No debts to be displayed...</td>
+            <td colSpan={10}>{fallback || "No data to be displayed..."}</td>
           </tr>
         )}
       </tbody>
-      {data?.length > 1 && (
+      {data?.length > 1 && footer?.length && (
         <tfoot>
           <tr>
             {footer.map(({ value = "", element }: any, index: number) => <th key={(value || 0) + index}>{element || value}</th>)}

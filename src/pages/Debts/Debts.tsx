@@ -1,6 +1,6 @@
-import { useEffect, useState, useMemo } from "react"
-import Button from "../../components/UI/Button"
-import { equal, tableActions } from "../../helpers"
+import { useEffect, useMemo, useState } from "react"
+import Table, { ITableProps } from "../../components/UI/Table"
+import { tableActions } from "../../helpers"
 import { getDebts } from "../../store/Debt/slice"
 import { Debt as IDebt } from "../../store/Debt/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
@@ -71,96 +71,110 @@ const Debts = () => {
     return temp
   }, [debts])
 
+  const columns = [
+    {
+      title: "Title"
+    },
+    {
+      title: "Due Date",
+      data: "end"
+    },
+    {
+      title: "Debts",
+      data: "array"
+    },
+    {
+      title: "Paid"
+    },
+    {
+      data: "total",
+      element: <table className="table">
+        <thead>
+          <tr>
+            <td>Paid</td>
+            <td>Left</td>
+            <td>Total</td>
+          </tr>
+        </thead>
+      </table>,
+    },
+    {
+      title: "Currency"
+    },
+    {
+      title: "Action",
+      sorting: false
+    },
+  ]
+
+  const body = data.map((debt: IDebt) => (
+    <Debt key={debt.id} debt={debt} index={debts.indexOf(debt)} />
+  ))
+
+  const footer = [
+    "",
+    "",
+    "",
+    "",
+    {
+      element: <table className="table">
+        <thead>
+          <tr>
+            <td>Paid</td>
+            <td>Left</td>
+            <td>Total</td>
+          </tr>
+        </thead>
+      </table>,
+    },
+    {
+      element:
+        <table>
+          <tbody>
+            {debtSummary.map((sumObject: any) => (
+              <tr key={sumObject.currency}>
+                <td>{sumObject.paid}</td>
+                <td>{sumObject.left}</td>
+                <td>{sumObject.total}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>,
+    },
+    {
+      element:
+        <table>
+          <tbody>
+            {debtSummary.map((sumObject: any) => (
+              <tr key={sumObject.currency}>
+                <td>{sumObject.currency}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>,
+    },
+    ""
+  ]
+
+  const tableProps: ITableProps = {
+    data,
+    columns,
+    body,
+    footer,
+    loading,
+    sorting,
+    sort,
+    reset,
+    initData: debts
+  }
+
   return (
     <div className="section is-medium pt-2 pb-6">
       <DebtForm key={JSON.stringify(debt)} />
       <hr />
-      <div className="table-container">
-        <table className="table table-debts is-striped is-bordered is-hoverable is-fullwidth is-narrow">
-          <thead>
-            <tr>
-              <th>
-                <Button
-                  text="Reset"
-                  onClick={reset}
-                  className={
-                    !loading && (!equal(debts, data) || sorting)
-                      ? "is-danger"
-                      : ""
-                  }
-                  disabled={equal(debts, data) && !sorting}
-                />
-              </th>
-              <th onClick={sort}>Title</th>
-              <th onClick={(e) => sort(e, "end")}>Due Date</th>
-              <th onClick={(e) => sort(e, "array")}>Debts</th>
-              <th onClick={sort}>Paid</th>
-              <th onClick={(e) => sort(e, "total")}>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <td>Paid</td>
-                      <td>Left</td>
-                      <td>Total</td>
-                    </tr>
-                  </thead>
-                </table>
-              </th>
-              <th onClick={sort}>Currency</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!!data?.length ? (
-              data.map((debt: IDebt) => (
-                <tr key={debt.id}>
-                  <Debt debt={debt} index={debts.indexOf(debt)} />
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={10}>No debts to be displayed...</td>
-              </tr>
-            )}
-          </tbody>
-          {data?.length > 1 && (
-            <tfoot>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>
-                  <table>
-                    <tbody>
-                      {debtSummary.map((sumObject: any) => (
-                        <tr key={sumObject.currency}>
-                          <td>{sumObject.paid}</td>
-                          <td>{sumObject.left}</td>
-                          <td>{sumObject.total}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </th>
-                <th>
-                  <table>
-                    <tbody>
-                      {debtSummary.map((sumObject: any) => (
-                        <tr key={sumObject.currency}>
-                          <td>{sumObject.currency}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </th>
-                <th></th>
-              </tr>
-            </tfoot>
-          )}
-        </table>
-      </div>
+      <Table
+        {...tableProps}
+      />
     </div>
   )
 }

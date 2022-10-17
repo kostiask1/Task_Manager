@@ -1,9 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import SecurityMiddleware from '../../components/SecurityMiddleware'
-import Button from "../../components/UI/Button"
 import Loader from "../../components/UI/Loader/Loader"
-import { equal, tableActions } from "../../helpers"
+import Table, { ITableProps } from '../../components/UI/Table'
+import { tableActions } from "../../helpers"
 import { User } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { getWishes } from "../../store/Wish/slice"
@@ -43,64 +43,52 @@ const Wishlist = () => {
   useEffect(() => {
     setData(wishes)
   }, [wishes])
-  
+
+  const columns = [
+    { title: "Title" },
+    { title: "Price" },
+    { title: "Description" },
+    { title: "Category" },
+    { title: "Url" },
+    { title: "Completed" }
+  ]
+  const temp = [
+    { title: "Open" },
+    { title: "Whitelist" },
+    { title: "Action", sorting: false },
+  ]
+
+  !foreignUser && columns.push(...temp)
+  const body = data.map((wish: IWish, index) => (
+    <Wish
+      key={wish.id}
+      wish={wish}
+      editable={!foreignUser}
+      index={wishes.indexOf(wish)}
+    />
+  ))
+
+  const tableProps: ITableProps = {
+    data,
+    columns,
+    body,
+    loading,
+    sorting,
+    sort,
+    reset,
+    initData: wishes
+  }
+
   const fallback = foreignUser && data.length ? "User have granted you access only to part of his wishlist" : "User haven't granted you access to his wishlist"
   return (
     <div className="section is-medium pt-2 pb-6">
-      <SecurityMiddleware fallback={fallback}/>
+      <SecurityMiddleware fallback={fallback} />
       {!foreignUser && <WishForm key={JSON.stringify(wish)} />}
       {!foreignUser && <hr />}
       <Suspense fallback={<Loader loading={true} />}>
-        <div className="table-container">
-          <table className="table table-wishes is-striped is-bordered is-hoverable is-fullwidth is-narrow">
-            <thead>
-              <tr>
-                <th>
-                  <Button
-                    text="Reset"
-                    onClick={reset}
-                    className={
-                      !loading && (!equal(wishes, data) || sorting)
-                        ? "is-danger"
-                        : ""
-                    }
-                    disabled={equal(wishes, data) && !sorting}
-                  />
-                </th>
-                <th onClick={sort}>Title</th>
-                <th onClick={sort}>Price</th>
-                <th onClick={sort}>Description</th>
-                <th onClick={sort}>Category</th>
-                <th onClick={sort}>Url</th>
-                <th onClick={sort}>Completed</th>
-                {!foreignUser && (
-                  <>
-                    <th onClick={sort}>Open</th>
-                    <th onClick={sort}>Whitelist</th>
-                    <th>Action</th>
-                  </>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {!!data?.length ? (
-                data.map((wish: IWish, index) => (
-                  <tr key={wish.id}>
-                    <Wish
-                      wish={wish}
-                      editable={!foreignUser}
-                      index={wishes.indexOf(wish)}
-                    />
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={10}>No wishes to be displayed...</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          {...tableProps}
+        />
         <Loader loading={loading} />
       </Suspense>
     </div>
