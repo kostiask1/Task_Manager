@@ -49,6 +49,14 @@ const Payment: FC<PaymentProps> = ({ payment, data, editing, update }) => {
         onChange={toggleChecked}
         checked={payment.paid}
       />
+      <Button
+        className="is-danger is-small ml-1"
+        type="button"
+        style={{ height: 16, padding: "0px 4px" }}
+        onClick={removePayment}
+        onKeyDown={() => alert(1)}
+        text="x"
+      />
       <label
         style={{ textDecoration: payment.paid ? "line-through" : "unset" }}
         className="ml-2"
@@ -60,14 +68,6 @@ const Payment: FC<PaymentProps> = ({ payment, data, editing, update }) => {
           {data.currency}
         </span>
       </label>
-      <Button
-        className="is-danger is-small"
-        type="button"
-        style={{ height: 16, padding: "0px 4px" }}
-        onClick={removePayment}
-        onKeyDown={() => alert(1)}
-        text="x"
-      />
     </>
   )
 }
