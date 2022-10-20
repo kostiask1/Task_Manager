@@ -23,7 +23,7 @@ export interface ITableProps<T = unknown> {
   initData: T[],
   renderBody: (data: T) => React.ReactNode,
   footer?: (IFooter | string)[],
-  loading: boolean,
+  loading?: boolean,
   fallback?: string
 }
 
