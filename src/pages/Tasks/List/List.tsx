@@ -36,7 +36,7 @@ const List = () => {
 
   useEffect(() => {
     setData(tasks.slice(0, count * increment))
-  }, [count])
+  }, [count, tasks])
 
   useEffect(() => {
     setLoading(!tasks.length)
