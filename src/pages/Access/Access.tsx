@@ -1,4 +1,4 @@
-import { createRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import Input from "../../components/UI/Input";
 import { setError, setSuccess } from "../../store/App/slice";
@@ -15,7 +15,6 @@ const Access = () => {
   const [search, setSearch] = useState<string>("")
   const [users, setUsers] = useState<User[]>([])
   const [filteredList, setFilteredList] = useState<User[]>([])
-  const userRef = createRef<HTMLInputElement>()
 
   useEffect(() => {
     getAllUsers().then((users: User[]) => {
@@ -83,7 +82,6 @@ const Access = () => {
         className="input mt-2"
         placeholder="start typing user Name, Surname or id (Expecting 28 characters)"
         value={search}
-        ref={userRef}
         onChange={(e) => setSearch(e.target.value)}
         list="users_ids"
       />
