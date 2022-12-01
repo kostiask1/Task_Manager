@@ -6,7 +6,14 @@ import {
   sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth"
-import { deleteDoc, doc, getDoc, setDoc } from "firebase/firestore/lite"
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
 import { deleteImage } from "../../firebase/firestore"
 import { loading, setError, setSuccess } from "../App/slice"
@@ -139,13 +146,21 @@ export const signout = () => {
 
 // Get user by id
 export const getUserById = async (id: string): Promise<User> => {
-    const docRef = doc(db, "users", id)
-    const docSnap = await getDoc(docRef)
-    const userData = docSnap.data() as User
-    return userData
+  const docRef = doc(db, "users", id)
+  const docSnap = await getDoc(docRef)
+  const userData = docSnap.data() as User
+  return userData
 }
 
-// Get user by id
+// Get all users
+export const getAllUsers = async (): Promise<User[]> => {
+  const snapshot = await collection(db, "users")
+  const docs = await getDocs(snapshot)
+  const users: User[] = docs?.docs.map((doc) => doc.data()) as User[]
+  return users
+}
+
+// Get current user
 export const getCurrentUser = (id: string) => {
   return async (dispatch: AppDispatch) => {
     const user = await getUserById(id)
