@@ -31,11 +31,11 @@ const Access = () => {
     setFilteredList(filteredList)
   }, [search])
 
-  const toggleOpened = async (e: React.MouseEvent<HTMLButtonElement>, user: User) => {
+  const toggleOpened = async (e: React.MouseEvent<HTMLButtonElement>, u: User) => {
     e.preventDefault()
-    const id = user.id
+    const id = u.id
     const wlist = JSON.parse(JSON.stringify(whitelist))
-    let index = wlist.findIndex((user: IWhitelist) => user.id === id)
+    let index = wlist.findIndex((u: IWhitelist) => u.id === id)
 
     if (index !== -1) {
       wlist[index].open = !wlist[index].open
@@ -47,9 +47,9 @@ const Access = () => {
     await dispatch(updateUser({ ...user, whitelist: wlist }))
 
     if (wlist[index].open) {
-      dispatch(setSuccess(`Data OPENED to ${user ? `${user.firstName} ${user.lastName}` : id}`))
+      dispatch(setSuccess(`Data OPENED to ${u ? `${u.firstName} ${u.lastName}` : id}`))
     } else {
-      dispatch(setError(`Data CLOSED from ${user ? `${user.firstName} ${user.lastName}` : id}`))
+      dispatch(setError(`Data CLOSED from ${u ? `${u.firstName} ${u.lastName}` : id}`))
     }
   }
 
