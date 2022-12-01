@@ -71,7 +71,7 @@ const Guest = () => {
           <hr className="mt-0 mb-4" />
           <button className={`button ${hasUserAccess ? "is-success" : "is-danger"}`} onClick={toggleUserAccess}>Access to you: {hasUserAccess ? "GRANTED" : "DENIED"}</button>
         </div>
-        <div className="column is-half">
+        <div className="column ml-2 is-half">
           <hr className="mt-0 mb-4" />
           <GuestLinks uid={uid} />
         </div>

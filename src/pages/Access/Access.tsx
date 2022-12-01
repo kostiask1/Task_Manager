@@ -18,12 +18,12 @@ const Access = () => {
   const userRef = createRef<HTMLInputElement>()
 
   useEffect(() => {
-    getAllUsers().then((users: User[]) => setUsers(users.filter(u => (u.id !== user.id))))
+    getAllUsers().then((users: User[]) => {
+      const filteredList = users.filter(u => (u.id !== user.id))
+      setUsers(filteredList)
+      setFilteredList(filteredList)
+    })
   }, [])
-
-  useEffect(() => {
-    setFilteredList(users)
-  }, [users])
 
   useEffect(() => {
     if (!search) return setFilteredList(users)
@@ -44,7 +44,7 @@ const Access = () => {
       index = wlist.length - 1
     }
 
-    await saveWhitelist(wlist)
+    await dispatch(updateUser({ ...user, whitelist: wlist }))
 
     if (wlist[index].open) {
       dispatch(setSuccess(`Data OPENED to ${user ? `${user.firstName} ${user.lastName}` : id}`))
@@ -53,17 +53,23 @@ const Access = () => {
     }
   }
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) =>
-    e.target.value.trim().length <= 28 && setSearch(e.target.value.trim())
-
-  const saveWhitelist = async (whitelist: IWhitelist[]) => {
-    const updatedProfile: User = { ...user, whitelist }
-    return await dispatch(updateUser(updatedProfile))
-  }
-
   const isOpen = (id: string) => {
     const index = whitelist.findIndex((user: IWhitelist) => user.id === id)
     return whitelist[index]?.open || false
+  }
+
+  const openToYou = (foreignUser: User) => {
+    const you = foreignUser.whitelist.find(u => u.id === user.id)
+    const opened = you?.open || false
+    return opened
+  }
+
+  const WrapUser = ({ user, children }: any) => {
+    const isOpened = openToYou(user)
+
+    if (isOpened) {
+      return <Link className="is-flex is-align-items-center" to={`/profile/${user.id}`}>{children}</Link>
+    } else { return <div className="is-flex is-align-items-center">{children}</div> }
   }
 
   return (
@@ -78,36 +84,38 @@ const Access = () => {
         placeholder="start typing user Name, Surname or id (Expecting 28 characters)"
         value={search}
         ref={userRef}
-        onChange={handleSearch}
+        onChange={(e) => setSearch(e.target.value)}
         list="users_ids"
       />
       <hr />
       {
         filteredList.map((user, index) => (
           <li key={user.id + index} className="is-flex mb-3 is-align-items-center">
-            <label className="whitelist-text is-flex is-align-items-center" htmlFor={"checkbox-" + user.id}>
-              <figure className="image mx-2 is-48x48 is-inline-block">
-                <img
-                  className="is-rounded"
-                  src={
-                    user.profileImg ||
-                    "https://bulma.io/images/placeholders/128x128.png"
-                  }
-                  style={{ maxHeight: "48px" }}
-                  onError={({ currentTarget }) => {
-                    currentTarget.onerror = null
-                    currentTarget.src =
+            <div className="whitelist-text is-flex is-align-items-center">
+              <WrapUser user={user}>
+                <figure className="image mx-2 is-48x48 is-inline-block">
+                  <img
+                    className="is-rounded"
+                    src={
+                      user.profileImg ||
                       "https://bulma.io/images/placeholders/128x128.png"
-                  }}
-                  alt="Profile img"
-                />
-              </figure>
-              <Link to={`/profile/${user.id}`}>{user.firstName} {user.lastName}</Link>
+                    }
+                    style={{ maxHeight: "48px" }}
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null
+                      currentTarget.src =
+                        "https://bulma.io/images/placeholders/128x128.png"
+                    }}
+                    alt="Profile img"
+                  />
+                </figure>
+                <span>{user.firstName} {user.lastName}</span>
+              </WrapUser>
               <Button
                 onClick={(e) => toggleOpened(e, user)}
                 className={"is-small ml-2 " + (isOpen(user.id) ? "is-primary" : "is-danger")}
                 text={isOpen(user.id) ? "Accessed" : "Closed"} />
-            </label>
+            </div>
           </li>
         ))}
     </div>
