@@ -60,7 +60,8 @@ export const getWishes = (uid: string) => {
 
     const docRef = doc(db, "wishes", uid)
     const docSnap = await getDoc(docRef)
-    const { wishes: wishList} = docSnap.data() as { wishes: Wish[] }
+
+    const { wishes: wishList} = (docSnap.data() || []) as { wishes: Wish[] }
 
     const sendWishes: Wish[] = [...wishList]
 

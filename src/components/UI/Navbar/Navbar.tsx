@@ -6,6 +6,10 @@ import { useAppSelector, RootState, useAppDispatch } from "../../../store/store"
 import Button from "../Button"
 import "./Navbar.scss"
 import { setSuccess, setError } from "../../../store/App/slice"
+import { wishes } from "../../../store/Wish/slice"
+import { tasks } from "../../../store/Task/slice"
+
+let lastLocation = ""
 
 function Navbar() {
   const dispatch = useAppDispatch()
@@ -24,12 +28,24 @@ function Navbar() {
     if (user.id && window.location.pathname.includes(user.id)) {
       const newLocation = window.location.pathname.replace(`/${user.id}`, "")
       navigate(newLocation)
+    } else {
+      if (hasId(window.location.pathname) && !hasId(lastLocation)) {
+        dispatch(wishes([]))
+        dispatch(tasks([]))
+      }
     }
-    
+
+    lastLocation = window.location.pathname
     burgerRef.current?.classList.remove("is-active")
     menuRef.current?.classList.remove("is-active")
   }, [location.pathname, user.id])
 
+  const hasId = (route: string) => {
+    const pathname = route.split("/")
+    const hasId = pathname[pathname.length - 1].length === 28
+
+    return hasId
+  }
 
   const logout = () => dispatch(signout())
 
