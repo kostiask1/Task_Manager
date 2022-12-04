@@ -3,13 +3,13 @@ import { useParams } from 'react-router-dom';
 import GuestLinks from "../../components/GuestLinks";
 import { setError, setSuccess } from '../../store/App/slice';
 import { authInitialState, getUserById, updateUser } from '../../store/Auth/slice';
-import { User } from "../../store/Auth/types";
+import { IUser } from "../../store/Auth/types";
 import { RootState, useAppDispatch, useAppSelector } from '../../store/store';
 
 const Guest = () => {
   const dispatch = useAppDispatch()
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
-  const [gotUser, setGotUser] = useState<User>(authInitialState.user)
+  const user: IUser = useAppSelector((state: RootState) => state.auth.user)
+  const [gotUser, setGotUser] = useState<IUser>(authInitialState.user)
 
   const { uid } = useParams()
 
@@ -26,7 +26,7 @@ const Guest = () => {
     const newWhitelist = [...user.whitelist]
     const newUserState = { id: gotUser.id, open: !hasUserAccess }
     newWhitelist.splice(newWhitelist.findIndex(u => u.id == gotUser.id), 1, newUserState)
-    const updatedProfile: User = { ...user, whitelist: newWhitelist }
+    const updatedProfile: IUser = { ...user, whitelist: newWhitelist }
 
     await dispatch(updateUser(updatedProfile))
 

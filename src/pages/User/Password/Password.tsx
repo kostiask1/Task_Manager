@@ -9,12 +9,12 @@ import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import { setError, setSuccess } from "../../../store/App/slice"
 import { updateUser } from "../../../store/Auth/slice"
-import { User } from "../../../store/Auth/types"
+import { IUser } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 
 const Password = () => {
   const dispatch = useAppDispatch()
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
+  const user: IUser = useAppSelector((state: RootState) => state.auth.user)
   const [oldPassword, setOldPassword] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
@@ -38,7 +38,7 @@ const Password = () => {
 
       if (auth.currentUser && oldPassword === user.password) {
         setLoading(true)
-        const userData: User = {
+        const userData: IUser = {
           ...user,
           password,
         }

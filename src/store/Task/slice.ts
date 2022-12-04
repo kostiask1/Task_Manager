@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
 import { convertDateToString, convertToDate, equal } from "../../helpers"
-import { User } from "../Auth/types"
+import { IUser } from "../Auth/types"
 import { AppDispatch, RootState } from "../store"
 import { Subtask, Task } from "./types"
 import { getAuth } from 'firebase/auth';
@@ -61,7 +61,7 @@ const _auth = getAuth()
 export const getTasks = (uid: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const currendId = _auth?.currentUser?.uid || ""
-    const user: User = await getUserById(uid)
+    const user: IUser = await getUserById(uid)
 
     const docRef = doc(db, "tasks", uid)
     const docSnap = await getDoc(docRef)

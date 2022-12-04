@@ -1,7 +1,7 @@
 import { Whitelist } from "../Wish/types"
 import { ICity } from "../Weather/types"
 
-export interface User {
+export interface IUser {
   firstName: string
   lastName: string
   profileImg: string
@@ -15,7 +15,7 @@ export interface User {
 }
 
 export interface AuthState {
-  user: User
+  user: IUser
   authenticated: boolean
 }
 

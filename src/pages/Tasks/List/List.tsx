@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState, useRef } from 'react';
 import Loader from "../../../components/UI/Loader/Loader"
-import { User } from "../../../store/Auth/types"
+import { IUser } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { getTasks } from "../../../store/Task/slice"
 import { Task as TaskProps } from "../../../store/Task/types"
@@ -13,7 +13,7 @@ const increment:number = 6
 
 const List = () => {
   const dispatch = useAppDispatch()
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
+  const user: IUser = useAppSelector((state: RootState) => state.auth.user)
   const { uid } = useParams()
   const tasks: TaskProps[] = useAppSelector(
     (state: RootState) => state.tasks.array

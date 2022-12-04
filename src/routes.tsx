@@ -13,7 +13,7 @@ const Password = lazy(() => import("./pages/User/Password"))
 const Profile = lazy(() => import("./pages/User/Profile"))
 const GuestProfile = lazy(() => import("./pages/Guest"))
 const Wishes = lazy(() => import("./pages/Wishlist"))
-const Access = lazy(() => import("./pages/Access"))
+const Users = lazy(() => import("./pages/Users"))
 const Weather = lazy(() => import("./pages/Weather"))
 const Debts = lazy(() => import("./pages/Debts"))
 
@@ -84,11 +84,11 @@ export const routesArray: RoutesArray[] = [
     element: <Weather />,
   },
   {
-    name: "Access",
+    name: "Users",
     private: true,
     show: true,
-    path: "access",
-    element: <Access />,
+    path: "users",
+    element: <Users />,
   },
   {
     name: "Profile",

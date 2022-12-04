@@ -4,7 +4,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
 import { equal } from "../../helpers"
 import { getUserById } from "../Auth/slice"
-import { User } from '../Auth/types'
+import { IUser } from '../Auth/types'
 import { AppDispatch, RootState } from "../store"
 import { Wish } from "./types"
 
@@ -56,7 +56,7 @@ const _auth = getAuth()
 export const getWishes = (uid: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const currendId = _auth?.currentUser?.uid || ""
-    const user: User = await getUserById(uid)
+    const user: IUser = await getUserById(uid)
 
     const docRef = doc(db, "wishes", uid)
     const docSnap = await getDoc(docRef)

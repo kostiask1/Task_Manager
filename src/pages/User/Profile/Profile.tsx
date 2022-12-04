@@ -20,7 +20,7 @@ import {
   deleteUserData,
   updateUser,
 } from "../../../store/Auth/slice"
-import { User } from "../../../store/Auth/types"
+import { IUser } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import { tasks } from "../../../store/Task/slice"
 import { wishes } from "../../../store/Wish/slice"
@@ -30,8 +30,8 @@ const maximumSize = 1.5 * 1024 * 1024 // 1.5 MB
 
 const Profile = () => {
   const dispatch = useAppDispatch()
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
-  const [userData, setUserData] = useState<User>(user)
+  const user: IUser = useAppSelector((state: RootState) => state.auth.user)
+  const [userData, setUserData] = useState<IUser>(user)
   const [files, setFiles] = useState<FileList | null>(null)
   const [loading, setLoading] = useState(false)
   const imageRef = useRef<HTMLImageElement>(null)
@@ -73,7 +73,7 @@ const Profile = () => {
   const updateUserProfile = async (image?: string) => {
     const auth = getAuth()
     if (auth.currentUser) {
-      const updatedProfile: User = {
+      const updatedProfile: IUser = {
         ...userData,
         firstName: userData.firstName.trim(),
         lastName: userData.lastName.trim(),
@@ -132,7 +132,7 @@ const Profile = () => {
     value?: string
   ) =>
     setUserData(
-      (state): User => ({
+      (state): IUser => ({
         ...state,
         profileImg: e?.target.value || value || "",
       })

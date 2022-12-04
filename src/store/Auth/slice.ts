@@ -22,7 +22,7 @@ import { AppDispatch, RootState } from "../store"
 import { tasks } from "../Task/slice"
 import { setCities } from "../Weather/slice"
 import { wishes } from "../Wish/slice"
-import { AuthState, SignInData, SignUpData, User } from "./types"
+import { AuthState, SignInData, SignUpData, IUser } from "./types"
 
 export const authInitialState: AuthState = {
   user: {
@@ -44,7 +44,7 @@ const auth = createSlice({
   name: "auth",
   initialState: authInitialState,
   reducers: {
-    setUser: (state: AuthState, action: PayloadAction<User>) => {
+    setUser: (state: AuthState, action: PayloadAction<IUser>) => {
       state.user = action.payload
       state.authenticated = true
     },
@@ -63,7 +63,7 @@ export const { setUser, signOut } = auth.actions
 
 const _auth = getAuth()
 
-export const updateUser = (user: User) => {
+export const updateUser = (user: IUser) => {
   return async (dispatch: AppDispatch) => {
     await setDoc(doc(db, "users", user.id), user)
     await dispatch(setUser(user))
@@ -76,7 +76,7 @@ export const signup = (data: SignUpData, onError: () => void) => {
       createUserWithEmailAndPassword(_auth, data.email, data.password)
         .then((res) => {
           if (res.user) {
-            const userData: User = {
+            const userData: IUser = {
               ...data,
               id: res.user.uid,
               admin: false,
@@ -145,18 +145,18 @@ export const signout = () => {
 }
 
 // Get user by id
-export const getUserById = async (id: string): Promise<User> => {
+export const getUserById = async (id: string): Promise<IUser> => {
   const docRef = doc(db, "users", id)
   const docSnap = await getDoc(docRef)
-  const userData = docSnap.data() as User
+  const userData = docSnap.data() as IUser
   return userData
 }
 
 // Get all users
-export const getAllUsers = async (): Promise<User[]> => {
+export const getAllUsers = async (): Promise<IUser[]> => {
   const snapshot = await collection(db, "users")
   const docs = await getDocs(snapshot)
-  const users: User[] = docs?.docs.map((doc) => doc.data()) as User[]
+  const users: IUser[] = docs?.docs.map((doc) => doc.data()) as IUser[]
   return users
 }
 
@@ -187,7 +187,7 @@ export const deleteAccount = (id: string, image: string) => {
 
 export const deleteUserData = (id: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    const user: User = getState().auth.user
+    const user: IUser = getState().auth.user
     const clearedUser = { ...user, whitelist: [], cities: [] }
     await setDoc(doc(db, "users", user.id), clearedUser)
     await deleteDoc(doc(db, "tasks", id))

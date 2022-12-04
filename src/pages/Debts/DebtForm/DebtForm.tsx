@@ -4,7 +4,7 @@ import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import { dateFormat, datesList, equal } from "../../../helpers"
 import { setError } from "../../../store/App/slice"
-import { User } from "../../../store/Auth/types"
+import { IUser } from "../../../store/Auth/types"
 import {
   debtInitialState,
   deleteDebt,
@@ -30,7 +30,7 @@ const DebtForm = () => {
   const debt: Debt | null = useAppSelector(
     (state: RootState) => state.debts.editingDebt
   )
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
+  const user: IUser = useAppSelector((state: RootState) => state.auth.user)
   const [state, setState] = useState<Debt>(debt || debtInitialState)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)

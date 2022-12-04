@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { setError, setSuccess } from "../../store/App/slice";
 import { authInitialState, getUserById } from "../../store/Auth/slice";
-import { User } from "../../store/Auth/types";
+import { IUser } from "../../store/Auth/types";
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store";
 import GuestLinks from '../GuestLinks/GuestLinks';
 import Button from "../UI/Button";
@@ -15,8 +15,8 @@ type ISecurityProps = {
 const SecurityMiddleware: FC<ISecurityProps> = ({ fallback, children }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
-  const [gotUser, setGotUser] = useState<User>(authInitialState.user)
+  const user: IUser = useAppSelector((state: RootState) => state.auth.user)
+  const [gotUser, setGotUser] = useState<IUser>(authInitialState.user)
   const { uid } = useParams()
 
   const foreignUser = uid !== undefined && user.id !== uid

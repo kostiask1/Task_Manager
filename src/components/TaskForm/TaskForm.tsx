@@ -2,7 +2,7 @@ import { createRef, FC, useCallback, useEffect, useMemo, useState } from "react"
 import InputMask from "react-input-mask"
 import { dateFormat, datesList, equal } from "../../helpers"
 import { setSuccess } from "../../store/App/slice"
-import { User } from "../../store/Auth/types"
+import { IUser } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import {
   deleteTask,
@@ -23,7 +23,7 @@ interface TaskInterface {
 
 const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const dispatch = useAppDispatch()
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
+  const user: IUser = useAppSelector((state: RootState) => state.auth.user)
 
   const task: Task | null = useAppSelector(
     (state: RootState) => state.tasks.editingTask

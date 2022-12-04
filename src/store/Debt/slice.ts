@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
 import { equal, convertToDate } from "../../helpers"
-import { User } from "../Auth/types"
+import { IUser } from "../Auth/types"
 import { AppDispatch, RootState } from "../store"
 import { Debt, Payment } from "./types"
 import { setSuccess } from "../App/slice"
@@ -51,7 +51,7 @@ export const { debts, editingDebt } = debt.actions
 
 export const getDebts = () => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    const user: User = getState().auth.user
+    const user: IUser = getState().auth.user
 
     const docRef = doc(db, "debts", user.id)
     const docSnap = await getDoc(docRef)

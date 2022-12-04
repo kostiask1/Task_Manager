@@ -5,7 +5,7 @@ import { db } from "../../firebase/base"
 import { equal } from "../../helpers"
 import { setError, setSuccess } from "../App/slice"
 import { setUser } from "../Auth/slice"
-import { User } from "../Auth/types"
+import { IUser } from "../Auth/types"
 import { AppDispatch, RootState } from "../store"
 import { CitiesState, ICity } from "./types"
 
@@ -32,7 +32,7 @@ export default citiesSlice.reducer
 
 export const getCities = () => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    const user: User = getState().auth.user
+    const user: IUser = getState().auth.user
 
     if (user.cities?.length) {
       const stateCities = getState().cities.array
@@ -47,7 +47,7 @@ export const getCities = () => {
 export const deleteCity = (city: ICity) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const cities = getState().cities.array as ICity[]
-    const user: User = getState().auth.user
+    const user: IUser = getState().auth.user
     const filtered_cities = cities.filter((c: ICity) => c.name !== city.name)
 
     const updatedUser = { ...user, cities: filtered_cities }
@@ -61,7 +61,7 @@ export const deleteCity = (city: ICity) => {
 export const saveCity = (city: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const cities = getState().cities.array as ICity[]
-    const user: User = getState().auth.user
+    const user: IUser = getState().auth.user
     if (city.length < 2) return dispatch(setError("City name is too short"))
     const isExist = cities.findIndex((c: ICity) => c.name === city)
     if (isExist !== -1) return dispatch(setError("City already exist"))
@@ -84,7 +84,7 @@ export const saveCity = (city: string) => {
 export const updateCity = (city: ICity) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const cities = getState().cities.array
-    const user: User = getState().auth.user
+    const user: IUser = getState().auth.user
     const citiesCopy = [...cities]
 
     const indexOfCity = citiesCopy.findIndex((c: ICity) => c.id === city.id)

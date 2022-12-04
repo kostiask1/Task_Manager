@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import SecurityMiddleware from '../../components/SecurityMiddleware'
 import Loader from "../../components/UI/Loader/Loader"
 import Table, { ITableProps } from '../../components/UI/Table'
-import { User } from "../../store/Auth/types"
+import { IUser } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { getWishes } from "../../store/Wish/slice"
 import { Wish as IWish } from "../../store/Wish/types"
@@ -18,7 +18,7 @@ const Wishlist = () => {
   const wish: IWish | null = useAppSelector(
     (state: RootState) => state.wishes.editingWish
   )
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
+  const user: IUser = useAppSelector((state: RootState) => state.auth.user)
   const { uid } = useParams()
   const [loading, setLoading] = useState(true)
 

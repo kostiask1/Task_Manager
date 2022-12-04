@@ -22,7 +22,7 @@ import Modal from "../../components/Modal/Modal"
 import SecurityMiddleware from '../../components/SecurityMiddleware/SecurityMiddleware'
 import Loader from "../../components/UI/Loader/Loader"
 import { convertDateToString, convertToDate } from "../../helpers"
-import { User } from "../../store/Auth/types"
+import { IUser } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { editingTask, getTasks, taskInitialState } from "../../store/Task/slice"
 import { Task as TaskProps } from "../../store/Task/types"
@@ -44,7 +44,7 @@ const genTitle = (task: TaskProps): string => {
 
 const Calendar = () => {
   const dispatch = useAppDispatch()
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
+  const user: IUser = useAppSelector((state: RootState) => state.auth.user)
   const tasks: TaskProps[] = useAppSelector(
     (state: RootState) => state.tasks.array
   )

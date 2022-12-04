@@ -4,7 +4,7 @@ import Input from "../../../components/UI/Input"
 import Textarea from "../../../components/UI/Textarea"
 import { equal } from "../../../helpers"
 import { setError, setSuccess } from "../../../store/App/slice"
-import { User } from "../../../store/Auth/types"
+import { IUser } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import {
   deleteWish,
@@ -21,7 +21,7 @@ import "./WishForm.scss"
 
 const WishForm = () => {
   const dispatch = useAppDispatch()
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
+  const user: IUser = useAppSelector((state: RootState) => state.auth.user)
   const wish: IWish | null = useAppSelector(
     (state: RootState) => state.wishes.editingWish
   )
@@ -178,9 +178,8 @@ const WishForm = () => {
           />
           {!!state.id && (
             <Button
-              className={`complete-task-btn ${
-                state.completed ? "is-primary" : "is-danger"
-              }`}
+              className={`complete-task-btn ${state.completed ? "is-primary" : "is-danger"
+                }`}
               onClick={handleCompleted}
               text={`completed: ${state.completed ? "Yes" : "No"}`}
             />
@@ -227,7 +226,7 @@ const WishForm = () => {
             />
           </div>
         </div>
-        <div className="is-flex is-align-items-center mb-5">
+        <div className="is-flex is-align-items-center mb-0">
           <label htmlFor="open">Open</label>
           <input
             type="checkbox"
@@ -246,49 +245,46 @@ const WishForm = () => {
             )
           </label>
         </div>
-        <label htmlFor="user">
-          {state.open ? (
-            <del>
-              <b>Whitelist (IDs of users that can view this wish)</b>
-            </del>
-          ) : (
+        {state.open}
+        {!state.open && <>
+          <label className="mt-5 is-block" htmlFor="user">
             <b>Whitelist (IDs of users that can view this wish)</b>
-          )}
-        </label>
-        <hr style={{ margin: "5px 0" }} />
-        <ul key={JSON.stringify(state.whitelist)}>
-          {!!state.whitelist?.length &&
-            state.whitelist.map((user, index) => (
-              <Whitelist
-                key={user.id + index}
-                data={user}
-                wish={state}
-                editable={!state.open}
-                update={(data) =>
-                  setState((state: IWish) => ({ ...state, whitelist: data }))
-                }
-              />
-            ))}
-        </ul>
-        <Input
-          name="user"
-          className="input mt-4"
-          placeholder="Enter user id (Expecting 28 characters)"
-          value={userW}
-          ref={wishRef}
-          onChange={handleWhitelist}
-          disabled={state.open}
-          list="users_in_whitelist"
-        />
-        <datalist id="users_in_whitelist">{users_in_whitelist}</datalist>
-        <Button
-          onClick={addUserToWhitelist}
-          className={`add-user ${state.open ? "" : "is-info"}`}
-          text="Add user"
-          disabled={
-            loadingSave || deleting || userW.trim().length !== 28 || state.open
-          }
-        />
+          </label>
+          <hr style={{ margin: "5px 0" }} />
+          <ul key={JSON.stringify(state.whitelist)}>
+            {!!state.whitelist?.length &&
+              state.whitelist.map((user, index) => (
+                <Whitelist
+                  key={user.id + index}
+                  data={user}
+                  wish={state}
+                  editable={!state.open}
+                  update={(data) =>
+                    setState((state: IWish) => ({ ...state, whitelist: data }))
+                  }
+                />
+              ))}
+          </ul>
+          <Input
+            name="user"
+            className="input mt-4"
+            placeholder="Enter user id (Expecting 28 characters)"
+            value={userW}
+            ref={wishRef}
+            onChange={handleWhitelist}
+            disabled={state.open}
+            list="users_in_whitelist"
+          />
+          <datalist id="users_in_whitelist">{users_in_whitelist}</datalist>
+          <Button
+            onClick={addUserToWhitelist}
+            className={`add-user ${state.open ? "" : "is-info"}`}
+            text="Add user"
+            disabled={
+              loadingSave || deleting || userW.trim().length !== 28 || state.open
+            }
+          />
+        </>}
       </div>
       <footer className="card-footer p-3">
         <div className="buttons">

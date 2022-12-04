@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import SecurityMiddleware from "../../components/SecurityMiddleware"
 import TaskForm from "../../components/TaskForm/TaskForm"
-import { User } from "../../store/Auth/types"
+import { IUser } from "../../store/Auth/types"
 import { RootState, useAppSelector } from "../../store/store"
 import { Task } from "../../store/Task/types"
 import List from "./List/List"
@@ -11,7 +11,7 @@ const Tasks = () => {
     (state: RootState) => state.tasks.editingTask
   )
 
-  const user: User = useAppSelector((state: RootState) => state.auth.user)
+  const user: IUser = useAppSelector((state: RootState) => state.auth.user)
   const { uid } = useParams()
 
   const foreignUser = uid !== undefined && user.id !== uid
