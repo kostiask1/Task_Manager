@@ -68,7 +68,7 @@ const Wishlist = () => {
       {!foreignUser && <hr />}
       <Suspense fallback={<Loader loading={true} />}>
         <Table
-          key={wishes.length}
+          key={JSON.stringify(wishes)}
           {...tableProps}
         />
         <Loader loading={loading} />
