@@ -153,11 +153,21 @@ export const getUserById = async (id: string): Promise<IUser> => {
 }
 
 // Get all users
-export const getAllUsers = async (): Promise<IUser[]> => {
+export const getAllUsers = async (filterValue?: string): Promise<IUser[]> => {
   const snapshot = await collection(db, "users")
   const docs = await getDocs(snapshot)
   const users: IUser[] = docs?.docs.map((doc) => doc.data()) as IUser[]
-  return users
+  const searchText: string = filterValue ? filterValue.toLowerCase() : ""
+  const filteredList = filterValue
+    ? users.filter(
+        (user) =>
+          user.firstName.toLowerCase().includes(searchText) ||
+          user.lastName.toLowerCase().includes(searchText) ||
+          user.id === filterValue
+      )
+    : users
+
+  return filteredList
 }
 
 // Get current user

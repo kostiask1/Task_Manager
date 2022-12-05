@@ -1,12 +1,13 @@
-import { FC } from "react"
-import Button from "../../../components/UI/Button"
-import { useAppDispatch } from "../../../store/store"
-import { setWish } from "../../../store/Wish/slice"
+import { FC } from 'react';
+import Button from "../../../components/UI/Button";
+import { useAppDispatch } from "../../../store/store";
+import { setWish } from "../../../store/Wish/slice";
 import {
   Whitelist as IWhitelist,
-  Wish as IWish,
-} from "../../../store/Wish/types"
-import "./Whitelist.scss"
+  Wish as IWish
+} from "../../../store/Wish/types";
+import User from '../../Users/User';
+import "./Whitelist.scss";
 
 interface Props {
   data: IWhitelist
@@ -57,7 +58,6 @@ const Whitelist: FC<Props> = ({ data, wish, update, editable }) => {
       }
     }
   }
-
   return (
     <li>
       {editable && (
@@ -77,9 +77,7 @@ const Whitelist: FC<Props> = ({ data, wish, update, editable }) => {
           />
         </>
       )}
-      <label className="whitelist-text" htmlFor={"checkbox-" + data.id}>
-        {data.id}
-      </label>
+      <User id={data.id} mode="mini" />
     </li>
   )
 }

@@ -1,20 +1,22 @@
-import { useCallback, useMemo, useState, createRef } from "react"
+import { useCallback, useMemo, useState } from "react"
+import AjaxSelect from "../../../components/AjaxSelect"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import Textarea from "../../../components/UI/Textarea"
 import { equal } from "../../../helpers"
 import { setError, setSuccess } from "../../../store/App/slice"
+import { getAllUsers } from "../../../store/Auth/slice"
 import { IUser } from "../../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
 import {
   deleteWish,
   editingWish,
   setWish,
-  wishInitialState,
+  wishInitialState
 } from "../../../store/Wish/slice"
 import {
   Whitelist as IWhitelist,
-  Wish as IWish,
+  Wish as IWish
 } from "../../../store/Wish/types"
 import Whitelist from "../Whitelist"
 import "./WishForm.scss"
@@ -31,11 +33,9 @@ const WishForm = () => {
   const [state, setState] = useState<IWish>(wish || wishInitialState)
   const [loadingSave, setLoadingSave] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const [userW, setUser] = useState<string>("")
 
   const isEdit = state.id !== 0
   const stateName = isEdit ? "Edit" : "Create"
-  const wishRef = createRef<HTMLInputElement>()
 
   const handleCompleted = (event: React.MouseEvent) => {
     event.preventDefault()
@@ -105,13 +105,7 @@ const WishForm = () => {
       const saveWish: IWish = { ...state }
       setLoadingSave(true)
       if (!isEdit) saveWish.id = new Date().getTime()
-      if (
-        state.whitelist.findIndex((user) => user.id === userW) == -1 &&
-        userW.trim().length == 28
-      ) {
-        const newUser: IWhitelist = { id: userW, open: true }
-        saveWish.whitelist = [...saveWish.whitelist, newUser]
-      }
+
       saveWish.title = saveWish.title.trim()
       saveWish.description = saveWish.description.trim()
       saveWish.uid = user.id
@@ -137,30 +131,25 @@ const WishForm = () => {
     [state]
   )
 
-  const addUserToWhitelist = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault()
-      if (state.whitelist.findIndex((user) => user.id === userW) > -1) {
-        dispatch(setError("User already in whitelist"))
-        setUser("")
-      } else {
-        if (userW.trim().length == 28) {
-          const newUser: IWhitelist = { id: userW, open: true }
-          setUser("")
-          setState((state: IWish) => ({
-            ...state,
-            whitelist: [...state.whitelist, newUser],
-          }))
-        } else {
-          dispatch(setError("Invalid user id"))
-        }
-      }
-      wishRef?.current?.focus()
-    },
-    [userW]
-  )
-  const handleWhitelist = (e: React.ChangeEvent<HTMLInputElement>) =>
-    e.target.value.trim().length <= 28 && setUser(e.target.value.trim())
+  const addUserToWhitelist = (id: string) => {
+    if (state.whitelist.findIndex((user) => user.id === id) > -1) {
+      dispatch(setError("User already in whitelist"))
+      return
+    }
+    const newUser: IWhitelist = { id, open: true }
+    setState((state: IWish) => ({
+      ...state,
+      whitelist: [...state.whitelist, newUser],
+    }))
+  }
+
+  const transformer = (array: IUser[]) => {
+    if (array.length) {
+      const filteredArray = array.filter(u => !state.whitelist.map((u) => u.id).includes(u.id) && user.id !== u.id)
+      return filteredArray && filteredArray.map(u => <div onClick={() => addUserToWhitelist(u.id)} key={u.id}>{u.firstName} {u.lastName}</div>)
+    }
+    return null
+  }
 
   return (
     <form className="card wish fadeIn" key={state.id} onSubmit={addWishToUser}>
@@ -248,7 +237,7 @@ const WishForm = () => {
         {state.open}
         {!state.open && <>
           <label className="mt-5 is-block" htmlFor="user">
-            <b>Whitelist (IDs of users that can view this wish)</b>
+            <b>Whitelist (users that can view this wish)</b>
           </label>
           <hr style={{ margin: "5px 0" }} />
           <ul key={JSON.stringify(state.whitelist)}>
@@ -265,25 +254,14 @@ const WishForm = () => {
                 />
               ))}
           </ul>
-          <Input
-            name="user"
-            className="input mt-4"
-            placeholder="Enter user id (Expecting 28 characters)"
-            value={userW}
-            ref={wishRef}
-            onChange={handleWhitelist}
-            disabled={state.open}
-            list="users_in_whitelist"
-          />
+          <AjaxSelect key={JSON.stringify(state.whitelist) + user.id} transformer={transformer} responseParams={["firstName", "id", "lastName"]} request={getAllUsers} emptySearch={false} inputProps={
+            {
+              name: "user",
+              className: "input mt-4",
+              placeholder: "Start typing user Name, Surname or id (Expecting 28 characters)",
+              list: "users_in_whitelist"
+            }} />
           <datalist id="users_in_whitelist">{users_in_whitelist}</datalist>
-          <Button
-            onClick={addUserToWhitelist}
-            className={`add-user ${state.open ? "" : "is-info"}`}
-            text="Add user"
-            disabled={
-              loadingSave || deleting || userW.trim().length !== 28 || state.open
-            }
-          />
         </>}
       </div>
       <footer className="card-footer p-3">

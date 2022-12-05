@@ -34,7 +34,7 @@ const Access = () => {
       <Input
         name="user"
         className="input mt-2"
-        placeholder="start typing user Name, Surname or id (Expecting 28 characters)"
+        placeholder="Start typing user Name, Surname or id (Expecting 28 characters)"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         list="users_ids"
