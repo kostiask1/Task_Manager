@@ -28,6 +28,7 @@ interface RoutesArray extends RouteProps {
   private?: boolean
   visible?: boolean
   show?: boolean
+  guestOnly?: boolean
 }
 
 export const routesArray: RoutesArray[] = [
@@ -111,6 +112,7 @@ export const routesArray: RoutesArray[] = [
   {
     name: "About",
     private: false,
+    guestOnly: true,
     show: true,
     visible: true,
     path: "about",
@@ -148,7 +150,7 @@ const Routing: FC = () => {
           }
         />
         {routesArray.map(
-          (route) => (!route.private || authenticated) && unWrapRoute(route)
+          (route) => (route.guestOnly ? (route.guestOnly && !authenticated) : true) && (!route.private || authenticated) && unWrapRoute(route)
         )}
       </Routes>
     </Suspense>

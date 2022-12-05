@@ -106,8 +106,8 @@ function Navbar() {
             {routesArray
               .filter(
                 (route) =>
-                  route.visible ||
-                  (route.private === authenticated && route.show)
+                  (route.guestOnly ? (route.guestOnly && !authenticated) : true) && (route.visible ||
+                    (route.private === authenticated && route.show))
               )
               .map((route) =>
                 !isActivePage(route.path) ? (
