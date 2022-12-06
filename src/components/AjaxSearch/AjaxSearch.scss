@@ -1,0 +1,42 @@
+.AjaxSearchWrapper {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+
+  &.open {
+    .input {
+      border-radius: 4px 4px 0 0;
+      // border-bottom: unset;
+    }
+  }
+
+  &__results {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform: translateY(100%);
+    background-color: #fff;
+    border: 1px solid #dbdbdb;
+    border-top: unset;
+    width: 100%;
+    z-index: 9999;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 7px 11px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #ededed;
+      }
+    }
+  }
+
+  &.open &__results {
+    display: block;
+  }
+}
