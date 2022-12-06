@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react"
-import AjaxSelect from "../../../components/AjaxSelect"
+import AjaxSearch from "../../../components/AjaxSearch"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
 import Textarea from "../../../components/UI/Textarea"
@@ -42,22 +42,11 @@ const WishForm = () => {
     setState((state: IWish) => ({ ...state, completed: !state.completed }))
   }
 
-  const [categories, users_in_whitelist] = useMemo(() => {
+  const categories = useMemo(() => {
     const categories: string[] = []
-    const users_ids: string[] = []
+
     for (let i = 0; i < wishes.length; i++) {
       const wish = wishes[i]
-      if (wish.whitelist?.length) {
-        for (let j = 0; j < wish.whitelist.length; j++) {
-          const user = wish.whitelist[j]
-          if (
-            !users_ids.includes(user.id) &&
-            state.whitelist.findIndex((u) => u.id === user.id) === -1
-          ) {
-            users_ids.push(user.id)
-          }
-        }
-      }
       if (wish.category) {
         if (!categories.includes(wish.category)) {
           categories.push(wish.category)
@@ -69,14 +58,8 @@ const WishForm = () => {
       <option value={category} key={category + index}></option>
     ))
 
-    const users_ids_Options: any = users_ids.map(
-      (id: string, index: number) => (
-        <option key={id + index} value={id}></option>
-      )
-    )
-
-    return [categories_Options, users_ids_Options]
-  }, [wishes, state.whitelist])
+    return categories_Options
+  }, [wishes])
 
   const clear = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
@@ -146,7 +129,7 @@ const WishForm = () => {
   const transformer = (array: IUser[]) => {
     if (array.length) {
       const filteredArray = array.filter(u => !state.whitelist.map((u) => u.id).includes(u.id) && user.id !== u.id)
-      return filteredArray && filteredArray.map(u => <div onClick={() => addUserToWhitelist(u.id)} key={u.id}>{u.firstName} {u.lastName}</div>)
+      return filteredArray && filteredArray.map(u => <div style={{width: "100%"}} onClick={() => addUserToWhitelist(u.id)} key={u.id}>{u.firstName} {u.lastName}</div>)
     }
     return null
   }
@@ -254,14 +237,12 @@ const WishForm = () => {
                 />
               ))}
           </ul>
-          <AjaxSelect key={JSON.stringify(state.whitelist) + user.id} transformer={transformer} responseParams={["firstName", "id", "lastName"]} request={getAllUsers} emptySearch={false} inputProps={
+          <AjaxSearch transformer={transformer} autoClose={false} responseParams={["firstName", "id", "lastName"]} request={getAllUsers} inputProps={
             {
               name: "user",
-              className: "input mt-4",
+              className: "input mt-2",
               placeholder: "Start typing user Name, Surname or id (Expecting 28 characters)",
-              list: "users_in_whitelist"
             }} />
-          <datalist id="users_in_whitelist">{users_in_whitelist}</datalist>
         </>}
       </div>
       <footer className="card-footer p-3">
