@@ -203,6 +203,7 @@ export const deleteUserData = (id: string) => {
     await deleteDoc(doc(db, "tasks", id))
     await deleteDoc(doc(db, "wishes", id))
     await deleteDoc(doc(db, "debts", id))
+    await dispatch(getCurrentUser(id))
     dispatch(setSuccess("Your account data was erased"))
   }
 }

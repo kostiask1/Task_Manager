@@ -55,7 +55,7 @@ export const getDebts = () => {
 
     const docRef = doc(db, "debts", user.id)
     const docSnap = await getDoc(docRef)
-    const { debts: userDebts } = (docSnap.data() || []) as { debts: Debt[] }
+    const userDebts = (docSnap.data()?.debts || []) as Debt[]
 
     if (userDebts.length) {
       const stateDebts = getState().debts.array

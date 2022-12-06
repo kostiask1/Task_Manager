@@ -65,7 +65,7 @@ export const getTasks = (uid: string) => {
 
     const docRef = doc(db, "tasks", uid)
     const docSnap = await getDoc(docRef)
-    const { tasks: userTasks } = (docSnap.data() || []) as { tasks: Task[] }
+    const userTasks = (docSnap.data()?.tasks || []) as Task[]
 
     if (userTasks?.length) {
       const isForeignUser = userTasks[0].uid !== currendId
