@@ -19,19 +19,17 @@ const Debts = lazy(() => import("./pages/Debts"))
 
 interface RouteProps {
   path: string
-  element?: ReactNode
+  element: ReactNode
+  name?: string
+  private?: boolean
+  show?: boolean
+  visible?: boolean
+  guestOnly?: boolean
   children?: RouteProps[]
 }
 
-interface RoutesArray extends RouteProps {
-  name: string
-  private?: boolean
-  visible?: boolean
-  show?: boolean
-  guestOnly?: boolean
-}
+export const routesArray: RouteProps[] = [
 
-export const routesArray: RoutesArray[] = [
   {
     name: "SignIn",
     private: false,

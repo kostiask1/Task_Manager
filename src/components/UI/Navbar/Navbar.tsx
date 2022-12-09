@@ -1,13 +1,13 @@
-import React, { useRef, useEffect } from "react"
-import { useLocation, Link, useNavigate } from "react-router-dom"
-import { routesArray } from "../../../routes"
-import { signout } from "../../../store/Auth/slice"
-import { useAppSelector, RootState, useAppDispatch } from "../../../store/store"
-import Button from "../Button"
-import "./Navbar.scss"
-import { setSuccess, setError } from "../../../store/App/slice"
-import { wishes } from "../../../store/Wish/slice"
-import { tasks } from "../../../store/Task/slice"
+import React, { useEffect, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { routesArray } from '../../../routes';
+import { setError, setSuccess } from "../../../store/App/slice";
+import { signout } from "../../../store/Auth/slice";
+import { RootState, useAppDispatch, useAppSelector } from "../../../store/store";
+import { tasks } from "../../../store/Task/slice";
+import { wishes } from "../../../store/Wish/slice";
+import Button from "../Button";
+import "./Navbar.scss";
 
 let lastLocation = ""
 

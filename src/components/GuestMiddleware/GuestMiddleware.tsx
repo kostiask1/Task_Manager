@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { setError, setSuccess } from "../../store/App/slice";
 import { authInitialState, getUserById } from "../../store/Auth/slice";
 import { IUser } from "../../store/Auth/types";
@@ -9,17 +9,31 @@ import Button from "../UI/Button";
 
 type ISecurityProps = {
   fallback?: string,
-  children?: React.ReactNode
 }
 
-const SecurityMiddleware: FC<ISecurityProps> = ({ fallback, children }) => {
+const GuestMiddleware: FC<ISecurityProps> = ({ fallback }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
   const user: IUser = useAppSelector((state: RootState) => state.auth.user)
   const [gotUser, setGotUser] = useState<IUser>(authInitialState.user)
-  const { uid } = useParams()
+  const [uid, setUid] = useState("")
 
   const foreignUser = uid !== undefined && user.id !== uid
+
+  useEffect(() => {
+    const id = locationUserId()
+    setUid(id)
+  }, [location.pathname, user.id])
+
+  const locationUserId = () => {
+    const route = window.location.pathname
+    const pathname = route.split("/")
+    const id = pathname[pathname.length - 1]
+    const hasId = id.length === 28
+
+    if (hasId) return id
+    return user.id
+  }
 
   useEffect(() => {
     if (!foreignUser) return
@@ -49,7 +63,7 @@ const SecurityMiddleware: FC<ISecurityProps> = ({ fallback, children }) => {
   }, [user.id])
 
   return (
-    <>
+    <div className="container mt-5">
       {!foreignUser && (
         <Button
           onClick={copyPage}
@@ -91,11 +105,10 @@ const SecurityMiddleware: FC<ISecurityProps> = ({ fallback, children }) => {
       {isOpened && (
         <>
           <hr className="my-3" />
-          {children}
         </>)
       }
-    </>
+    </div>
   )
 }
 
-export default SecurityMiddleware
+export default GuestMiddleware

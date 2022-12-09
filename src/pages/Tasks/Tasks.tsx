@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom"
-import SecurityMiddleware from "../../components/SecurityMiddleware"
 import TaskForm from "../../components/TaskForm/TaskForm"
 import { IUser } from "../../store/Auth/types"
 import { RootState, useAppSelector } from "../../store/store"
@@ -18,12 +17,9 @@ const Tasks = () => {
 
   return (
     <div className="section is-medium pt-2">
-      <SecurityMiddleware fallback="User haven't granted you access to his tasks">
-        <>
-          {!foreignUser && <TaskForm key={JSON.stringify(task)} />}
-          {!foreignUser && <hr />}
-          <List /></>
-      </SecurityMiddleware>
+      {!foreignUser && <TaskForm key={JSON.stringify(task)} />}
+      {!foreignUser && <hr />}
+      <List />
     </div>
   )
 }

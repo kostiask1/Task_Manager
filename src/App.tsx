@@ -7,6 +7,7 @@ import Routing from "./routes"
 import { loading } from "./store/App/slice"
 import { getCurrentUser } from './store/Auth/slice'
 import { useAppDispatch } from "./store/store"
+import GuestMiddleware from './components/GuestMiddleware/GuestMiddleware';
 
 function App() {
   const dispatch = useAppDispatch()
@@ -27,6 +28,7 @@ function App() {
   return (
     <>
       <Navbar />
+      <GuestMiddleware/>
       <Messages />
       <div className="container mt-5">
         <Routing />

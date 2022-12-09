@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import SecurityMiddleware from '../../components/SecurityMiddleware'
 import Loader from "../../components/UI/Loader/Loader"
 import Table, { ITableProps } from '../../components/UI/Table'
 import { IUser } from "../../store/Auth/types"
@@ -59,11 +58,8 @@ const Wishlist = () => {
     initData: wishes
   }
 
-  const fallback = foreignUser && wishes.length ? "User have granted you access only to part of his wishlist" : "User haven't granted you access to his wishlist"
-  
   return (
     <div className="section is-medium pt-2 pb-6">
-      <SecurityMiddleware fallback={fallback} />
       {!foreignUser && <WishForm key={JSON.stringify(wish)} />}
       {!foreignUser && <hr />}
       <Suspense fallback={<Loader loading={true} />}>
