@@ -50,6 +50,7 @@ const Guest = () => {
                 gotUser.profileImg ||
                 "https://bulma.io/images/placeholders/128x128.png"
               }
+              style={{ aspectRatio: "1/1" }}
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null
                 currentTarget.src =
