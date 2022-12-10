@@ -1,7 +1,7 @@
 import { createRef, FC, useCallback, useEffect, useMemo, useState } from "react"
 import InputMask from "react-input-mask"
 import { dateFormat, datesList, equal } from "../../helpers"
-import { setSuccess } from "../../store/App/slice"
+import { setSuccess, setError } from "../../store/App/slice"
 import { IUser } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import {
@@ -11,11 +11,12 @@ import {
   taskInitialState,
 } from "../../store/Task/slice"
 import { Subtask as ISubtask, Task } from "../../store/Task/types"
-import Subtask from "../Subtask/Subtask"
+// import Subtask from "../Subtask/Subtask"
 import Button from "../UI/Button"
 import Input from "../UI/Input"
 import Textarea from "../UI/Textarea"
 import "./TaskForm.scss"
+import SubTasks from '../SubTasks/SubTasks';
 
 interface TaskInterface {
   setModal?: undefined | Function
@@ -129,7 +130,14 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
       if (subtask.trim().length) {
-        const newTask: ISubtask = { text: subtask, completed: false }
+        const text = subtask.trim()
+        const isExist = state.subtasks.find((sub) => sub.text === text)
+
+        if (isExist) {
+          return dispatch(setError("Identical subtask already exists"))
+        }
+
+        const newTask: ISubtask = { text, completed: false }
         setSubtask("")
         setState((state: Task) => ({
           ...state,
@@ -194,9 +202,8 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
             />
             {!!state.start && (
               <Button
-                className={`complete-task-btn ${
-                  state.completed ? "is-primary" : "is-danger"
-                }`}
+                className={`complete-task-btn ${state.completed ? "is-primary" : "is-danger"
+                  }`}
                 onClick={handleCompleted}
                 text={`Completed: ${state.completed ? "Yes" : "No"}`}
                 disabled={!!state.subtasks?.length || loadingSave || deleting}
@@ -218,21 +225,15 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               <b>Subtasks</b>
             </label>
             <hr style={{ margin: "5px 0" }} />
-            <ul key={JSON.stringify(state.subtasks)}>
-              {state.subtasks?.map((subtask, index) => (
-                <Subtask
-                  key={subtask.text + index}
-                  data={subtask as ISubtask}
-                  task={state}
-                  state={"create"}
-                  edit={setSubtask}
-                  editable={true}
-                  update={(data) =>
-                    setState((state: Task) => ({ ...state, subtasks: data }))
-                  }
-                />
-              ))}
-            </ul>
+            <SubTasks
+              key={JSON.stringify(state.subtasks)}
+              task={state}
+              type="create"
+              edit={setSubtask}
+              editable={true}
+              update={(data) =>
+                setState((state: Task) => ({ ...state, subtasks: data }))
+              } />
             <Input
               ref={subTaskRef}
               name="subtask"

@@ -3,9 +3,10 @@ import { setError, setSuccess } from "../../store/App/slice"
 import { useAppDispatch } from "../../store/store"
 import { deleteTask, editingTask, setTask } from "../../store/Task/slice"
 import { Task as TaskProps } from "../../store/Task/types"
-import Subtask from "../Subtask"
+// import Subtask from "../Subtask"
 import Button from "../UI/Button"
 import "./Task.scss"
+import SubTasks from '../SubTasks/SubTasks';
 
 interface TaskInterface {
   task: TaskProps
@@ -87,16 +88,14 @@ const Task: FC<TaskInterface> = ({
             <div className="card-header-title">
               {task.title}
               <Button
-                className={`complete-task-btn ${
-                  task.completed ? "is-primary" : "is-danger"
-                }`}
+                className={`complete-task-btn ${task.completed ? "is-primary" : "is-danger"
+                  }`}
                 style={{ height: "100%" }}
                 onClick={() => editable && complete(task, !task.completed)}
-                text={`${
-                  loading
+                text={`${loading
                     ? "Updating..."
                     : `Completed: ${task.completed ? "Yes" : "No"}`
-                }`}
+                  }`}
                 disabled={loading || deleting || !editable}
               />
             </div>
@@ -111,20 +110,11 @@ const Task: FC<TaskInterface> = ({
                 <>
                   <b>Subtasks</b>
                   <hr style={{ margin: "5px 0" }} />
-                  {!!task.subtasks?.length && (
-                    <ul>
-                      {task.subtasks.map((t, index) => (
-                        <Subtask
-                          key={t.text + index}
-                          data={t}
-                          task={task}
-                          state="show"
-                          setModal={setModal}
-                          editable={editable}
-                        />
-                      ))}
-                    </ul>
-                  )}
+                  <SubTasks
+                    task={task}
+                    type="show"
+                    editable={editable}
+                    setModal={setModal} />
                   <hr style={{ margin: "10px 0" }} />
                 </>
               )}
