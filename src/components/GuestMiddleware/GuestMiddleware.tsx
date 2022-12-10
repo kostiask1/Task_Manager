@@ -11,19 +11,15 @@ type ISecurityProps = {
   fallback?: string,
 }
 
+let lastLocationId = ""
+
 const GuestMiddleware: FC<ISecurityProps> = ({ fallback }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
   const user: IUser = useAppSelector((state: RootState) => state.auth.user)
   const [gotUser, setGotUser] = useState<IUser>(authInitialState.user)
-  const [uid, setUid] = useState("")
-
-  const foreignUser = uid !== undefined && user.id !== uid
-
-  useEffect(() => {
-    const id = locationUserId()
-    setUid(id)
-  }, [location.pathname, user.id])
+  const [uid, setUid] = useState(user.id)
+  const foreignUser = user.id !== uid
 
   const locationUserId = () => {
     const route = window.location.pathname
@@ -31,16 +27,31 @@ const GuestMiddleware: FC<ISecurityProps> = ({ fallback }) => {
     const id = pathname[pathname.length - 1]
     const hasId = id.length === 28
 
-    if (hasId) return id
+    if (lastLocationId !== (hasId ? id : user.id)) {
+      setGotUser(authInitialState.user)
+    }
+    if (hasId) {
+      lastLocationId = id
+      return id
+    }
     return user.id
   }
 
   useEffect(() => {
+    return () => { lastLocationId = locationUserId() }
+  }, [window.location.pathname])
+
+  useEffect(() => {
+    const id = locationUserId()
+    setUid(id)
+  }, [window.location.pathname, user.id])
+
+  useEffect(() => {
     if (!foreignUser) return
-      ; (async () => {
-        getUserById(uid).then((user) => setGotUser(user))
-      })()
-  }, [user.id])
+    getUserById(uid).then((user) => {
+      setGotUser(user)
+    })
+  }, [uid, user.id, window.location.pathname])
 
   const copyPage = useCallback(() => {
     navigator.clipboard
