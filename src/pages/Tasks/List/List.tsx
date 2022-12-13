@@ -9,7 +9,17 @@ import { useParams } from "react-router-dom"
 import useIntersectionObserver from '../../../hooks/useIntersectionObserver';
 const Task = lazy(() => import("../../../components/Task"))
 
-const increment:number = 6
+const increment: number = 6
+
+interface IData {
+  uncompleted: TaskProps[],
+  finished: TaskProps[]
+}
+
+const initData = {
+  uncompleted: [],
+  finished: [],
+}
 
 const List = () => {
   const dispatch = useAppDispatch()
@@ -21,11 +31,14 @@ const List = () => {
   const foreignUser = uid !== undefined && user.id !== uid
   const [loading, setLoading] = useState(false)
 
-  const [data, setData] = useState<TaskProps[]>([])
+  const [data, setData] = useState<IData>(initData)
   const [count, setCount] = useState<number>(0)
 
+  const tabs: Array<keyof IData> = ["uncompleted", "finished"]
+  const [activeTab, setActiveTab] = useState<keyof IData>(tabs[0])
+
   const ref = useRef<HTMLDivElement | null>(null)
-  const entry = useIntersectionObserver(ref,{})
+  const entry = useIntersectionObserver(ref, {})
   const isVisible = !!entry?.isIntersecting
 
   useEffect(() => {
@@ -35,7 +48,19 @@ const List = () => {
   }, [isVisible, tasks.length])
 
   useEffect(() => {
-    setData(tasks.slice(0, count * increment))
+    const uncompleted = [] // tasks.filter(task => !task.completed)
+    const finished = [] // tasks.filter(task => task.completed)
+
+    for (let i = 0; i < tasks.length; i++) {
+      const task = tasks[i]
+      task.completed ? finished.push(task) : uncompleted.push(task)
+    }
+
+    setData({
+      uncompleted,
+      finished
+    })
+    // setData(tasks.slice(0, count * increment))
   }, [count, tasks])
 
   useEffect(() => {
@@ -43,17 +68,23 @@ const List = () => {
     dispatch(getTasks(uid || user.id)).then(() => setLoading(false))
   }, [uid])
 
+
   return (
-    <div className="columns tasks-list">
-      <Suspense fallback={<Loader loading={true} />}>
-        {!!data.length &&
-          data.map((task) => (
+    <Suspense fallback={<Loader loading={true} />}>
+      <div className="tabs is-centered is-boxed">
+        <ul>
+          {tabs.map(tab => <li key={tab} className={tab === activeTab ? "is-active" : ""} onClick={() => setActiveTab(tab)}><a><span>{tab}</span></a></li>)}
+        </ul>
+      </div>
+      <div className="columns tasks-list">
+        {!!data[activeTab].length &&
+          data[activeTab].map((task) => (
             <Task task={task} key={task.id} editable={!foreignUser} />
           ))}
-          <div ref={ref} />
+        <div ref={ref} />
         <Loader loading={loading} />
-      </Suspense>
-    </div>
+      </div>
+    </Suspense>
   )
 }
 
