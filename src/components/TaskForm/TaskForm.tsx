@@ -10,7 +10,7 @@ import {
   setTask,
   taskInitialState,
 } from "../../store/Task/slice"
-import { Subtask as ISubtask, Task } from "../../store/Task/types"
+import { Subtask as ISubtask, Task, TaskRepeating } from "../../store/Task/types"
 // import Subtask from "../Subtask/Subtask"
 import Button from "../UI/Button"
 import Input from "../UI/Input"
@@ -91,12 +91,15 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     setState((state: Task) => ({ ...state, [name]: value }))
   }
 
-  const toggleDaily = () =>
+  const setRepeating = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val: TaskRepeating = e.target.value as TaskRepeating;
+
     setState((state: Task) => ({
       ...state,
-      daily: !state.daily,
-      end: !state.daily ? "" : state.end,
+      repeating: val,
+      end: !state.repeating ? "" : state.end,
     }))
+  }
 
   const clear = useCallback((e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
@@ -179,7 +182,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       }))
     })
   }
-
+  
   return (
     <>
       <form
@@ -250,42 +253,48 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
             />
             <br />
             <hr style={{ margin: "10px 0" }} />
-            {state.daily ? (
-              <del>Deadline</del>
-            ) : (
-              <label htmlFor="end">Deadline</label>
+            {(!state.repeating || state.repeating === "no") && (
+              <>
+                <label htmlFor="end">Deadline</label>
+                <InputMask
+                  className="input"
+                  mask={formatChars}
+                  maskPlaceholder=""
+                  placeholder="dd-mm-yyyy"
+                  alwaysShowMask={true}
+                  name="end"
+                  id="end"
+                  value={state.end}
+                  onChange={(event) => handleChange(event)}
+                  autoComplete="off"
+                  list="dates"
+                />
+                <datalist id="dates">
+                  {datesList.map((value) => (
+                    <option value={value} key={value}></option>
+                  ))}
+                </datalist>
+              </>
             )}
-            <InputMask
-              className="input"
-              mask={formatChars}
-              maskPlaceholder=""
-              placeholder="dd-mm-yyyy"
-              alwaysShowMask={true}
-              name="end"
-              id="end"
-              value={state.end}
-              onChange={(event) => !state.daily && handleChange(event)}
-              disabled={state.daily}
-              autoComplete="off"
-              list="dates"
-            />
-            <datalist id="dates">
-              {datesList.map((value) => (
-                <option value={value} key={value}></option>
-              ))}
-            </datalist>
           </div>
-          <input
-            type="checkbox"
-            className="checkbox"
-            id={"checkbox-" + state.id}
-            checked={state.daily}
-            onChange={toggleDaily}
-            disabled={loadingSave || deleting}
-          />
-          <label className="subtask-text ml-2" htmlFor={"checkbox-" + state.id}>
-            Daily task
-          </label>
+          <div className="is-flex is-align-items-center">
+            <label className="subtask-text mr-2" htmlFor={"select-" + state.id}>
+              Repeating?
+            </label>
+            <select
+              className="select"
+              id={"select-" + state.id}
+              value={state.repeating}
+              onChange={setRepeating}
+              disabled={loadingSave || deleting}
+            >
+              <option value="no">No</option>
+              <option value="day">Day</option>
+              <option value="week">Week</option>
+              <option value="month">Month</option>
+              <option value="year">Year</option>
+            </select>
+          </div>
         </div>
         <footer className="card-footer p-3">
           <div className="buttons">

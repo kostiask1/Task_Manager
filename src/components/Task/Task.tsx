@@ -7,6 +7,7 @@ import { Task as TaskProps } from "../../store/Task/types"
 import Button from "../UI/Button"
 import "./Task.scss"
 import SubTasks from '../SubTasks/SubTasks';
+import { convertDateToString } from "../../helpers"
 
 interface TaskInterface {
   task: TaskProps
@@ -80,6 +81,18 @@ const Task: FC<TaskInterface> = ({
     }
   }, [task])
 
+  const day = 86400000
+  const week = day * 7
+  const month = week * 4
+  const year = month * 12 - day
+
+  const multiplier = {
+    day,
+    week,
+    month,
+    year,
+  }
+
   return (
     <>
       <div className="column task fadeIn" key={task.id}>
@@ -93,8 +106,8 @@ const Task: FC<TaskInterface> = ({
                 style={{ height: "100%" }}
                 onClick={() => editable && complete(task, !task.completed)}
                 text={`${loading
-                    ? "Updating..."
-                    : `Completed: ${task.completed ? "Yes" : "No"}`
+                  ? "Updating..."
+                  : `Completed: ${task.completed ? "Yes" : "No"}`
                   }`}
                 disabled={loading || deleting || !editable}
               />
@@ -118,8 +131,15 @@ const Task: FC<TaskInterface> = ({
                   <hr style={{ margin: "10px 0" }} />
                 </>
               )}
-              {task.daily ? (
-                <time>Daily task {task.completed && "- checked"}</time>
+              {task.repeating && task.repeating !== "no" ? (
+                <time>
+                  <span>Repeating: {task.repeating}</span>
+                  <p>
+                    Reset on:
+                    {convertDateToString(new Date(
+                      new Date(task.updatedAt).getTime() + multiplier[task.repeating]
+                    ))}
+                  </p></time>
               ) : (
                 <time dateTime={task.end}>
                   Due: {task.end || "No deadline specified"}

@@ -134,7 +134,7 @@ const Calendar = () => {
     if (!task.hasEndDate || !task.end) {
       style.backgroundColor = "#27557b"
     }
-    if (task.daily) {
+    if (task.repeating && task.repeating !=="no") {
       style.backgroundColor = "#acd9eb"
     }
     if (task.completed) {

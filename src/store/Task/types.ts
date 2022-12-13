@@ -3,6 +3,9 @@ export interface Subtask {
   text: string
 }
 
+export type TaskRepeating = "no" |"day" | "week" | "month" | "year"
+
+
 export interface Task {
   completed: boolean
   description: string
@@ -13,5 +16,5 @@ export interface Task {
   start: number
   updatedAt: number
   subtasks: Subtask[] | []
-  daily: boolean
+  repeating: TaskRepeating
 }

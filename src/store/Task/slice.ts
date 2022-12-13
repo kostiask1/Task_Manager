@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { getAuth } from "firebase/auth"
 import { doc, getDoc, setDoc } from "firebase/firestore/lite"
 import { db } from "../../firebase/base"
-import { convertDateToString, convertToDate, equal } from "../../helpers"
+import { convertToDate, equal } from "../../helpers"
+import { getUserById } from "../Auth/slice"
 import { IUser } from "../Auth/types"
 import { AppDispatch, RootState } from "../store"
 import { Subtask, Task } from "./types"
-import { getAuth } from 'firebase/auth';
-import { getUserById } from "../Auth/slice"
 
 const sortDeadlines = (array: Task[]) =>
   array.sort(
@@ -34,7 +34,7 @@ export const taskInitialState: Task = {
   start: 0,
   updatedAt: 0,
   subtasks: [],
-  daily: false,
+  repeating: "no",
 }
 
 const task = createSlice({
@@ -76,21 +76,36 @@ export const getTasks = (uid: string) => {
       }
 
       const stateTasks = getState().tasks.array
-      
+
       for (let i = 0; i < userTasks.length; i++) {
         const task = userTasks[i]
-        if (
-          task.daily &&
-          convertDateToString(new Date(task.updatedAt)) !==
-            convertDateToString(new Date())
-        ) {
-          task.completed = false
-          task.subtasks = task.subtasks.length
-            ? task.subtasks.map((subtask: Subtask) => ({
-                ...subtask,
-                completed: false,
-              }))
-            : []
+        const day = 86400000
+        const week = day * 7
+        const month = week * 4
+        const year = month * 12 - day
+
+        const multiplier = {
+          day,
+          week,
+          month,
+          year,
+        }
+        if (task.repeating && task.repeating !== "no" && task.completed && task.updatedAt) {
+          const taskStart = convertToDate(task.updatedAt)
+
+          const repeatDate = new Date(
+            taskStart.getTime() + multiplier[task.repeating]
+          )
+
+          if (repeatDate < new Date()) {
+            task.completed = false
+            task.subtasks = task.subtasks.length
+              ? task.subtasks.map((subtask: Subtask) => ({
+                  ...subtask,
+                  completed: false,
+                }))
+              : []
+          }
         }
       }
       !equal(stateTasks, userTasks) && dispatch(tasks(userTasks as Task[]))
@@ -107,7 +122,7 @@ export const setTask = (task: Task) => {
     const tasksWithoutEndDates: Task[] = []
     const tasksWithEndDates: Task[] = []
     const completedTasks: Task[] = []
-    const dailyTasks: Task[] = []
+    const repeatingTasks: Task[] = []
 
     const indexOfTask = tasksArray.findIndex((t: Task) => t.id === task.id)
     const existTask = indexOfTask !== -1
@@ -120,29 +135,29 @@ export const setTask = (task: Task) => {
     }
 
     for (let i = 0; i < tasksCopy.length; i++) {
-      const item = tasksCopy[i]
-      if (item.completed) {
-        completedTasks.push(item)
+      const task = tasksCopy[i]
+      if (task.completed) {
+        completedTasks.push(task)
         continue
       }
-      if (item.daily) {
-        dailyTasks.push(item)
+      if (task.repeating) {
+        repeatingTasks.push(task)
         continue
       }
-      if (item.end) {
-        tasksWithEndDates.push(item)
+      if (task.end) {
+        tasksWithEndDates.push(task)
       } else {
-        tasksWithoutEndDates.push(item)
+        tasksWithoutEndDates.push(task)
       }
     }
 
     tasksWithoutEndDates.sort((a: Task, b: Task) => b.updatedAt - a.updatedAt)
-    dailyTasks.sort((a: Task, b: Task) => b.updatedAt - a.updatedAt)
+    repeatingTasks.sort((a: Task, b: Task) => b.updatedAt - a.updatedAt)
     sortDeadlines(tasksWithEndDates)
     sortDeadlines(completedTasks)
 
     const newArray = [
-      ...dailyTasks,
+      ...repeatingTasks,
       ...tasksWithEndDates,
       ...tasksWithoutEndDates,
       ...completedTasks,
