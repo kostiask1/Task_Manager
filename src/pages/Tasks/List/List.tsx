@@ -48,8 +48,8 @@ const List = () => {
   }, [isVisible, tasks.length])
 
   useEffect(() => {
-    const uncompleted = [] // tasks.filter(task => !task.completed)
-    const finished = [] // tasks.filter(task => task.completed)
+    const uncompleted = []
+    const finished = []
 
     for (let i = 0; i < tasks.length; i++) {
       const task = tasks[i]
@@ -57,25 +57,25 @@ const List = () => {
     }
 
     setData({
-      uncompleted,
-      finished
+      uncompleted: uncompleted.slice(0, count * increment),
+      finished: finished.slice(0, count * increment)
     })
-    // setData(tasks.slice(0, count * increment))
   }, [count, tasks])
+
+  useEffect(() => { setCount(0) }, [activeTab])
 
   useEffect(() => {
     setLoading(!tasks.length)
     dispatch(getTasks(uid || user.id)).then(() => setLoading(false))
   }, [uid])
 
-
   return (
     <Suspense fallback={<Loader loading={true} />}>
-      <div className="tabs is-centered is-boxed">
+      {!!tasks.length && <div className="tabs is-centered is-boxed">
         <ul>
           {tabs.map(tab => <li key={tab} className={tab === activeTab ? "is-active" : ""} onClick={() => setActiveTab(tab)}><a><span>{tab}</span></a></li>)}
         </ul>
-      </div>
+      </div>}
       <div className="columns tasks-list">
         {!!data[activeTab].length &&
           data[activeTab].map((task) => (
