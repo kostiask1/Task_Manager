@@ -26,6 +26,7 @@ import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { editingTask, getTasks, taskInitialState } from "../../store/Task/slice"
 import { Task as TaskProps } from "../../store/Task/types"
 import "./Calendar.scss"
+import Button from '../../components/UI/Button';
 const Task = lazy(() => import("../../components/Task"))
 const TaskForm = lazy(() => import("../../components/TaskForm"))
 
@@ -154,6 +155,17 @@ const Calendar = () => {
     }
   }, [])
 
+  const createTask = useCallback(() => {
+    if (!foreignUser) {
+      dispatch(
+        editingTask({
+          ...taskInitialState,
+        })
+      )
+      setSlot(true)
+    }
+  }, [])
+
   const handleCloseTaskModal = useCallback(() => {
     dispatch(editingTask(null))
     setSlot(null)
@@ -173,6 +185,7 @@ const Calendar = () => {
 
   return (
     <div className="pb-6 pt-3">
+      {!foreignUser && <Button onClick={createTask} text="Create task" className="is-primary mb-5"/>}
       <Loader loading={loading} />
       <div className="calendar-wrapper">
         <EventCalendar
