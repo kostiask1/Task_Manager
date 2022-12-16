@@ -1,22 +1,22 @@
-import { createRef, FC, useCallback, useEffect, useMemo, useState } from "react"
-import InputMask from "react-input-mask"
-import { dateFormat, datesList, equal } from "../../helpers"
-import { setSuccess, setError } from "../../store/App/slice"
-import { IUser } from "../../store/Auth/types"
-import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
+import { createRef, FC, useCallback, useEffect, useMemo, useState } from "react";
+import InputMask from "react-input-mask";
+import { dateFormat, datesList, equal, convertDateToString, convertToDate, convertDateToTimestamp } from '../../helpers';
+import { setError, setSuccess } from "../../store/App/slice";
+import { IUser } from "../../store/Auth/types";
+import { RootState, useAppDispatch, useAppSelector } from "../../store/store";
 import {
   deleteTask,
   editingTask,
   setTask,
-  taskInitialState,
-} from "../../store/Task/slice"
-import { Subtask as ISubtask, Task, TaskRepeating } from "../../store/Task/types"
+  taskInitialState
+} from "../../store/Task/slice";
+import { Subtask as ISubtask, Task, TaskRepeating } from "../../store/Task/types";
 // import Subtask from "../Subtask/Subtask"
-import Button from "../UI/Button"
-import Input from "../UI/Input"
-import Textarea from "../UI/Textarea"
-import "./TaskForm.scss"
 import SubTasks from '../SubTasks/SubTasks';
+import Button from "../UI/Button";
+import Input from "../UI/Input";
+import Textarea from "../UI/Textarea";
+import "./TaskForm.scss";
 
 interface TaskInterface {
   setModal?: undefined | Function
@@ -31,6 +31,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   )
 
   const [state, setState] = useState<Task>(task || taskInitialState)
+  const [deadline_date, setDeadline_date] = useState(() => convertDateToString(state.deadline_date))
   const [loadingSave, setLoadingSave] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [subtask, setSubtask] = useState<string>("")
@@ -62,10 +63,11 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       setLoadingSave(true)
       if (!isEdit) {
         saveTask.id = new Date().getTime()
-        saveTask.start = new Date().getTime()
+        saveTask.create_date = new Date().getTime()
         saveTask.uid = user.id
       }
-      if (saveTask.end === "dd-mm-yyyy") saveTask.end = ""
+      console.log('deadline_date:', deadline_date)
+      if (deadline_date) saveTask.deadline_date = convertDateToTimestamp(convertToDate(deadline_date))
       if (subtask.trim().length) {
         const newTask: ISubtask = { text: subtask, completed: false }
         saveTask.subtasks = [...saveTask.subtasks, newTask]
@@ -80,7 +82,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
         : dispatch(setSuccess("Task created successfully"))
       clear()
     },
-    [state]
+    [state, deadline_date]
   )
 
   const handleChange = (
@@ -91,13 +93,21 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     setState((state: Task) => ({ ...state, [name]: value }))
   }
 
+  const handleInputMask = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = event.target.value
+    console.log('value:', value)
+    setDeadline_date(value)
+  }
+
   const setRepeating = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val: TaskRepeating = e.target.value as TaskRepeating;
 
     setState((state: Task) => ({
       ...state,
       repeating: val,
-      end: !state.repeating ? "" : state.end,
+      deadline_date: !state.repeating ? 0 : state.deadline_date,
     }))
   }
 
@@ -124,10 +134,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     [state]
   )
 
-  const formatChars: Array<RegExp | string> = useMemo(
-    () => dateFormat(state.end as string),
-    [state.end]
-  )
+  const formatChars: Array<RegExp | string> = useMemo(() => dateFormat(state.deadline_date),[state.deadline_date])
 
   const addSubtask = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -182,7 +189,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       }))
     })
   }
-  
+
   return (
     <>
       <form
@@ -203,7 +210,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               maxLength={75}
               required
             />
-            {!!state.start && (
+            {!!state.create_date && (
               <Button
                 className={`complete-task-btn ${state.completed ? "is-primary" : "is-danger"
                   }`}
@@ -253,19 +260,19 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
             />
             <br />
             <hr style={{ margin: "10px 0" }} />
-            {(!state.repeating || state.repeating === "no") && (
+            {(!state.repeating) && (
               <>
-                <label htmlFor="end">Deadline</label>
+                <label htmlFor="deadline_date">Deadline</label>
                 <InputMask
                   className="input"
                   mask={formatChars}
                   maskPlaceholder=""
                   placeholder="dd-mm-yyyy"
                   alwaysShowMask={true}
-                  name="end"
-                  id="end"
-                  value={state.end}
-                  onChange={(event) => handleChange(event)}
+                  name="deadline_date"
+                  id="deadline_date"
+                  value={deadline_date}
+                  onChange={(event) => handleInputMask(event)}
                   autoComplete="off"
                   list="dates"
                 />
@@ -288,7 +295,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               onChange={setRepeating}
               disabled={loadingSave || deleting}
             >
-              <option value="no">No</option>
+              <option value="">No</option>
               <option value="day">Day</option>
               <option value="week">Week</option>
               <option value="month">Month</option>
@@ -302,7 +309,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               <Button
                 className="mx-2 card-footer-item is-success"
                 text={loadingSave ? "Updating..." : "Update"}
-                disabled={loadingSave || deleting || equal(state, task)}
+                disabled={loadingSave || deleting || (convertDateToString(state.deadline_date) === deadline_date && equal(state, task))}
               />
             ) : (
               <Button

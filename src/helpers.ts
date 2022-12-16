@@ -11,7 +11,8 @@ export function equal(x: any, y: any): boolean {
 export const capitalizeFirstLetter = (string: string): string =>
   string.charAt(0).toUpperCase() + string.slice(1)
 
-export const dateFormat = (date: string): Array<string | RegExp> => {
+export const dateFormat = (raw_date: number): Array<string | RegExp> => {
+  const date = new Date(raw_date).toISOString()
   const dayStartsWithThree = date?.charAt(0) === "3" || false
   const monthStartsWithOne = date?.charAt(3) === "1" || false
 
@@ -30,6 +31,7 @@ export const dateFormat = (date: string): Array<string | RegExp> => {
 }
 
 export const convertToDate = (date: string | number): Date => {
+  if (!date) return new Date()
   if (typeof date === "string") {
     const day = date.slice(0, 2)
     const month = date.slice(3, 5)
@@ -40,7 +42,21 @@ export const convertToDate = (date: string | number): Date => {
   return new Date(date)
 }
 
-export const convertDateToString = (date: Date): string => {
+export const convertDateToTimestamp = (date: Date | number | ""): number => {
+  if (!date) return 0
+  if (typeof date === "number") {
+    return new Date(date).getTime()
+  }
+  if (date instanceof Date) return date.getTime()
+  const rdate: any = date
+  return rdate.seconds
+}
+
+export const convertDateToString = (date: Date | number | ""): string => {
+  if (!date) return ""
+  if (typeof date === "number") {
+    date = new Date(date)
+  }
   let month = (date.getUTCMonth() + 1).toString() //months from 1-12
   month.length < 2 && (month = "0" + month)
   let day = date.getDate().toString()
@@ -123,6 +139,6 @@ export const tableActions = ({
   return [sort, reset]
 }
 
-export const datesList = Array.from(Array(8)).map((_, index) =>
+export const datesList = Array.from(Array(9)).map((_, index) =>
   convertDateToString(new Date(new Date().getTime() + 86400000 * +index))
 )

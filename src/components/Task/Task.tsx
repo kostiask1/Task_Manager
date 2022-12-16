@@ -3,7 +3,6 @@ import { setError, setSuccess } from "../../store/App/slice"
 import { useAppDispatch } from "../../store/store"
 import { deleteTask, editingTask, setTask } from "../../store/Task/slice"
 import { Task as TaskProps } from "../../store/Task/types"
-// import Subtask from "../Subtask"
 import Button from "../UI/Button"
 import "./Task.scss"
 import SubTasks from '../SubTasks/SubTasks';
@@ -28,6 +27,11 @@ const Task: FC<TaskInterface> = ({
 
   const complete = useCallback(async (task: TaskProps, completed: boolean) => {
     if (task && editable) {
+      if (task.subtasks.length) {
+        if (!task.subtasks.every(subtask => subtask.completed)) {
+          return dispatch(setError("Complete all subtasks first"))
+        }
+      }
       setLoading(true)
       const saveTask: TaskProps = { ...task }
       saveTask.completed = completed
@@ -92,7 +96,6 @@ const Task: FC<TaskInterface> = ({
     month,
     year,
   }
-
   return (
     <>
       <div className="column task fadeIn" key={task.id}>
@@ -131,18 +134,18 @@ const Task: FC<TaskInterface> = ({
                   <hr style={{ margin: "10px 0" }} />
                 </>
               )}
-              {task.repeating && task.repeating !== "no" ? (
+              {task.repeating ? (
                 <time>
                   <span>Repeating: {task.repeating}</span>
                   <p>
                     Reset on:
                     {convertDateToString(new Date(
-                      new Date(task.updatedAt).getTime() + multiplier[task.repeating]
+                      task.update_date + multiplier[task.repeating]
                     ))}
                   </p></time>
               ) : (
-                <time dateTime={task.end}>
-                  Due: {task.end || "No deadline specified"}
+                <time dateTime={convertDateToString(task.deadline_date)}>
+                  Due: {convertDateToString(task.deadline_date) || "No deadline specified"}
                 </time>
               )}
             </div>

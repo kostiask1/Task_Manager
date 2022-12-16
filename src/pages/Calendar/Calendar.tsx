@@ -19,14 +19,14 @@ import {
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import { useParams } from "react-router-dom"
 import Modal from "../../components/Modal/Modal"
+import Button from '../../components/UI/Button'
 import Loader from "../../components/UI/Loader/Loader"
-import { convertDateToString, convertToDate } from "../../helpers"
 import { IUser } from "../../store/Auth/types"
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { editingTask, getTasks, taskInitialState } from "../../store/Task/slice"
 import { Task as TaskProps } from "../../store/Task/types"
 import "./Calendar.scss"
-import Button from '../../components/UI/Button';
+import { convertToDate } from '../../helpers';
 const Task = lazy(() => import("../../components/Task"))
 const TaskForm = lazy(() => import("../../components/TaskForm"))
 
@@ -77,17 +77,17 @@ const Calendar = () => {
     return tasks.map((task: any) => ({
       ...task,
       title: genTitle(task),
-      start: task.end
-        ? convertToDate(task.end)
+      start: task.deadline_date
+        ? convertToDate(task.deadline_date)
         : task.completed
-          ? clearDate(task.updatedAt)
+          ? clearDate(task.update_date)
           : today,
-      end: task.end
-        ? convertToDate(task.end)
+      end: task.deadline_date
+        ? convertToDate(task.deadline_date)
         : task.completed
-          ? clearDate(task.updatedAt)
+          ? clearDate(task.update_date)
           : today,
-      hasEndDate: task.end ? true : false,
+      hasEndDate: task.deadline_date ? true : false,
     }))
   }, [])
 
@@ -110,14 +110,13 @@ const Calendar = () => {
   const onSelectEvent = useCallback((calEvent: any) => {
     const copy = { ...calEvent }
     copy.title = copy.title.replace(/\s*\(.*?\)\s*/g, "")
-    copy.start = convertDateToString(copy.start)
-    copy.end = copy.hasEndDate ? convertDateToString(copy.end) : ""
+    copy.deadline_date = copy.hasEndDate ? copy.deadline_date : ""
     setTask(copy)
   }, [])
 
-  const eventPropGetter = useCallback((task: any, start: Date, end: Date) => {
+  const eventPropGetter = useCallback((task: any, create_date: Date, deadline_date: Date) => {
     const daysLeft = Math.ceil(
-      (end.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+      (deadline_date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
     )
     const style = {
       color: "white",
@@ -125,16 +124,16 @@ const Calendar = () => {
       width: "calc(100% - 10px)",
       backgroundColor: "#27557b",
     }
-    if (daysLeft >= 0 && task.end) {
+    if (daysLeft >= 0 && task.deadline_date) {
       style.backgroundColor = `hsl(${0 + Math.min(16, daysLeft) * 3}, 90% ,50%)`
     }
     if (daysLeft < 0) {
       style.backgroundColor = "#222222"
     }
-    if (!task.hasEndDate || !task.end) {
+    if (!task.hasEndDate || !task.deadline_date) {
       style.backgroundColor = "#27557b"
     }
-    if (task.repeating && task.repeating !=="no") {
+    if (task.repeating) {
       style.backgroundColor = "#acd9eb"
     }
     if (task.completed) {
@@ -148,7 +147,7 @@ const Calendar = () => {
       dispatch(
         editingTask({
           ...taskInitialState,
-          end: convertDateToString(slotInfo.start),
+          deadline_date: slotInfo.start.getTime(),
         })
       )
       setSlot(true)
@@ -185,7 +184,7 @@ const Calendar = () => {
 
   return (
     <div className="pb-6 pt-3">
-      {!foreignUser && <Button onClick={createTask} text="Create task" className="is-primary mb-5"/>}
+      {!foreignUser && <Button onClick={createTask} text="Create task" className="is-primary mb-5" />}
       <Loader loading={loading} />
       <div className="calendar-wrapper">
         <EventCalendar

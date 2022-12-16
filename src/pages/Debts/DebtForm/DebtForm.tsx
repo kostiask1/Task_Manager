@@ -2,7 +2,7 @@ import { useMemo, useState, createRef } from "react"
 import InputMask from "react-input-mask"
 import Button from "../../../components/UI/Button"
 import Input from "../../../components/UI/Input"
-import { dateFormat, datesList, equal } from "../../../helpers"
+import { dateFormat, datesList, equal, convertDateToTimestamp, convertToDate } from '../../../helpers';
 import { setError } from "../../../store/App/slice"
 import { IUser } from "../../../store/Auth/types"
 import {
@@ -90,7 +90,7 @@ const DebtForm = () => {
   }
 
   const formatChars: Array<RegExp | string> = useMemo(
-    () => dateFormat(state.end as string),
+    () => dateFormat(convertDateToTimestamp(convertToDate(state.end))),
     [state.end]
   )
   const deleteT = async (event: React.MouseEvent<HTMLButtonElement>) => {

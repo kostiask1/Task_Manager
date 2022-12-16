@@ -1,17 +1,18 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { getAuth } from "firebase/auth"
-import { doc, getDoc, setDoc } from "firebase/firestore/lite"
-import { db } from "../../firebase/base"
-import { convertToDate, equal } from "../../helpers"
-import { getUserById } from "../Auth/slice"
-import { IUser } from "../Auth/types"
-import { AppDispatch, RootState } from "../store"
-import { Subtask, Task } from "./types"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getAuth } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore/lite";
+import { db } from "../../firebase/base";
+import { equal } from '../../helpers';
+import { getUserById } from "../Auth/slice";
+import { IUser } from "../Auth/types";
+import { AppDispatch, RootState } from "../store";
+import { Subtask, Task } from "./types";
 
 const sortDeadlines = (array: Task[]) =>
   array.sort(
     (a: Task, b: Task) =>
-      convertToDate(a.end).getTime() - convertToDate(b.end).getTime()
+      (a.deadline_date ? a.deadline_date : 0) -
+      (b.deadline_date ? b.deadline_date : 0)
   )
 
 interface TasksState {
@@ -25,16 +26,18 @@ const initialState: TasksState = {
 }
 
 export const taskInitialState: Task = {
-  id: 0,
-  uid: "",
+  complete_date: 0,
   completed: false,
+  create_date: new Date().getTime(),
+  deadline_date: 0,
   description: "",
-  title: "",
-  end: "",
-  start: 0,
-  updatedAt: 0,
+  id: 0,
+  repeating: "",
+  return_date: 0,
   subtasks: [],
-  repeating: "no",
+  title: "",
+  uid: "",
+  update_date: new Date().getTime(),
 }
 
 const task = createSlice({
@@ -77,27 +80,37 @@ export const getTasks = (uid: string) => {
 
       const stateTasks = getState().tasks.array
 
+      
       for (let i = 0; i < userTasks.length; i++) {
         const task = userTasks[i]
-        const day = 86400000
-        const week = day * 7
-        const month = week * 4
-        const year = month * 12 - day
 
-        const multiplier = {
-          day,
-          week,
-          month,
-          year,
+        const differences = {
+          day: 1,
+          week: 7,
+          month: 31,
+          year: 365,
         }
-        if (task.repeating && task.repeating !== "no" && task.completed && task.updatedAt) {
-          const taskStart = convertToDate(task.updatedAt)
+        if (task.repeating && task.completed && task.create_date) {
+          const today = new Date().getTime()
+          const updated = task.update_date
+          const taskDate = task.create_date
+          console.log("task.repeating:", task)
+          const diffTime = Math.abs(today - taskDate)
+          const diffTimeUpdated = Math.abs(updated - taskDate)
+          console.log("diffTimeUpdated:", diffTimeUpdated)
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) - 1
+          const diffDaysUpdated =
+            Math.ceil(diffTimeUpdated / (1000 * 60 * 60 * 24)) - 1
+          console.log("diffDays:", diffDays)
+          console.log("diffDaysUpdated:", diffDaysUpdated)
 
-          const repeatDate = new Date(
-            taskStart.getTime() + multiplier[task.repeating]
+          console.log(
+            "diffDays > differences[task.repeating]:",
+            diffDays >= differences[task.repeating]
           )
+          // if (diffDays > differences[task.repeating])
 
-          if (repeatDate < new Date()) {
+          if (diffDays >= differences[task.repeating]) {
             task.completed = false
             task.subtasks = task.subtasks.length
               ? task.subtasks.map((subtask: Subtask) => ({
@@ -126,7 +139,7 @@ export const setTask = (task: Task) => {
 
     const indexOfTask = tasksArray.findIndex((t: Task) => t.id === task.id)
     const existTask = indexOfTask !== -1
-    task.updatedAt = new Date().getTime()
+    task.update_date = new Date().getTime()
 
     if (!existTask) {
       tasksCopy.push(task)
@@ -144,19 +157,23 @@ export const setTask = (task: Task) => {
         repeatingTasks.push(task)
         continue
       }
-      if (task.end) {
+      if (task.deadline_date) {
         tasksWithEndDates.push(task)
       } else {
         tasksWithoutEndDates.push(task)
       }
     }
 
-    tasksWithoutEndDates.sort((a: Task, b: Task) => b.updatedAt - a.updatedAt)
-    repeatingTasks.sort((a: Task, b: Task) => b.updatedAt - a.updatedAt)
+    tasksWithoutEndDates.sort(
+      (a: Task, b: Task) => b.update_date - a.update_date
+    )
+    repeatingTasks.sort(
+      (a: Task, b: Task) => b.update_date - a.update_date
+    )
     sortDeadlines(tasksWithEndDates)
     sortDeadlines(completedTasks)
 
-    const newArray = [
+    const newArray: Task[] = [
       ...repeatingTasks,
       ...tasksWithEndDates,
       ...tasksWithoutEndDates,
@@ -164,7 +181,7 @@ export const setTask = (task: Task) => {
     ]
 
     await setDoc(doc(db, "tasks", task.uid), {
-      tasks: newArray as Task[],
+      tasks: newArray,
     })
 
     dispatch(tasks(newArray))
