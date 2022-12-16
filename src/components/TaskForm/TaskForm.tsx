@@ -66,7 +66,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
         saveTask.create_date = new Date().getTime()
         saveTask.uid = user.id
       }
-      console.log('deadline_date:', deadline_date)
       if (deadline_date) saveTask.deadline_date = convertDateToTimestamp(convertToDate(deadline_date))
       if (subtask.trim().length) {
         const newTask: ISubtask = { text: subtask, completed: false }
@@ -97,7 +96,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const value = event.target.value
-    console.log('value:', value)
     setDeadline_date(value)
   }
 
