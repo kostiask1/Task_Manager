@@ -66,7 +66,11 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
         saveTask.create_date = new Date().getTime()
         saveTask.uid = user.id
       }
-      if (deadline_date) saveTask.deadline_date = convertDateToTimestamp(convertToDate(deadline_date))
+      if (deadline_date) {
+        saveTask.deadline_date = convertDateToTimestamp(convertToDate(deadline_date))
+      } else {
+        saveTask.deadline_date = 0
+      }
       if (subtask.trim().length) {
         const newTask: ISubtask = { text: subtask, completed: false }
         saveTask.subtasks = [...saveTask.subtasks, newTask]
@@ -133,7 +137,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     [state]
   )
 
-  const formatChars: Array<RegExp | string> = useMemo(() => dateFormat(state.deadline_date),[state.deadline_date])
+  const formatChars: Array<RegExp | string> = useMemo(() => dateFormat(state.deadline_date), [state.deadline_date])
 
   const addSubtask = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
