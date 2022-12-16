@@ -112,6 +112,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   const clear = useCallback((e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault()
     setState(taskInitialState)
+    setDeadline_date(convertDateToString(taskInitialState.deadline_date))
     dispatch(editingTask(null))
   }, [])
 
