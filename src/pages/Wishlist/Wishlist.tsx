@@ -55,7 +55,7 @@ const Wishlist = () => {
     columns,
     renderBody,
     loading,
-    initData: wishes
+    data: wishes
   }
 
   return (

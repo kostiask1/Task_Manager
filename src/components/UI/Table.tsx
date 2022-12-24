@@ -20,14 +20,14 @@ type IFooter = {
 
 export interface ITableProps<T = unknown> {
   columns: IHeader[],
-  initData: T[],
+  data: T[],
   renderBody: (data: T) => React.ReactNode,
   footer?: (IFooter | string)[],
   loading?: boolean,
   fallback?: string
 }
 
-const Table: <T>(p: ITableProps<T>) => React.ReactElement = ({ columns, initData, renderBody, footer, loading, fallback }) => {
+const Table: <T>(p: ITableProps<T>) => React.ReactElement = ({ columns, data: initData, renderBody, footer, loading, fallback }) => {
   const [data, setData] = useState(initData)
   const [sorting, setSorting] = useState("")
   const [sort, reset] = tableActions({

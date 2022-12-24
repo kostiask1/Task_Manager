@@ -1,3 +1,5 @@
+import { MouseEventHandler } from "react"
+
 export function equal(x: any, y: any): boolean {
   const ok = Object.keys,
     tx = typeof x,
@@ -65,7 +67,7 @@ export const convertDateToString = (date: Date | number | ""): string => {
   return `${day}-${month}-${year}`
 }
 
-function isNumeric(value: any) {
+function isNumeric(value: string) {
   return /^-?\d+$/.test(value)
 }
 
@@ -75,21 +77,21 @@ const removeThHighlight = () => {
   })
 }
 
-interface ITableActions {
-  data: any[]
+interface ITableActions<T> {
+  data: T[]
   setData: Function
   sorting: string
   setSorting: Function
-  initData: any[]
+  initData: T[]
 }
 
-export const tableActions = ({
+export const tableActions: <T>(p: ITableActions<T>) => [Function, MouseEventHandler<HTMLButtonElement>] = ({
   data,
   setData,
   sorting,
   setSorting,
   initData,
-}: ITableActions) => {
+}) => {
   const sort = (e: React.MouseEvent<HTMLElement>, col?: string) => {
     const target = e.currentTarget as HTMLTableCellElement
     const innerText = target.innerHTML
@@ -108,7 +110,7 @@ export const tableActions = ({
       target.style.backgroundColor = "#ff7f87"
     }
 
-    const copy = [...data]
+    const copy: any[] = [...data]
     const modifier = sorting === column ? -1 : 1
     copy.sort((a, b) => {
       if (typeof a[column] === "string" && !isNumeric(a[column])) {
@@ -118,8 +120,8 @@ export const tableActions = ({
       } else if (isNumeric(a[column])) {
         return (+a[column] - +b[column]) * modifier
       } else if (typeof a[column] == "object" || typeof b[column] == "object") {
-        const aсol: any = a[column] || []
-        const bсol: any = b[column] || []
+        const aсol = a[column] || []
+        const bсol = b[column] || []
         return (aсol?.length - bсol?.length) * modifier
       } else {
         if (a[column] < b[column]) return 1 * modifier

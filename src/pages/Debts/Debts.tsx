@@ -147,7 +147,7 @@ const renderBody = (debt: IDebt) => (
     renderBody,
     footer,
     loading,
-    initData: debts
+    data: debts
   }
 
   return (
