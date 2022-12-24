@@ -1,12 +1,12 @@
-import { lazy, Suspense, useEffect, useState, useRef } from 'react';
-import Loader from "../../../components/UI/Loader/Loader"
-import { IUser } from "../../../store/Auth/types"
-import { RootState, useAppDispatch, useAppSelector } from "../../../store/store"
-import { getTasks } from "../../../store/Task/slice"
-import { Task as TaskProps } from "../../../store/Task/types"
-import "./List.scss"
-import { useParams } from "react-router-dom"
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { useParams } from "react-router-dom";
+import Loader from "../../../components/UI/Loader/Loader";
 import useIntersectionObserver from '../../../hooks/useIntersectionObserver';
+import { IUser } from "../../../store/Auth/types";
+import { RootState, useAppDispatch, useAppSelector } from "../../../store/store";
+import { getTasks } from "../../../store/Task/slice";
+import { Task as TaskProps } from "../../../store/Task/types";
+import "./List.scss";
 const Task = lazy(() => import("../../../components/Task"))
 
 const increment: number = 6
@@ -32,7 +32,7 @@ const List = () => {
   const [loading, setLoading] = useState(false)
 
   const [data, setData] = useState<IData>(initData)
-  const [count, setCount] = useState<number>(0)
+  const [count, setCount] = useState<number>(1)
 
   const tabs: Array<keyof IData> = ["uncompleted", "finished"]
   const [activeTab, setActiveTab] = useState<keyof IData>(tabs[0])
@@ -62,7 +62,7 @@ const List = () => {
     })
   }, [count, tasks])
 
-  useEffect(() => { setCount(0) }, [activeTab])
+  useEffect(() => setCount(1), [activeTab])
 
   useEffect(() => {
     setLoading(!tasks.length)
