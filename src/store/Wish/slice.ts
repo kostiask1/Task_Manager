@@ -6,7 +6,7 @@ import { equal } from "../../helpers"
 import { getUserById } from "../Auth/slice"
 import { IUser } from '../Auth/types'
 import { AppDispatch, RootState } from "../store"
-import { Wish } from "./types"
+import { Whitelist, Wish } from "./types"
 
 interface WishesState {
   array: Wish[]
@@ -73,13 +73,13 @@ export const getWishes = (uid: string) => {
       if (isForeignUser) {
         sendWishes.length = 0
         for (const wish of wishList) {
-          const foreignUserWish = wish.whitelist?.find(
+          const foreignUserWish: Whitelist | undefined = wish.whitelist?.find(
             (user) => user.id === currendId
           )
-          if (wish.open || !foreignUser || foreignUser.open)
+          if (wish.open || !foreignUser || foreignUser.read)
             sendWishes.push(wish)
           else {
-            if (foreignUserWish?.open) sendWishes.push(wish)
+            if (foreignUserWish?.read) sendWishes.push(wish)
           }
         }
       }

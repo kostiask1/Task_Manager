@@ -23,7 +23,7 @@ const Guest = () => {
 
   const toggleUserAccess = async () => {
     const newWhitelist = [...user.whitelist]
-    const newUserState = { id: gotUser.id, open: !hasUserAccess }
+    const newUserState = { id: gotUser.id, read: !hasUserAccess, write: false }
     newWhitelist.splice(newWhitelist.findIndex(u => u.id == gotUser.id), 1, newUserState)
     const updatedProfile: IUser = { ...user, whitelist: newWhitelist }
 
@@ -36,8 +36,8 @@ const Guest = () => {
     }
   }
 
-  const isOpened = foreignUser ? (gotUser.whitelist?.find(u => u.id === user?.id)?.open || false) : true
-  const hasUserAccess = user.whitelist?.find(u => u.id === gotUser?.id)?.open || false
+  const isOpened = foreignUser ? (gotUser.whitelist?.find(u => u.id === user?.id)?.read || false) : true
+  const hasUserAccess = user.whitelist?.find(u => u.id === gotUser?.id)?.read || false
 
   return isOpened ? (
     <>

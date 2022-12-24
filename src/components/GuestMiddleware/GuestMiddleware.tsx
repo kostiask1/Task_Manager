@@ -67,7 +67,7 @@ const GuestMiddleware: FC<ISecurityProps> = ({ fallback }) => {
       )
   }, [user.id])
 
-  const isOpened = foreignUser ? (gotUser.whitelist?.find(u => u.id === user?.id)?.open || false) : true
+  const isOpened = foreignUser ? (gotUser.whitelist?.find(u => u.id === user?.id)?.read || false) : true
 
   const goToUser = useCallback(() => {
     navigate(`/profile/${uid}`);

@@ -119,7 +119,7 @@ const WishForm = () => {
       dispatch(setError("User already in whitelist"))
       return
     }
-    const newUser: IWhitelist = { id, open: true }
+    const newUser: IWhitelist = { id, read: true, write: false }
     setState((state: IWish) => ({
       ...state,
       whitelist: [...state.whitelist, newUser],

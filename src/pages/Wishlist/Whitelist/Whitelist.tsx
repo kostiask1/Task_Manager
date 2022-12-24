@@ -66,7 +66,7 @@ const Whitelist: FC<Props> = ({ data, wish, update, editable }) => {
             type="checkbox"
             className="checkbox"
             id={"checkbox-" + data.id}
-            checked={data.open}
+            checked={data.read}
             onChange={toggleOpened}
           />
           <Button

@@ -75,7 +75,7 @@ export const getTasks = (uid: string) => {
 
       if (isForeignUser) {
         const foreignUser = user.whitelist.find((u) => u.id === currendId)
-        if (!foreignUser || foreignUser.open === false) userTasks.length = 0
+        if (!foreignUser || foreignUser.read === false) userTasks.length = 0
       }
 
       const stateTasks = getState().tasks.array

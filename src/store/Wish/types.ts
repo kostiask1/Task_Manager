@@ -14,5 +14,6 @@ export interface Wish {
 
 export interface Whitelist {
   id: string
-  open: boolean
+  read: boolean
+  write: boolean
 }
