@@ -80,9 +80,12 @@ export const getTasks = (uid: string) => {
 
       const stateTasks = getState().tasks.array
 
-      
       for (let i = 0; i < userTasks.length; i++) {
         const task = userTasks[i]
+        // @ts-ignore
+        delete task.start
+        // @ts-ignore
+        delete task.end
 
         const differences = {
           day: 1,
@@ -140,6 +143,10 @@ export const setTask = (task: Task) => {
     const indexOfTask = tasksArray.findIndex((t: Task) => t.id === task.id)
     const existTask = indexOfTask !== -1
     task.update_date = new Date().getTime()
+    // @ts-ignore
+    delete task.start
+    // @ts-ignore
+    delete task.end
 
     if (!existTask) {
       tasksCopy.push(task)

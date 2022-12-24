@@ -26,7 +26,8 @@ import { RootState, useAppDispatch, useAppSelector } from "../../store/store"
 import { editingTask, getTasks, taskInitialState } from "../../store/Task/slice"
 import { Task as TaskProps } from "../../store/Task/types"
 import "./Calendar.scss"
-import { convertToDate } from '../../helpers';
+import { convertDateToTimestamp, convertToDate } from '../../helpers';
+import Checkbox from "../../components/UI/Checkbox"
 const Task = lazy(() => import("../../components/Task"))
 const TaskForm = lazy(() => import("../../components/TaskForm"))
 
@@ -56,6 +57,7 @@ const Calendar = () => {
   const [slot, setSlot] = useState<any>(null)
   const [bcView, setBCView] = useState("month")
   const [date, setDate] = useState(new Date())
+  const [showCompleted, setShowCompleted] = useState(true)
 
   const getData = useCallback(() => {
     setLoading(!tasks.length)
@@ -74,24 +76,24 @@ const Calendar = () => {
       return date
     }
     const today = clearDate(new Date().getTime())
-    return tasks.map((task: any) => ({
+    return tasks.filter(task => (showCompleted && task.completed) || (!task.completed)).map((task: any) => ({
       ...task,
       title: genTitle(task),
       start: task.deadline_date
-        ? convertToDate(task.deadline_date)
+        ? clearDate(convertDateToTimestamp(convertToDate(task.deadline_date)))
         : task.completed
           ? clearDate(task.update_date)
           : today,
       end: task.deadline_date
-        ? convertToDate(task.deadline_date)
+        ? clearDate(convertDateToTimestamp(convertToDate(task.deadline_date)))
         : task.completed
           ? clearDate(task.update_date)
           : today,
       hasEndDate: task.deadline_date ? true : false,
     }))
-  }, [])
+  }, [showCompleted])
 
-  const events = useMemo(() => generateEvents(tasks), [tasks])
+  const events = useMemo(() => generateEvents(tasks), [tasks, showCompleted])
 
   const localizer = useMemo(
     () =>
@@ -180,13 +182,22 @@ const Calendar = () => {
     setBCView("week")
   }, [])
 
+  const handleCheckbox = (val: boolean) => {
+    setShowCompleted(val)
+  }
+
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate])
 
   return (
     <div className="pb-6 pt-3">
       {!foreignUser && <Button onClick={createTask} text="Create task" className="is-primary mb-5" />}
       <Loader loading={loading} />
-      <div className="calendar-wrapper">
+        <Checkbox
+          text="Show completed tasks?"
+          onChange={handleCheckbox}
+          checked={showCompleted}
+        />
+      <div className="calendar-wrapper mt-3">
         <EventCalendar
           className="fadeIn"
           localizer={localizer}
