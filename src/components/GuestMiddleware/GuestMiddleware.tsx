@@ -47,7 +47,7 @@ const GuestMiddleware: FC<ISecurityProps> = ({ fallback }) => {
   }, [window.location.pathname, user.id])
 
   useEffect(() => {
-    if (!foreignUser) return
+    if (!foreignUser || !uid) return
     getUserById(uid).then((user) => {
       setGotUser(user)
     })

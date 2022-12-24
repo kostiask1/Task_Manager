@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom"
 import Loader from "./components/UI/Loader/Loader"
 import useNetwork from "./hooks/useNetwork"
 import { RootState, useAppSelector } from "./store/store"
+
 const Tasks = lazy(() => import("./pages/Tasks"))
 const Calendar = lazy(() => import("./pages/Calendar"))
 const About = lazy(() => import("./pages/About"))
