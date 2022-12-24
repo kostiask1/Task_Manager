@@ -110,12 +110,12 @@ export const tableActions: <T>(p: ITableActions<T>) => [Function, MouseEventHand
       target.style.backgroundColor = "#ff7f87"
     }
 
-    const copy: any[] = [...data]
+    const copy: typeof data = [...data]
     const modifier = sorting === column ? -1 : 1
-    copy.sort((a, b) => {
+    copy.sort((a: any, b: any) => {
       if (typeof a[column] === "string" && !isNumeric(a[column])) {
         return (
-          (a[column] as string).localeCompare(b[column] as string) * modifier
+          (a[column]).localeCompare(b[column]) * modifier
         )
       } else if (isNumeric(a[column])) {
         return (+a[column] - +b[column]) * modifier
