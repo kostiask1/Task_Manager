@@ -28,6 +28,7 @@ import { Task as TaskProps } from "../../store/Task/types"
 import "./Calendar.scss"
 import { convertDateToTimestamp, convertToDate } from '../../helpers';
 import Checkbox from "../../components/UI/Checkbox"
+import { useLocalStorage } from "../../hooks/useLocalStorage"
 const Task = lazy(() => import("../../components/Task"))
 const TaskForm = lazy(() => import("../../components/TaskForm"))
 
@@ -57,7 +58,7 @@ const Calendar = () => {
   const [slot, setSlot] = useState<any>(null)
   const [bcView, setBCView] = useState("month")
   const [date, setDate] = useState(new Date())
-  const [showCompleted, setShowCompleted] = useState(true)
+  const [showCompleted, setShowCompleted] = useLocalStorage("showCompleted", true)
 
   const getData = useCallback(() => {
     setLoading(!tasks.length)
