@@ -213,6 +213,8 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
       newEndDate = new Date(newEndDate.setFullYear(newEndDate.getFullYear() + (1 * modifier)))
     }
 
+    if (newEndDate < new Date()) return setDeadline_date(convertDateToString(new Date()))
+
     setDeadline_date(convertDateToString(newEndDate))
   }
 
@@ -327,6 +329,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                         key={delay}
                         onClick={(e) => setDelayEndDate(e, delay, -1)}
                         text={capitalizeFirstLetter(delay)}
+                        disabled={new Date() > convertToDate(deadline_date)}
                       />)}
                   </div>
                 </div>
