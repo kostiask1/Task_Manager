@@ -1,6 +1,6 @@
 import { createRef, FC, useCallback, useEffect, useMemo, useState } from "react";
 import InputMask from "react-input-mask";
-import { dateFormat, datesList, equal, convertDateToString, convertToDate, convertDateToTimestamp } from '../../helpers';
+import { dateFormat, datesList, equal, convertDateToString, convertToDate, convertDateToTimestamp, capitalizeFirstLetter } from '../../helpers';
 import { setError, setSuccess } from "../../store/App/slice";
 import { IUser } from "../../store/Auth/types";
 import { RootState, useAppDispatch, useAppSelector } from "../../store/store";
@@ -31,19 +31,19 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
   )
 
   const [state, setState] = useState<Task>(task || taskInitialState)
-  const [deadline_date, setDeadline_date] = useState(() => convertDateToString(state.deadline_date))
+  const [deadline_date, setDeadline_date] = useState<string>(() => convertDateToString(state.deadline_date))
   const [loadingSave, setLoadingSave] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [subtask, setSubtask] = useState<string>("")
-
-  const isEdit = state.id !== 0
-  const stateName = isEdit ? "Edit" : "Create"
-  const subTaskRef = createRef<HTMLInputElement>()
-
   const subtasksCompleted = useMemo(
     () => state.subtasks?.every((subtask) => subtask.completed),
     [state.subtasks]
   )
+
+  const isEdit = state.id !== 0
+  const stateName = isEdit ? "Edit" : "Create"
+  const subTaskRef = createRef<HTMLInputElement>()
+  const delays = ["day", "week", "month", "year"]
 
   useEffect(() => {
     if (state.subtasks?.length) {
@@ -193,6 +193,29 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
     })
   }
 
+  const setDelayEndDate = (e: React.MouseEvent<HTMLButtonElement>, delay: string, modifier: 1 | -1) => {
+    e.preventDefault()
+
+    const date = convertToDate(deadline_date)
+    const timestamp = convertDateToTimestamp(date)
+    let newEndDate = new Date(timestamp)
+
+    if (delay === "day") {
+      newEndDate.setDate(date.getDate() + (1 * modifier))
+    }
+    if (delay === "week") {
+      newEndDate.setDate(date.getDate() + (7 * modifier))
+    }
+    if (delay === "month") {
+      newEndDate = new Date(newEndDate.setMonth(newEndDate.getMonth() + (1 * modifier)))
+    }
+    if (delay === "year") {
+      newEndDate = new Date(newEndDate.setFullYear(newEndDate.getFullYear() + (1 * modifier)))
+    }
+
+    setDeadline_date(convertDateToString(newEndDate))
+  }
+
   return (
     <>
       <form
@@ -234,19 +257,21 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               name="description"
               maxLength={750}
             />
+            <hr style={{ margin: "10px 0" }} />
             <label htmlFor="subtask">
               <b>Subtasks</b>
             </label>
-            <hr style={{ margin: "5px 0" }} />
-            <SubTasks
-              key={JSON.stringify(state.subtasks)}
-              task={state}
-              type="create"
-              edit={setSubtask}
-              editable={true}
-              update={(data) =>
-                setState((state: Task) => ({ ...state, subtasks: data }))
-              } />
+            <div className="my-2">
+              <SubTasks
+                key={JSON.stringify(state.subtasks)}
+                task={state}
+                type="create"
+                edit={setSubtask}
+                editable={true}
+                update={(data) =>
+                  setState((state: Task) => ({ ...state, subtasks: data }))
+                } />
+            </div>
             <Input
               ref={subTaskRef}
               name="subtask"
@@ -261,7 +286,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
               text="Add subtask"
               disabled={loadingSave || deleting || !subtask.trim().length}
             />
-            <br />
             <hr style={{ margin: "10px 0" }} />
             {(!state.repeating) && (
               <>
@@ -284,9 +308,32 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                     <option value={value} key={value}></option>
                   ))}
                 </datalist>
+
+                <div className="is-flex is-justify-content-space-between mt-2">
+                  <div className="is-flex is-align-items-center" style={{ gap: 8 }}>
+                    Add:
+                    {delays.map((delay) =>
+                      <Button
+                        key={delay}
+                        onClick={(e) => setDelayEndDate(e, delay, 1)}
+                        text={capitalizeFirstLetter(delay)}
+                      />)}
+                  </div>
+
+                  <div className="is-flex is-align-items-center" style={{ gap: 8 }}>
+                    Subtract:
+                    {delays.map((delay) =>
+                      <Button
+                        key={delay}
+                        onClick={(e) => setDelayEndDate(e, delay, -1)}
+                        text={capitalizeFirstLetter(delay)}
+                      />)}
+                  </div>
+                </div>
               </>
             )}
           </div>
+          <hr style={{ margin: "10px 0" }} />
           <div className="is-flex is-align-items-center">
             <label className="subtask-text mr-2" htmlFor={"select-" + state.id}>
               Repeating?
