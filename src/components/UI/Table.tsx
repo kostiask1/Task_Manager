@@ -48,7 +48,7 @@ const Table: <T>(p: ITableProps<T>) => React.ReactElement = ({ columns, data: in
               onClick={reset}
               className={
                 !loading && (!equal(initData, data) || sorting)
-                  ? "is-danger"
+                  ? "danger"
                   : ""
               }
               disabled={equal(initData, data) && !sorting}

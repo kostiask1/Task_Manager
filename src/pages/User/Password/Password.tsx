@@ -85,7 +85,7 @@ const Password = () => {
         />
         <Button
           text={loading ? "Loading..." : "Update Password"}
-          className="is-primary is-fullwidth mt-5"
+          className="primary is-fullwidth mt-5"
           disabled={loading}
         />
       </form>

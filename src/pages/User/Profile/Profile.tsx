@@ -204,12 +204,12 @@ const Profile = () => {
         </figure>
         <Button
           onClick={() => setPromptDelete(true)}
-          className="is-danger is-fullwidth mt-5"
+          className="danger is-fullwidth mt-5"
           text="Delete profile"
         />
         <Button
           onClick={() => setPromptErase(true)}
-          className="is-warning is-fullwidth mt-2"
+          className="warning is-fullwidth mt-2"
           text="Erase data"
         />
       </div>
@@ -300,7 +300,7 @@ const Profile = () => {
         />
         <Button
           text={loading ? "Loading..." : "Update Profile"}
-          className="is-primary is-fullwidth mt-5"
+          className="primary is-fullwidth mt-5"
           disabled={(isEqual && !files) || loading}
         />
       </form>

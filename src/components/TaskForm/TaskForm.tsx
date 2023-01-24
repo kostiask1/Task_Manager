@@ -240,7 +240,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
             />
             {!!state.create_date && (
               <Button
-                className={`complete-task-btn ${state.completed ? "is-primary" : "is-danger"
+                className={`complete-task-btn ${state.completed ? "primary" : "danger"
                   }`}
                 onClick={handleCompleted}
                 text={`Completed: ${state.completed ? "Yes" : "No"}`}
@@ -284,7 +284,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
             />
             <Button
               onClick={addSubtask}
-              className="add-subtask is-info"
+              className="add-subtask info"
               text="Add subtask"
               disabled={loadingSave || deleting || !subtask.trim().length}
             />
@@ -311,8 +311,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                   ))}
                 </datalist>
 
-                <div className="is-flex is-justify-content-space-between mt-2">
-                  <div className="is-flex is-align-items-center" style={{ gap: 8 }}>
+                  <div className="is-flex my-2 is-align-items-center" style={{ gap: 8 }}>
                     Add:
                     {delays.map((delay) =>
                       <Button
@@ -332,7 +331,6 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
                         disabled={new Date() > convertToDate(deadline_date)}
                       />)}
                   </div>
-                </div>
               </>
             )}
           </div>
@@ -360,13 +358,13 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
           <div className="buttons">
             {isEdit ? (
               <Button
-                className="mx-2 card-footer-item is-success"
+                className="mx-2 card-footer-item success"
                 text={loadingSave ? "Updating..." : "Update"}
                 disabled={loadingSave || deleting || (convertDateToString(state.deadline_date) === deadline_date && equal(state, task))}
               />
             ) : (
               <Button
-                className="mx-2 card-footer-item is-success"
+                className="mx-2 card-footer-item success"
                 text={loadingSave ? "Saving..." : "Save"}
                 disabled={
                   loadingSave || deleting || equal(state, taskInitialState)
@@ -375,7 +373,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
             )}
             {isEdit && (
               <Button
-                className="mx-2 card-footer-item is-danger"
+                className="mx-2 card-footer-item danger"
                 text={deleting ? "Deleting..." : "Delete"}
                 onClick={deleteT}
                 disabled={loadingSave || deleting}
@@ -384,7 +382,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
             {isEdit && (
               <Button
                 onClick={reset}
-                className="mx-2 card-footer-item is-warning"
+                className="mx-2 card-footer-item warning"
                 text="Reset"
                 disabled={
                   loadingSave ||
@@ -396,7 +394,7 @@ const TaskForm: FC<TaskInterface> = ({ setModal }) => {
             {!setModal && (
               <Button
                 onClick={clear}
-                className="mx-2 card-footer-item is-warning"
+                className="mx-2 card-footer-item warning"
                 text="Clear"
                 disabled={loadingSave || deleting}
               />

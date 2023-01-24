@@ -191,7 +191,7 @@ const Calendar = () => {
 
   return (
     <div className="pb-6 pt-3">
-      {!foreignUser && <Button onClick={createTask} text="Create task" className="is-primary mb-5" />}
+      {!foreignUser && <Button onClick={createTask} text="Create task" className="primary mb-5" />}
       <Loader loading={loading} />
         <Checkbox
           text="Show completed tasks?"

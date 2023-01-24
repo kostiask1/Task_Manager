@@ -105,12 +105,12 @@ const User: FC<UserProps> = ({ user: u, id, withControls = false, mode = "full" 
       {withControls && <>
         <Button
           onClick={(e) => toggleOpened(e, user, "read")}
-          className={"is-small ml-2 " + (isOpen(user.id, "read") ? "is-primary" : "is-danger")}
+          className={"is-small ml-2 " + (isOpen(user.id, "read") ? "primary" : "danger")}
           style={isMiniMode ? { padding: "0px 4px", height: "auto" } : {}}
           text={isMiniMode ? "r" : "read"} />
         <Button
           onClick={(e) => toggleOpened(e, user, "write")}
-          className={"is-small ml-2 " + (isOpen(user.id, "write") ? "is-primary" : "is-danger")}
+          className={"is-small ml-2 " + (isOpen(user.id, "write") ? "primary" : "danger")}
           style={isMiniMode ? { padding: "0px 4px", height: "auto" } : {}}
           text={isMiniMode ? "w" : "write"} /></>}
     </WrapUser> : null

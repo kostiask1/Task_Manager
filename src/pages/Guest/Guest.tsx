@@ -63,7 +63,7 @@ const Guest = () => {
         <div className="column is-half">
           <div className="is-size-3">{gotUser.firstName} {gotUser.lastName}</div>
           <div><a href={`mailto:${gotUser.email}`}>{gotUser.email}</a></div>
-          <button className={`button mt-5 ${hasUserAccess ? "is-success" : "is-danger"}`} onClick={toggleUserAccess}>Access to you: {hasUserAccess ? "GRANTED" : "DENIED"}</button>
+          <button className={`button mt-5 ${hasUserAccess ? "success" : "danger"}`} onClick={toggleUserAccess}>Access to you: {hasUserAccess ? "GRANTED" : "DENIED"}</button>
         </div>
       </div>
     </>

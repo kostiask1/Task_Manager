@@ -33,7 +33,7 @@ const City: FC<Props> = ({ city }) => {
         <Button
           onClick={handleDeleteCity}
           text="Delete"
-          className="is-danger mx-1 delete-city-btn is-small"
+          className="danger mx-1 delete-city-btn is-small"
           disabled={loading}
         />
         this city?
@@ -58,7 +58,7 @@ const City: FC<Props> = ({ city }) => {
           <div className="card-header-title">
             <Button onClick={refetchData} text="Update data" />
             <Button
-              className="is-danger is-small delete-city-btn"
+              className="danger is-small delete-city-btn"
               text="x"
               onClick={handleDeleteCity}
               disabled={loading}

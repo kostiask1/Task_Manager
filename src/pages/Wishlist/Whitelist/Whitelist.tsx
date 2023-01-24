@@ -70,7 +70,7 @@ const Whitelist: FC<Props> = ({ data, wish, update, editable }) => {
             onChange={toggleOpened}
           />
           <Button
-            className="is-danger is-small"
+            className="danger is-small"
             style={{ height: 16, padding: "0px 4px" }}
             onClick={removeUser}
             text="x"

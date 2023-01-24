@@ -78,7 +78,7 @@ const GuestMiddleware: FC<ISecurityProps> = ({ fallback }) => {
       {!foreignUser && (
         <Button
           onClick={copyPage}
-          className="is-primary"
+          className="primary"
           text="Share Your Data"
         />
       )}

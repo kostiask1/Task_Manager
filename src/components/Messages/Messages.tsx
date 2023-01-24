@@ -15,7 +15,7 @@ const Messages = () => {
     if (messages.length) {
       timeout = setTimeout(() => {
           dispatch(clearMessages([]))
-      }, 3400)
+      }, messages.length * 2000 + 400)
     }
     
     return () => clearTimeout(timeout)
@@ -27,6 +27,7 @@ const Messages = () => {
         {messages.map((message, index) => (
           <Message
             key={index}
+            index={index + 1}
             type={message.type}
             msg={message.text}
           />

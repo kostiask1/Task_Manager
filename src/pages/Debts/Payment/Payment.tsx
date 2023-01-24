@@ -50,7 +50,7 @@ const Payment: FC<PaymentProps> = ({ payment, data, editing, update }) => {
         checked={payment.paid}
       />
       <Button
-        className="is-danger is-small ml-1"
+        className="danger is-small ml-1"
         type="button"
         style={{ height: 16, padding: "0px 4px" }}
         onClick={removePayment}

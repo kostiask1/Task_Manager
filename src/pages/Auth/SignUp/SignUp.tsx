@@ -87,7 +87,7 @@ const Signup: FC = () => {
         <Link to="/signin">Already have account? - Sign in</Link>
         <Button
           text={loading ? "Loading..." : "Create Account"}
-          className="is-primary is-fullwidth mt-5"
+          className="primary is-fullwidth mt-5"
           disabled={loading}
         />
       </form>

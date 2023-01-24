@@ -24,7 +24,7 @@ const Prompt: FC<Props> = ({
       <div className="columns mt-5">
         <div className="column">
           <Button
-            className="is-primary"
+            className="primary"
             onClick={confirm}
             text="Confirm"
             disabled={disabled}
@@ -32,7 +32,7 @@ const Prompt: FC<Props> = ({
         </div>
         <div className="column">
           <Button
-            className="is-danger"
+            className="danger"
             onClick={cancel}
             text="Cancel"
             disabled={disabled}

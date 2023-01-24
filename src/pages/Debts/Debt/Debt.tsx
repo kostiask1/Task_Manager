@@ -85,7 +85,7 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
       </td>
       <td>
         <Button
-          className={`is-small ${debt.paid ? "is-primary" : "is-danger"}`}
+          className={`is-small ${debt.paid ? "primary" : "danger"}`}
           style={{ height: "100%" }}
           onClick={() => complete(debt, !debt.paid)}
           text={`${
@@ -109,13 +109,13 @@ const Debt: FC<DebtProps> = ({ debt, index }) => {
       <td>
         <div className="buttons">
           <Button
-            className="is-info is-small"
+            className="info is-small"
             onClick={setEdit}
             text="Edit"
             disabled={loading || deleting}
           />
           <Button
-            className="is-danger is-small"
+            className="danger is-small"
             text={deleting ? "Deleting..." : "Delete"}
             onClick={deleteD}
             disabled={loading || deleting}

@@ -86,7 +86,7 @@ const SubTasks = ({ task, editable, type, setModal,
               disabled={!editable}
             />
             <Button
-              className="is-danger is-small"
+              className="danger is-small"
               style={{ height: 16, padding: "0px 4px" }}
               onClick={() => removeSubtask(data)}
               disabled={!editable}
@@ -98,7 +98,7 @@ const SubTasks = ({ task, editable, type, setModal,
           </label>
           {(isEdit || isCreate) && edit && editable && (
             <Button
-              className="is-info is-small"
+              className="info is-small"
               style={{ height: 16, padding: "0px 4px" }}
               onClick={(e) => setEdit(e, data)}
               text="edit"

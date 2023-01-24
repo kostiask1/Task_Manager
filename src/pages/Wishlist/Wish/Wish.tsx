@@ -91,7 +91,7 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
       </td>
       <td>
         <Button
-          className={`is-small ${wish.completed ? "is-primary" : "is-danger"}`}
+          className={`is-small ${wish.completed ? "primary" : "danger"}`}
           style={{ height: "100%" }}
           onClick={() => editable && complete(wish, !wish.completed)}
           text={`${
@@ -106,7 +106,7 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
         <>
           <td>
             <Button
-              className={`is-small ${wish.open ? "is-primary" : "is-danger"}`}
+              className={`is-small ${wish.open ? "primary" : "danger"}`}
               style={{ height: "100%" }}
               onClick={() => editable && toggleOpen(wish, !wish.open)}
               text={`${
@@ -131,13 +131,13 @@ const Wish: FC<WishInterface> = ({ wish, editable = false, index }) => {
           <td>
             <div className="buttons">
               <Button
-                className="is-info is-small"
+                className="info is-small"
                 onClick={setEdit}
                 text="Edit"
                 disabled={loading || deleting}
               />
               <Button
-                className="is-danger is-small"
+                className="danger is-small"
                 text={deleting ? "Deleting..." : "Delete"}
                 onClick={deleteW}
                 disabled={loading || deleting}

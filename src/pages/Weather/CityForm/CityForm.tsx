@@ -71,7 +71,7 @@ const CityForm = () => {
                 {city.name}
               </label>
               <Button
-                className="is-danger is-small"
+                className="danger is-small"
                 style={{ height: 16, padding: "0px 4px" }}
                 onClick={() => handleDeleteCity(city)}
                 text="x"

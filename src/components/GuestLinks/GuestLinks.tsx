@@ -8,13 +8,13 @@ interface IProps {
 const GuestLinks: FC<IProps> = ({ uid }) => uid ? (
   <div className="columns">
     <div className="column">
-      <NavLink style={{ width: "100%" }} className={({ isActive }) => isActive ? "button is-success" : "button"} to={`/tasks/${uid}`}>Tasks</NavLink>
+      <NavLink style={{ width: "100%" }} className={({ isActive }) => isActive ? "button success" : "button"} to={`/tasks/${uid}`}>Tasks</NavLink>
     </div>
     <div className="column">
-      <NavLink style={{ width: "100%" }} className={({ isActive }) => isActive ? "button is-success" : "button"} to={`/calendar/${uid}`}>Calendar</NavLink>
+      <NavLink style={{ width: "100%" }} className={({ isActive }) => isActive ? "button success" : "button"} to={`/calendar/${uid}`}>Calendar</NavLink>
     </div>
     <div className="column">
-      <NavLink style={{ width: "100%" }} className={({ isActive }) => isActive ? "button is-success" : "button"} to={`/wishes/${uid}`}>Wishes</NavLink>
+      <NavLink style={{ width: "100%" }} className={({ isActive }) => isActive ? "button success" : "button"} to={`/wishes/${uid}`}>Wishes</NavLink>
     </div>
   </div>
 ) : null

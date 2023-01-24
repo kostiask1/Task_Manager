@@ -188,7 +188,7 @@ const DebtForm = () => {
           {!!state.start && (
             <Button
               className={`complete-task-btn ${
-                state.paid ? "is-primary" : "is-danger"
+                state.paid ? "primary" : "danger"
               }`}
               onClick={handlePaid}
               text={`paid: ${state.paid ? "Yes" : "No"}`}
@@ -288,7 +288,7 @@ const DebtForm = () => {
             </div>
             <div className="column">
               <Button
-                className="button  is-primary"
+                className="button  primary"
                 onClick={addPayment}
                 type="submit"
                 text="Add payment"
@@ -335,7 +335,7 @@ const DebtForm = () => {
           )}
           {isEdit && (
             <Button
-              className="mx-2 card-footer-item is-danger"
+              className="mx-2 card-footer-item danger"
               text={deleting ? "Deleting..." : "Delete"}
               onClick={deleteT}
               disabled={saving || deleting}
@@ -344,7 +344,7 @@ const DebtForm = () => {
           {isEdit && (
             <Button
               onClick={reset}
-              className="mx-2 card-footer-item is-warning"
+              className="mx-2 card-footer-item warning"
               text="Reset"
               disabled={
                 saving || deleting || equal(state, debt || debtInitialState)
@@ -353,7 +353,7 @@ const DebtForm = () => {
           )}
           <Button
             onClick={clear}
-            className="mx-2 card-footer-item is-warning"
+            className="mx-2 card-footer-item warning"
             text="Clear"
             disabled={saving || deleting}
           />

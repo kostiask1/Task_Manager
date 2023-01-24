@@ -104,7 +104,7 @@ const Task: FC<TaskInterface> = ({
             <div className="card-header-title">
               {task.title}
               <Button
-                className={`complete-task-btn ${task.completed ? "is-primary" : "is-danger"
+                className={`complete-task-btn ${task.completed ? "primary" : "danger"
                   }`}
                 style={{ height: "100%" }}
                 onClick={() => editable && complete(task, !task.completed)}
@@ -155,12 +155,12 @@ const Task: FC<TaskInterface> = ({
               <div className="buttons">
                 <Button
                   onClick={() => setTaskToUpdate(task)}
-                  className="card-footer-item is-primary"
+                  className="card-footer-item primary"
                   text="Edit"
                   disabled={loading || deleting}
                 />
                 <Button
-                  className="mx-2 card-footer-item is-danger"
+                  className="mx-2 card-footer-item danger"
                   text={deleting ? "Deleting..." : "Delete"}
                   onClick={(e) => deleteT(e, task)}
                   disabled={loading || deleting}

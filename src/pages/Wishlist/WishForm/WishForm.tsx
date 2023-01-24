@@ -150,7 +150,7 @@ const WishForm = () => {
           />
           {!!state.id && (
             <Button
-              className={`complete-task-btn ${state.completed ? "is-primary" : "is-danger"
+              className={`complete-task-btn ${state.completed ? "primary" : "danger"
                 }`}
               onClick={handleCompleted}
               text={`completed: ${state.completed ? "Yes" : "No"}`}
@@ -249,13 +249,13 @@ const WishForm = () => {
         <div className="buttons">
           {isEdit ? (
             <Button
-              className="mx-2 card-footer-item is-success"
+              className="mx-2 card-footer-item success"
               text={loadingSave ? "Updating..." : "Update"}
               disabled={loadingSave || deleting || equal(state, wish)}
             />
           ) : (
             <Button
-              className="mx-2 card-footer-item is-success"
+              className="mx-2 card-footer-item success"
               text={loadingSave ? "Saving..." : "Save"}
               disabled={
                 loadingSave || deleting || equal(state, wishInitialState)
@@ -264,7 +264,7 @@ const WishForm = () => {
           )}
           {isEdit && (
             <Button
-              className="mx-2 card-footer-item is-danger"
+              className="mx-2 card-footer-item danger"
               text={deleting ? "Deleting..." : "Delete"}
               onClick={deleteW}
               disabled={loadingSave || deleting}
@@ -273,7 +273,7 @@ const WishForm = () => {
           {isEdit && (
             <Button
               onClick={reset}
-              className="mx-2 card-footer-item is-warning"
+              className="mx-2 card-footer-item warning"
               text="Reset"
               disabled={
                 loadingSave ||
@@ -284,7 +284,7 @@ const WishForm = () => {
           )}
           <Button
             onClick={clear}
-            className="mx-2 card-footer-item is-warning"
+            className="mx-2 card-footer-item warning"
             text="Clear"
             disabled={loadingSave || deleting}
           />

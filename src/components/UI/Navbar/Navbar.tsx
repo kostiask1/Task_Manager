@@ -69,7 +69,7 @@ function Navbar() {
 
   return (
     <nav
-      className="navbar has-background-primary"
+      className="navbar primary"
       role="navigation"
       aria-label="main navigation"
     >
@@ -170,13 +170,13 @@ function Navbar() {
                     <Button
                       onClick={copyUserId}
                       text="Copy ID"
-                      className="is-info is-small"
+                      className="info is-small"
                     />
                     {authenticated ? (
                       <div className="is-flex mx-2">
                         <Button
                           onClick={logout}
-                          className="is-danger is-small"
+                          className="danger is-small"
                           text="Log out"
                         />
                       </div>

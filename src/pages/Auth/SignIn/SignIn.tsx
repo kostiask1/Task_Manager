@@ -54,7 +54,7 @@ const SignIn: FC = () => {
         <Link to="/signup">Sign up if you haven't registered</Link>
         <Button
           text={loading ? "Loading..." : "Sign In"}
-          className="is-primary is-fullwidth mt-5"
+          className="primary is-fullwidth mt-5"
           disabled={loading}
         />
       </form>

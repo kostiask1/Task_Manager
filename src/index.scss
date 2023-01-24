@@ -3,7 +3,7 @@
 body {
   font-weight: 400;
   min-height: 100vh;
-  background-color: #f9f9f9;
+  background-color: var(--bg-main);
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -200,5 +200,96 @@ hr {
 
   .button:last-child {
     margin-left: auto;
+  }
+}
+
+:root {
+  --bg-main: #f9f9f9;
+  --bg: #fff;
+  --text: #f9f9f9;
+  --plain: #fff;
+  --success: #48c78e;
+  --success-light: #59dba1;
+  --primary: #00d1b2;
+  --primary-light: #18e4c6;
+  --info: #3e8ed0;
+  --info-light: #5aa2de;
+  --danger: #f14668;
+  --danger-light: #f95a7a;
+  --warning: #ffe08a;
+  --warning-light: #ffe9ad;
+}
+
+.button,
+.button[disabled] {
+  background-color: var(--plain);
+}
+
+.success {
+  background-color: var(--success);
+}
+
+.primary {
+  background-color: var(--primary);
+}
+
+.info {
+  background-color: var(--info);
+}
+
+.danger {
+  background-color: var(--danger);
+}
+
+.warning {
+  background-color: var(--warning);
+}
+
+.button:is(.success, .primary, .danger, .info) {
+  color: var(--text);
+}
+
+.button.success {
+  border-color: var(--success);
+
+  &:hover,
+  &[disabled] {
+    background-color: var(--success-light);
+  }
+}
+
+.button.primary {
+  border-color: var(--primary);
+
+  &:hover,
+  &[disabled] {
+    background-color: var(--primary-light);
+  }
+}
+
+.button.info {
+  border-color: var(--info);
+
+  &:hover,
+  &[disabled] {
+    background-color: var(--info-light);
+  }
+}
+
+.button.danger {
+  border-color: var(--danger);
+
+  &:hover,
+  &[disabled] {
+    background-color: var(--danger-light);
+  }
+}
+
+.button.warning {
+  border-color: var(--warning);
+
+  &:hover,
+  &[disabled] {
+    background-color: var(--warning-light);
   }
 }

@@ -2,7 +2,7 @@ article.message {
   z-index: 9999;
   opacity: 0;
   margin-top: -64px;
-  animation: slideIn .4s ease-in-out forwards, .4s slideOut 3s ease-in-out forwards;
+  // animation: slideIn .4s ease-in-out forwards, .4s slideOut 3s ease-in-out forwards;
   pointer-events: none;
 }
 .messages__container {
