@@ -3,6 +3,7 @@
 body {
   font-weight: 400;
   min-height: 100vh;
+  color: var(--text-contrast);
   background-color: var(--bg-main);
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -16,6 +17,28 @@ optgroup,
 select,
 textarea {
   font-family: "Roboto", sans-serif;
+}
+
+.textarea,
+.input {
+  background-color: var(--bg-main);
+  color: var(--text-contrast);
+}
+
+.tabs a {
+  color: var(--text-contrast);
+}
+
+:is(.textarea, .input)::placeholder {
+  color: var(--text-contrast-hover);
+}
+
+.menu-list a,
+.menu-label {
+  color: var(--text-contrast);
+}
+.menu-list a.is-active {
+  background-color: var(--primary);
 }
 
 label[for] {
@@ -91,6 +114,11 @@ img {
 
 .card-header label {
   white-space: nowrap;
+}
+
+.card {
+  background-color: var(--bg);
+  color: var(--text-contrast);
 }
 
 @keyframes fadeIn {
@@ -194,6 +222,8 @@ hr {
 }
 
 .card-header-title {
+  color: var(--text-contrast);
+
   .field {
     margin-bottom: 0;
   }
@@ -206,7 +236,10 @@ hr {
 :root {
   --bg-main: #f9f9f9;
   --bg: #fff;
+  --text-contrast: #2f3640;
+  --text-contrast-hover: #324258;
   --text: #f9f9f9;
+  --text-hover: #deeeff;
   --plain: #fff;
   --success: #48c78e;
   --success-light: #59dba1;
@@ -245,8 +278,30 @@ hr {
   background-color: var(--warning);
 }
 
+.button,
+button {
+  color: var(--text-contrast);
+}
+
+.button:hover,
+button {
+  color: var(--text-contrast-hover);
+}
+
 .button:is(.success, .primary, .danger, .info) {
   color: var(--text);
+}
+
+button.warning {
+  color: var(--text-contrast);
+}
+
+button.warning:hover {
+  color: var(--text-contrast-hover);
+}
+
+.button:is(.success, .primary, .danger, .info):hover {
+  color: var(--text-hover);
 }
 
 .button.success {

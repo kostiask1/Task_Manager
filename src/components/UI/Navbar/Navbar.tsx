@@ -8,6 +8,8 @@ import { tasks } from "../../../store/Task/slice";
 import { wishes } from "../../../store/Wish/slice";
 import Button from "../Button";
 import "./Navbar.scss";
+import Switcher from '../../Switcher/Switcher';
+import { useLocalStorage } from "../../../hooks/useLocalStorage";
 
 let lastLocation = ""
 
@@ -15,6 +17,7 @@ function Navbar() {
   const dispatch = useAppDispatch()
   const location = useLocation()
   const navigate = useNavigate();
+  const [theme, setTheme] = useLocalStorage("theme", false)
   const { authenticated, user } = useAppSelector((state: RootState) => ({
     authenticated: state.auth.authenticated,
     user: state.auth.user,
@@ -39,6 +42,48 @@ function Navbar() {
     burgerRef.current?.classList.remove("is-active")
     menuRef.current?.classList.remove("is-active")
   }, [location.pathname, user.id])
+
+  useEffect(() => {
+    const r = document.querySelector(':root') as HTMLElement;
+    if (theme) {
+      r.style.setProperty('--bg-main', '#2f3640')
+      r.style.setProperty('--bg', '#353b48')
+      r.style.setProperty('--text', '#ffffff')
+      r.style.setProperty('--text-hover', '#deeeff')
+      r.style.setProperty('--text-contrast', '#deeeff')
+      r.style.setProperty('--text-contrast-hover', '#deeeff')
+      r.style.setProperty('--plain', '#353b48')
+      r.style.setProperty('--success', '#10ac84')
+      r.style.setProperty('--success-light', '#1dd1a1')
+      r.style.setProperty('--primary', '#273c75')
+      r.style.setProperty('--primary-light', '#273c75')
+      r.style.setProperty('--info', '#3e8ed0')
+      r.style.setProperty('--info-light', '#5aa2de')
+      r.style.setProperty('--danger', '#c23616')
+      r.style.setProperty('--danger-light', '#e84118')
+      r.style.setProperty('--warning', '#e1b12c')
+      r.style.setProperty('--warning-light', '#fbc531')
+    }
+    else {
+      r.style.setProperty('--bg-main', '#f9f9f9')
+      r.style.setProperty('--bg', '#fff')
+      r.style.setProperty('--text', '#f9f9f9')
+      r.style.setProperty('--text-hover', '#deeeff')
+      r.style.setProperty('--text-contrast', '#2f3640')
+      r.style.setProperty('--text-contrast-hover', '#324258')
+      r.style.setProperty('--plain', '#fff')
+      r.style.setProperty('--success', '#48c78e')
+      r.style.setProperty('--success-light', '#59dba1')
+      r.style.setProperty('--primary', '#00d1b2')
+      r.style.setProperty('--primary-light', '#18e4c6')
+      r.style.setProperty('--info', '#3e8ed0')
+      r.style.setProperty('--info-light', '#5aa2de')
+      r.style.setProperty('--danger', '#f14668')
+      r.style.setProperty('--danger-light', '#f95a7a')
+      r.style.setProperty('--warning', '#ffe08a')
+      r.style.setProperty('--warning-light', '#ffe9ad')
+    }
+  }, [theme])
 
   const hasId = (route: string) => {
     const pathname = route.split("/")
@@ -75,7 +120,7 @@ function Navbar() {
     >
       <div className="container">
         <div className="navbar-brand">
-          <Link className="navbar-item" to="/">
+          {/* <Link className="navbar-item" to="/">
             <img
               src="https://i.pinimg.com/originals/f6/32/22/f63222678d884a9a7449f1949fd24fec.png"
               width="40"
@@ -83,7 +128,7 @@ function Navbar() {
               style={{ maxHeight: "40px" }}
               alt="logo"
             />
-          </Link>
+          </Link> */}
           <button
             className="navbar-burger"
             aria-label="menu"
@@ -129,6 +174,9 @@ function Navbar() {
                   </button>
                 )
               )}
+          </div>
+          <div className="navbar-middle">
+            <Switcher checked={theme} onChange={setTheme} />
           </div>
           <div className="navbar-end">
             {authenticated && user ? (
