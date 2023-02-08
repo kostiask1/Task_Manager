@@ -10,6 +10,7 @@ import Button from "../Button";
 import "./Navbar.scss";
 import Switcher from '../../Switcher/Switcher';
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
+import { light, dark } from "../pallette";
 
 let lastLocation = ""
 
@@ -43,46 +44,16 @@ function Navbar() {
     menuRef.current?.classList.remove("is-active")
   }, [location.pathname, user.id])
 
-  useEffect(() => {
+  const applyTheme = (pallette: object) => {
     const r = document.querySelector(':root') as HTMLElement;
-    if (theme) {
-      r.style.setProperty('--bg-main', '#2f3640')
-      r.style.setProperty('--bg', '#353b48')
-      r.style.setProperty('--text', '#ffffff')
-      r.style.setProperty('--text-hover', '#deeeff')
-      r.style.setProperty('--text-contrast', '#deeeff')
-      r.style.setProperty('--text-contrast-hover', '#deeeff')
-      r.style.setProperty('--plain', '#353b48')
-      r.style.setProperty('--success', '#10ac84')
-      r.style.setProperty('--success-light', '#1dd1a1')
-      r.style.setProperty('--primary', '#273c75')
-      r.style.setProperty('--primary-light', '#273c75')
-      r.style.setProperty('--info', '#3e8ed0')
-      r.style.setProperty('--info-light', '#5aa2de')
-      r.style.setProperty('--danger', '#c23616')
-      r.style.setProperty('--danger-light', '#e84118')
-      r.style.setProperty('--warning', '#e1b12c')
-      r.style.setProperty('--warning-light', '#fbc531')
+
+    for (const [key, value] of Object.entries(pallette)) {
+      r.style.setProperty(key, value);
     }
-    else {
-      r.style.setProperty('--bg-main', '#f9f9f9')
-      r.style.setProperty('--bg', '#fff')
-      r.style.setProperty('--text', '#f9f9f9')
-      r.style.setProperty('--text-hover', '#deeeff')
-      r.style.setProperty('--text-contrast', '#2f3640')
-      r.style.setProperty('--text-contrast-hover', '#324258')
-      r.style.setProperty('--plain', '#fff')
-      r.style.setProperty('--success', '#48c78e')
-      r.style.setProperty('--success-light', '#59dba1')
-      r.style.setProperty('--primary', '#00d1b2')
-      r.style.setProperty('--primary-light', '#18e4c6')
-      r.style.setProperty('--info', '#3e8ed0')
-      r.style.setProperty('--info-light', '#5aa2de')
-      r.style.setProperty('--danger', '#f14668')
-      r.style.setProperty('--danger-light', '#f95a7a')
-      r.style.setProperty('--warning', '#ffe08a')
-      r.style.setProperty('--warning-light', '#ffe9ad')
-    }
+  }
+
+  useEffect(() => {
+    applyTheme(theme ? dark : light);
   }, [theme])
 
   const hasId = (route: string) => {
